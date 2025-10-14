@@ -703,6 +703,8 @@ function DashboardPage() {
               onClick={() => {
                 if (selectedAgent.name === 'SEOrix') {
                   navigate('/seorix');
+                } else if (selectedAgent.name === 'WhatsPulse') {
+                  navigate('/whatspulse');
                 } else {
                   // For other agents, you can add their specific routes here
                   alert(`${selectedAgent.name} agent page coming soon!`);
