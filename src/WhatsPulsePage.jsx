@@ -1,7 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { ArrowLeft, MessageCircle, Upload, Send, CheckCircle, Clock, Users, FileText, Calendar, TrendingUp, Sparkles, Zap } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 function WhatsPulsePage() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     offerTitle: '',
     messageContent: '',
@@ -653,7 +655,7 @@ function WhatsPulsePage() {
       {/* Main Content */}
       <div style={styles.content}>
         {/* Back Button */}
-        <button style={styles.backButton} onClick={() => window.history.back()}>
+        <button style={styles.backButton} onClick={() => navigate('/dashboard')}>
           <ArrowLeft size={20} />
           <span>Back to Dashboard</span>
         </button>
@@ -828,7 +830,7 @@ function WhatsPulsePage() {
 
                 <div style={styles.statCard} className="stat-card">
                   <TrendingUp size={32} style={{color: '#10b981', margin: '0 auto 0.75rem'}} />
-                  <div style={styles.statValue}>98%</div>
+                  <div style={styles.statValue}>100%</div>
                   <div style={{fontSize: '0.875rem', color: '#9ca3af'}}>Delivery Rate</div>
                 </div>
 
