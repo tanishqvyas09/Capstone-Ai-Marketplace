@@ -83,6 +83,7 @@ function DashboardPage() {
   }, [session]);
 
   const handleUseAgent = (agent) => {
+    // Open modal for all agents to show video first
     setSelectedAgent(agent);
   };
 
@@ -415,7 +416,11 @@ function DashboardPage() {
       transition: 'all 0.3s',
       boxShadow: '0 4px 12px rgba(147,51,234,0.4)',
       marginTop: '1.5rem',
-      fontSize: '1rem'
+      fontSize: '1rem',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '0.5rem'
     }
   };
 
@@ -657,7 +662,7 @@ function DashboardPage() {
             <h2 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
               {selectedAgent.name}
             </h2>
-            <p style={{ color: '#9ca3af', marginBottom: '1rem' }}>
+            <p style={{ color: '#9ca3af', marginBottom: '1.5rem' }}>
               {selectedAgent.desc}
             </p>
 
@@ -695,10 +700,18 @@ function DashboardPage() {
 
             <button
               style={styles.tryButton}
-              onClick={() => handleTryAgent(selectedAgent.id)}
-              disabled={loadingAgentId === selectedAgent.id}
+              onClick={() => {
+                if (selectedAgent.name === 'SEOrix') {
+                  navigate('/seorix');
+                } else {
+                  // For other agents, you can add their specific routes here
+                  alert(`${selectedAgent.name} agent page coming soon!`);
+                }
+                setSelectedAgent(null);
+              }}
             >
-              {loadingAgentId === selectedAgent.id ? 'Processing...' : 'Try This Agent Now'}
+              <Play size={16} />
+              Use This Agent
             </button>
 
             {outputs[selectedAgent.id] && (
