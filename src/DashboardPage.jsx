@@ -22,7 +22,7 @@ function DashboardPage() {
   // Predefined agents with video links
   const agentDetails = [
     { id: 1, name: 'SEOrix', icon: Search, desc: 'AI agent for search engine optimization', videoUrl: 'https://res.cloudinary.com/dry1chfzv/video/upload/v1760383592/_Create_a_cinematic_futuris_mqsfpe.mp4', status: 'active' },
-    { id: 2, name: 'LeadGen', icon: UserPlus, desc: 'Intelligent lead generation and contact discovery', videoUrl: '', status: 'active' },
+    { id: 2, name: 'LeadGen', icon: UserPlus, desc: 'Intelligent lead generation and contact discovery', videoUrl: 'https://player.cloudinary.com/embed/?cloud_name=dry1chfzv&public_id=WhatsApp_Video_2025-10-15_at_13.23.05_ztnmkn&profile=cld-default', status: 'active' },
     { id: 3, name: 'WhatsPulse', icon: MessageCircle, desc: 'Automates WhatsApp marketing campaigns', videoUrl: 'https://res.cloudinary.com/dry1chfzv/video/upload/v1760383595/AI_Marketing_Intro_Video_Generation_rucbpj.mp4', status: 'active' },
    // { id: 4, name: 'GraphiGen', icon: Image, desc: 'Generates stunning graphics for ads & social posts', videoUrl: 'https://res.cloudinary.com/dry1chfzv/video/upload/v1760383593/AI_Design_Agent_Intro_Video_Generation_iguoka.mp4', status: 'active' },
     { id: 5, name: 'AdVisor', icon: Target, desc: 'Creates optimized ad titles and visuals', videoUrl: 'https://res.cloudinary.com/dry1chfzv/video/upload/v1760383601/AI_Ad_Strategist_Promo_Video_Generated_c1leqv.mp4', status: 'active' },
@@ -672,7 +672,7 @@ function DashboardPage() {
               {selectedAgent.videoUrl ? (
                 selectedAgent.videoUrl.includes('player.cloudinary.com') ? (
                   <iframe
-                    src={`${selectedAgent.videoUrl}&autoplay=true&muted=true`}
+                    src={`${selectedAgent.videoUrl}&autoplay=true`}
                     style={{
                       width: '100%',
                       height: '100%',
@@ -686,7 +686,6 @@ function DashboardPage() {
                   <video
                     controls
                     autoPlay
-                    muted
                     playsInline
                     style={{
                       width: '100%',
