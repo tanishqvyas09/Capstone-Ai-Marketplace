@@ -5,6 +5,9 @@ import SEOrixPage from './SEOrixPage.jsx'
 import LeadGenPage from './LeadGenPage.jsx'
 import AdVisorPage from './AdVisorPage.jsx'
 import WhatsPulsePage from './WhatsPulsePage.jsx'
+import EchoMindPage from './EchoMindPage.jsx'
+import SociaPlanPage from './SociaPlanPage.jsx'
+
 import './App.css'
 
 function App() {
@@ -16,6 +19,9 @@ function App() {
       <Route path="/leadgen" element={<LeadGenPage />} />
       <Route path="/advisor" element={<AdVisorPage />} />
       <Route path="/whatspulse" element={<WhatsPulsePage />} />
+      <Route path="/echomind" element={<EchoMindPage />} />
+      <Route path="/sociaplan" element={<SociaPlanPage />} />
+
     </Routes>
   )
 }

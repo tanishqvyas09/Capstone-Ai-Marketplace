@@ -4,7 +4,7 @@ import { supabase } from "../supabaseClient";
 import { 
   Search, MessageCircle, Image, Target, Key, Phone, Headphones, 
   TrendingUp, FileText, Users, Bell, Settings, LogOut, 
-  ChevronDown, Menu, X, Play, Zap, BarChart3, Clock, CheckCircle, UserPlus
+  ChevronDown, Menu, X, Play, Zap, BarChart3, Clock, CheckCircle, UserPlus, Calendar
 } from 'lucide-react';
 
 function DashboardPage() {
@@ -24,14 +24,15 @@ function DashboardPage() {
     { id: 1, name: 'SEOrix', icon: Search, desc: 'AI agent for search engine optimization', videoUrl: 'https://res.cloudinary.com/dry1chfzv/video/upload/v1760383592/_Create_a_cinematic_futuris_mqsfpe.mp4', status: 'active' },
     { id: 2, name: 'LeadGen', icon: UserPlus, desc: 'Intelligent lead generation and contact discovery', videoUrl: '', status: 'active' },
     { id: 3, name: 'WhatsPulse', icon: MessageCircle, desc: 'Automates WhatsApp marketing campaigns', videoUrl: 'https://res.cloudinary.com/dry1chfzv/video/upload/v1760383595/AI_Marketing_Intro_Video_Generation_rucbpj.mp4', status: 'active' },
-    { id: 4, name: 'GraphiGen', icon: Image, desc: 'Generates stunning graphics for ads & social posts', videoUrl: 'https://res.cloudinary.com/dry1chfzv/video/upload/v1760383593/AI_Design_Agent_Intro_Video_Generation_iguoka.mp4', status: 'active' },
+   // { id: 4, name: 'GraphiGen', icon: Image, desc: 'Generates stunning graphics for ads & social posts', videoUrl: 'https://res.cloudinary.com/dry1chfzv/video/upload/v1760383593/AI_Design_Agent_Intro_Video_Generation_iguoka.mp4', status: 'active' },
     { id: 5, name: 'AdVisor', icon: Target, desc: 'Creates optimized ad titles and visuals', videoUrl: 'https://res.cloudinary.com/dry1chfzv/video/upload/v1760383601/AI_Ad_Strategist_Promo_Video_Generated_c1leqv.mp4', status: 'active' },
-    { id: 6, name: 'KeyMuse', icon: Key, desc: 'Generates high-performing marketing keywords', videoUrl: '', status: 'idle' },
-    { id: 7, name: 'SalesCalla', icon: Phone, desc: 'AI-driven sales calling and lead management', videoUrl: '', status: 'idle' },
-    { id: 8, name: 'EchoMind', icon: Headphones, desc: 'Analyzes customer recordings for sentiment patterns', videoUrl: 'https://res.cloudinary.com/dry1chfzv/video/upload/v1760383553/AI_Video_Intro_EchoMind_s_Emotional_Insight_xxcqga.mp4', status: 'active' },
-    { id: 9, name: 'TrendIQ', icon: TrendingUp, desc: 'Predicts market trends using data-driven insights', videoUrl: '', status: 'idle' },
-    { id: 10, name: 'Scriptly', icon: FileText, desc: 'Writes compelling video scripts instantly', videoUrl: '', status: 'idle' },
-    { id: 11, name: 'LostLens', icon: Users, desc: 'Diagnoses customer loss reasons & retention patterns', videoUrl: '', status: 'idle' }
+    { id: 6, name: 'SociaPlan', icon: Calendar, desc: 'Social Media Calendar Generator - Full week content planning', videoUrl: 'https://player.cloudinary.com/embed/?cloud_name=dry1chfzv&public_id=AI_Social_Media_Content_Calendar_Generation_nddmb9&profile=cld-default', status: 'active' },
+    //{ id: 7, name: 'KeyMuse', icon: Key, desc: 'Generates high-performing marketing keywords', videoUrl: '', status: 'idle' },
+    //{ id: 8, name: 'SalesCalla', icon: Phone, desc: 'AI-driven sales calling and lead management', videoUrl: '', status: 'idle' },
+    { id: 9, name: 'EchoMind', icon: Headphones, desc: 'Analyzes customer recordings for sentiment patterns', videoUrl: 'https://res.cloudinary.com/dry1chfzv/video/upload/v1760383553/AI_Video_Intro_EchoMind_s_Emotional_Insight_xxcqga.mp4', status: 'active' },
+   // { id: 10, name: 'TrendIQ', icon: TrendingUp, desc: 'Predicts market trends using data-driven insights', videoUrl: '', status: 'idle' },
+    //{ id: 11, name: 'Scriptly', icon: FileText, desc: 'Writes compelling video scripts instantly', videoUrl: '', status: 'idle' },
+    //{ id: 12, name: 'LostLens', icon: Users, desc: 'Diagnoses customer loss reasons & retention patterns', videoUrl: '', status: 'idle' }
   ];
 
   useEffect(() => {
@@ -669,20 +670,35 @@ function DashboardPage() {
 
             <div style={styles.videoContainer}>
               {selectedAgent.videoUrl ? (
-                <video
-                  controls
-                  autoPlay
-                  playsInline
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'contain',
-                    background: '#1a1a2e'
-                  }}
-                >
-                  <source src={selectedAgent.videoUrl} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
+                selectedAgent.videoUrl.includes('player.cloudinary.com') ? (
+                  <iframe
+                    src={`${selectedAgent.videoUrl}&autoplay=true&muted=true`}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      border: 'none',
+                      borderRadius: '12px'
+                    }}
+                    allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+                    allowFullScreen
+                  />
+                ) : (
+                  <video
+                    controls
+                    autoPlay
+                    muted
+                    playsInline
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain',
+                      background: '#1a1a2e'
+                    }}
+                  >
+                    <source src={selectedAgent.videoUrl} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                )
               ) : (
                 <div style={{
                   display: 'flex',
@@ -706,6 +722,10 @@ function DashboardPage() {
                   navigate('/seorix');
                 } else if (selectedAgent.name === 'WhatsPulse') {
                   navigate('/whatspulse');
+                } else if (selectedAgent.name === 'EchoMind') {
+                  navigate('/echomind');
+                } else if (selectedAgent.name === 'SociaPlan') {
+                  navigate('/sociaplan');
                 } else if (selectedAgent.name === 'LeadGen') {
                   navigate('/leadgen');
                 } else if (selectedAgent.name === 'AdVisor') {
