@@ -1,7 +1,12 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, Search, TrendingUp, Target, BarChart3, CheckCircle, AlertCircle, Loader2, Zap, Brain, FileText, ChevronDown, ChevronUp, Globe, Code, Activity, Clock, Award, Users, Link, ExternalLink, Sparkles, Download } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '../supabaseClient';
+import { executeWithTokens } from './utils/tokenService';
 
 function SEOrixPage() {
+  const navigate = useNavigate();
+  const [session, setSession] = useState(null);
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
@@ -10,9 +15,27 @@ function SEOrixPage() {
   const reportRef = useRef(null);
   const abortControllerRef = useRef(null);
 
+  // Session management
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
   const handleSubmit = async () => {
     if (!url) {
       setError('Please enter a website URL');
+      return;
+    }
+
+    // Check if user is logged in
+    if (!session || !session.user) {
+      setError('Please log in to use SEOrix');
+      navigate('/login');
       return;
     }
 
@@ -21,175 +44,173 @@ function SEOrixPage() {
     setResult(null);
 
     try {
-      // Step 1: Start the analysis job
-      console.log('Starting analysis for:', url);
-      const startResponse = await fetch('https://glowing-g79w8.crab.containers.automata.host/webhook/seo', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ website_url: url })
-      });
+      console.log('🚀 Starting SEOrix with token deduction...');
+      
+      // Execute with token deduction (200 tokens)
+      const tokenResult = await executeWithTokens(
+        session.user.id,
+        'SEOrix',
+        async () => {
+          // Entire API logic here
+          console.log('Starting analysis for:', url);
+          const startResponse = await fetch('https://glowing-g79w8.crab.containers.automata.host/webhook/seo', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ website_url: url })
+          });
 
-      if (!startResponse.ok) {
-        throw new Error(`Failed to start analysis: ${startResponse.status}`);
-      }
+          if (!startResponse.ok) {
+            throw new Error(`Failed to start analysis: ${startResponse.status}`);
+          }
 
-      const startData = await startResponse.json();
-      console.log('Start response:', startData);
+          const startData = await startResponse.json();
+          console.log('Start response:', startData);
 
-      // Extract job_id from response (adjust based on your API structure)
-      let jobId = startData.job_id || startData.id || startData[0]?.job_id || startData[0]?.id;
+          let jobId = startData.job_id || startData.id || startData[0]?.job_id || startData[0]?.id;
 
-      // If no job_id returned, the API might return results immediately (old behavior)
-      if (!jobId) {
-        console.log('No job_id found, processing immediate response');
-        // Handle different JSON structures for immediate response
-        let report = null;
-        if (Array.isArray(startData) && startData[0]?.output?.seo_report) {
-          report = startData[0].output.seo_report;
-        } else if (startData[0]?.seo_report) {
-          report = startData[0].seo_report;
-        } else if (startData.output?.seo_report) {
-          report = startData.output.seo_report;
-        } else if (startData.seo_report) {
-          report = startData.seo_report;
-        } else {
-          report = startData;
-        }
-        
-        setResult(report);
-        setExpanded({ critical: true, high: true });
+          if (!jobId) {
+            console.log('No job_id found, processing immediate response');
+            let report = null;
+            if (Array.isArray(startData) && startData[0]?.output?.seo_report) {
+              report = startData[0].output.seo_report;
+            } else if (startData[0]?.seo_report) {
+              report = startData[0].seo_report;
+            } else if (startData.output?.seo_report) {
+              report = startData.output.seo_report;
+            } else if (startData.seo_report) {
+              report = startData.seo_report;
+            } else {
+              report = startData;
+            }
+            return report;
+          }
+
+          // Poll for results
+          console.log('Job started with ID:', jobId);
+          const pollInterval = 5000;
+          const maxAttempts = 120;
+          let attempts = 0;
+
+          return new Promise((resolve, reject) => {
+            const checkStatus = async () => {
+              if (abortControllerRef.current?.signal.aborted) {
+                reject(new Error('Analysis cancelled'));
+                return;
+              }
+
+              attempts++;
+              console.log(`Polling attempt ${attempts}/${maxAttempts}`);
+
+              if (attempts > maxAttempts) {
+                reject(new Error('Analysis timed out after 10 minutes. Please try again.'));
+                return;
+              }
+
+              try {
+                const statusResponse = await fetch(
+                  `https://glowing-g79w8.crab.containers.automata.host/webhook/seo/status/${jobId}`,
+                  { method: 'GET', headers: { 'Content-Type': 'application/json' } }
+                );
+
+                if (!statusResponse.ok) {
+                  throw new Error(`Status check failed: ${statusResponse.status}`);
+                }
+
+                const statusData = await statusResponse.json();
+                console.log('Status response:', statusData);
+
+                const status = statusData.status || statusData[0]?.status;
+
+                if (status === 'completed' || status === 'success') {
+                  let report = null;
+                  if (statusData.result) {
+                    report = statusData.result;
+                  } else if (statusData.output?.seo_report) {
+                    report = statusData.output.seo_report;
+                  } else if (statusData.seo_report) {
+                    report = statusData.seo_report;
+                  } else if (Array.isArray(statusData) && statusData[0]?.output?.seo_report) {
+                    report = statusData[0].output.seo_report;
+                  } else if (Array.isArray(statusData) && statusData[0]?.seo_report) {
+                    report = statusData[0].seo_report;
+                  } else {
+                    report = statusData;
+                  }
+
+                  console.log('Analysis completed, report:', report);
+                  resolve(report);
+                } else if (status === 'failed' || status === 'error') {
+                  const errorMsg = statusData.error || statusData.message || 'Analysis failed';
+                  reject(new Error(errorMsg));
+                } else {
+                  console.log('Still processing, will poll again...');
+                  setTimeout(checkStatus, pollInterval);
+                }
+              } catch (pollError) {
+                console.warn('Status endpoint failed, trying direct fetch:', pollError.message);
+                
+                try {
+                  const resultResponse = await fetch(
+                    `https://glowing-g79w8.crab.containers.automata.host/webhook/seo/${jobId}`,
+                    { method: 'GET', headers: { 'Content-Type': 'application/json' } }
+                  );
+
+                  if (resultResponse.ok) {
+                    const resultData = await resultResponse.json();
+                    let report = null;
+                    
+                    if (Array.isArray(resultData) && resultData[0]?.output?.seo_report) {
+                      report = resultData[0].output.seo_report;
+                    } else if (resultData[0]?.seo_report) {
+                      report = resultData[0].seo_report;
+                    } else if (resultData.output?.seo_report) {
+                      report = resultData.output.seo_report;
+                    } else if (resultData.seo_report) {
+                      report = resultData.seo_report;
+                    } else {
+                      report = resultData;
+                    }
+
+                    if (report) {
+                      console.log('Got result from direct fetch:', report);
+                      resolve(report);
+                      return;
+                    }
+                  }
+                } catch (directError) {
+                  console.warn('Direct fetch also failed:', directError.message);
+                }
+                
+                setTimeout(checkStatus, pollInterval);
+              }
+            };
+
+            checkStatus();
+          });
+        },
+        { url },
+        1 // Token multiplier (fixed cost)
+      );
+
+      // Check result
+      if (!tokenResult.success) {
+        setError(tokenResult.error);
+        setLoading(false);
         return;
       }
 
-      // Step 2: Poll for results
-      console.log('Job started with ID:', jobId);
-      const pollInterval = 5000; // Poll every 5 seconds
-      const maxAttempts = 120; // 120 * 5s = 10 minutes max
-      let attempts = 0;
-
-      const checkStatus = async () => {
-        // Check if cancelled
-        if (abortControllerRef.current?.signal.aborted) {
-          throw new Error('Analysis cancelled');
-        }
-
-        attempts++;
-        console.log(`Polling attempt ${attempts}/${maxAttempts}`);
-
-        if (attempts > maxAttempts) {
-          throw new Error('Analysis timed out after 10 minutes. Please try again.');
-        }
-
-        try {
-          // Poll the status endpoint
-          const statusResponse = await fetch(
-            `https://glowing-g79w8.crab.containers.automata.host/webhook/seo/status/${jobId}`,
-            {
-              method: 'GET',
-              headers: { 'Content-Type': 'application/json' }
-            }
-          );
-
-          if (!statusResponse.ok) {
-            throw new Error(`Status check failed: ${statusResponse.status}`);
-          }
-
-          const statusData = await statusResponse.json();
-          console.log('Status response:', statusData);
-
-          const status = statusData.status || statusData[0]?.status;
-
-          if (status === 'completed' || status === 'success') {
-            // Extract the report from completed job
-            let report = null;
-            if (statusData.result) {
-              report = statusData.result;
-            } else if (statusData.output?.seo_report) {
-              report = statusData.output.seo_report;
-            } else if (statusData.seo_report) {
-              report = statusData.seo_report;
-            } else if (Array.isArray(statusData) && statusData[0]?.output?.seo_report) {
-              report = statusData[0].output.seo_report;
-            } else if (Array.isArray(statusData) && statusData[0]?.seo_report) {
-              report = statusData[0].seo_report;
-            } else {
-              report = statusData;
-            }
-
-            console.log('Analysis completed, report:', report);
-            setResult(report);
-            setExpanded({ critical: true, high: true });
-            return;
-          } else if (status === 'failed' || status === 'error') {
-            const errorMsg = statusData.error || statusData.message || 'Analysis failed';
-            throw new Error(errorMsg);
-          } else {
-            // Still processing (status: 'pending', 'processing', 'running', etc.)
-            console.log('Still processing, will poll again...');
-            // Schedule next poll
-            setTimeout(checkStatus, pollInterval);
-          }
-        } catch (pollError) {
-          // If status endpoint doesn't exist yet, try fetching the result directly
-          console.warn('Status endpoint failed, trying direct fetch:', pollError.message);
-          
-          try {
-            const resultResponse = await fetch(
-              `https://glowing-g79w8.crab.containers.automata.host/webhook/seo/${jobId}`,
-              {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' }
-              }
-            );
-
-            if (resultResponse.ok) {
-              const resultData = await resultResponse.json();
-              let report = null;
-              
-              if (Array.isArray(resultData) && resultData[0]?.output?.seo_report) {
-                report = resultData[0].output.seo_report;
-              } else if (resultData[0]?.seo_report) {
-                report = resultData[0].seo_report;
-              } else if (resultData.output?.seo_report) {
-                report = resultData.output.seo_report;
-              } else if (resultData.seo_report) {
-                report = resultData.seo_report;
-              } else {
-                report = resultData;
-              }
-
-              if (report && report.url) {
-                console.log('Got result from direct fetch');
-                setResult(report);
-                setExpanded({ critical: true, high: true });
-                return;
-              }
-            }
-          } catch (directFetchError) {
-            console.warn('Direct fetch also failed:', directFetchError.message);
-          }
-
-          // Continue polling if we couldn't get a definitive answer
-          if (attempts < maxAttempts) {
-            setTimeout(checkStatus, pollInterval);
-          } else {
-            throw pollError;
-          }
-        }
-      };
-
-      // Create abort controller for cancellation
-      abortControllerRef.current = new AbortController();
-
-      // Start polling
-      await checkStatus();
+      // Success - tokens deducted
+      console.log(`✅ SEOrix completed! Tokens deducted: ${tokenResult.tokensDeducted}`);
+      console.log(`💰 Remaining tokens: ${tokenResult.tokensRemaining}`);
+      
+      setResult(tokenResult.data);
+      setExpanded({ critical: true, high: true });
 
     } catch (err) {
-      console.error('Analysis error:', err);
-      setError(err.message || 'Analysis failed. Please try again.');
+      console.error('❌ SEOrix error:', err);
+      setError(err.message || 'SEO analysis failed');
     } finally {
       setLoading(false);
-      abortControllerRef.current = null;
     }
   };
 

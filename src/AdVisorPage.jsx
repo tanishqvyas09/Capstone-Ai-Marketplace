@@ -1,8 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Search, Image, Sparkles, Palette, Wand2, CheckCircle, AlertCircle, Loader2, Zap, Target, Download, Eye, RefreshCw, Copy, Share2, Layers, Upload, X } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '../supabaseClient';
+import { executeWithTokens } from './utils/tokenService';
 
 function AdVisorPage() {
+  const navigate = useNavigate();
+  const [session, setSession] = useState(null);
   const [headline, setHeadline] = useState('');
+
   const [subHeading, setSubHeading] = useState('');
   const [pointers, setPointers] = useState('');
   const [cta, setCta] = useState('');
@@ -16,6 +22,17 @@ function AdVisorPage() {
   const [imageUrl, setImageUrl] = useState(null);
   const [imageData, setImageData] = useState(null);
   const [error, setError] = useState('');
+
+  // Session management
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -52,58 +69,95 @@ function AdVisorPage() {
       return;
     }
 
+    // Check if user is logged in
+    if (!session || !session.user) {
+      setError('Please log in to use AdVisor');
+      navigate('/login');
+      return;
+    }
+
     setLoading(true);
     setError('');
     setImageUrl(null);
     setImageData(null);
 
     try {
-      console.log('🚀 Sending ad generation request...');
+      console.log('🚀 Starting AdVisor with token deduction...');
       
-      // Convert uploaded image to base64 if present
-      let personImageBase64 = '';
-      if (uploadedImage) {
-        personImageBase64 = await new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            // Remove the data:image/...;base64, prefix
-            const base64 = reader.result.split(',')[1];
-            resolve(base64);
+      // Execute with token deduction (200 tokens)
+      const tokenResult = await executeWithTokens(
+        session.user.id,
+        'AdVisor',
+        async () => {
+          console.log('🚀 Sending ad generation request...');
+          
+          // Convert uploaded image to base64 if present
+          let personImageBase64 = '';
+          if (uploadedImage) {
+            personImageBase64 = await new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onloadend = () => {
+                const base64 = reader.result.split(',')[1];
+                resolve(base64);
+              };
+              reader.onerror = reject;
+              reader.readAsDataURL(uploadedImage);
+            });
+            console.log('📸 Person image converted to base64');
+          }
+          
+          const requestBody = {
+            variationCount: "1",
+            headline: headline,
+            subHeading: subHeading,
+            pointers: pointers,
+            cta: cta,
+            buttonText: buttonText,
+            email: "",
+            personDetails: personDetails,
+            otherRequirements: specificRequirements,
+            resolution: resolution,
+            personImage: personImageBase64
           };
-          reader.onerror = reject;
-          reader.readAsDataURL(uploadedImage);
-        });
-        console.log('📸 Person image converted to base64');
-      }
-      
-      const requestBody = {
-        variationCount: "1",
-        headline: headline,
-        subHeading: subHeading,
-        pointers: pointers,
-        cta: cta,
-        buttonText: buttonText,
-        email: "",
-        personDetails: personDetails,
-        otherRequirements: specificRequirements,
-        resolution: resolution,
-        personImage: personImageBase64
-      };
-      
-      console.log('📤 Request body prepared');
-      console.log('Request body:', requestBody);
-      
-      const response = await fetch('https://glowing-g79w8.crab.containers.automata.host/webhook/adsgraphic', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Accept': 'image/png, image/jpeg, image/*, application/octet-stream, */*'
-        },
-        body: JSON.stringify(requestBody)
-      });
+          
+          console.log('📤 Request body prepared');
+          
+          const response = await fetch('https://glowing-g79w8.crab.containers.automata.host/webhook/adsgraphic', {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json',
+              'Accept': 'image/png, image/jpeg, image/*, application/octet-stream, */*'
+            },
+            body: JSON.stringify(requestBody)
+          });
 
-      console.log(`📥 Response received: ${response.status} ${response.statusText}`);
+          console.log(`📥 Response received: ${response.status} ${response.statusText}`);
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Server error response:', errorText);
+            throw new Error(`Server error: ${response.status} ${response.statusText}`);
+          }
+
+          // Return the response for token service to handle
+          return response;
+        },
+        { headline, subHeading, cta, buttonText, resolution },
+        1 // Token multiplier (fixed cost)
+      );
+
+      // Check result
+      if (!tokenResult.success) {
+        setError(tokenResult.error);
+        setLoading(false);
+        return;
+      }
+
+      // Success - tokens deducted, now process the image response
+      console.log(`✅ AdVisor completed! Tokens deducted: ${tokenResult.tokensDeducted}`);
+      console.log(`💰 Remaining tokens: ${tokenResult.tokensRemaining}`);
       
+      const response = tokenResult.data;
       const headers = {
         contentType: response.headers.get('content-type'),
         contentLength: response.headers.get('content-length'),

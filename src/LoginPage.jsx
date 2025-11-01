@@ -26,19 +26,48 @@ function LoginPage() {
   }, []);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        navigate('/');
+    // Check for existing session
+    const checkSession = async () => {
+      try {
+        console.log('Checking for existing session...');
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) {
+          console.error('Session check error:', error);
+          return;
+        }
+        if (session) {
+          console.log('Session found:', session.user.email);
+          console.log('Redirecting to dashboard...');
+          setTimeout(() => navigate('/'), 100); // Small delay to ensure navigation
+        } else {
+          console.log('No existing session found');
+        }
+      } catch (err) {
+        console.error('Failed to check session:', err);
+      }
+    };
+    checkSession();
+
+    // Listen for auth changes (handles OAuth callback)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('Auth state change event:', event);
+      console.log('Session:', session ? session.user.email : 'null');
+      
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        console.log('User signed in successfully!');
+        console.log('Navigating to dashboard...');
+        setTimeout(() => navigate('/'), 100); // Small delay to ensure navigation
+      } else if (event === 'PASSWORD_RECOVERY') {
+        console.log('Password recovery event');
+      } else if (event === 'SIGNED_OUT') {
+        console.log('User signed out');
       }
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) {
-        navigate('/');
-      }
-    });
-
-    return () => subscription.unsubscribe();
+    return () => {
+      console.log('Cleaning up auth subscription');
+      subscription.unsubscribe();
+    };
   }, [navigate]);
 
   // WebGL Wave Particle Effect
@@ -277,13 +306,24 @@ function LoginPage() {
   const signInWithGoogle = async () => {
     setLoading(true);
     setError('');
+    
+    // IMPORTANT: Always use the current origin to handle any port changes
+    const redirectUrl = `${window.location.origin}/`;
+    
+    console.log('Current location:', window.location.origin);
+    console.log('OAuth redirect URL:', redirectUrl);
+    
     const { error } = await supabase.auth.signInWithOAuth({ 
       provider: "google",
       options: {
-        redirectTo: window.location.origin
+        redirectTo: redirectUrl
       }
     });
-    if (error) setError(error.message);
+    
+    if (error) {
+      console.error('OAuth error:', error);
+      setError(error.message);
+    }
     setLoading(false);
   };
 

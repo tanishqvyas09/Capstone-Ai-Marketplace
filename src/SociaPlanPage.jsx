@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Calendar, Clock, Sparkles, Zap, TrendingUp, Hash, Image as ImageIcon, Send, Download, Eye, Copy, Share2, CheckCircle, AlertCircle, Target, Users, BarChart3, MessageSquare, Heart, Star, ChevronDown, ChevronUp } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '../supabaseClient';
+import { executeWithTokens } from './utils/tokenService';
 
 // Utility function to convert markdown-like text to formatted HTML
 const formatText = (text) => {
@@ -18,6 +21,8 @@ const formatText = (text) => {
 };
 
 function SociaPlanPage() {
+  const navigate = useNavigate();
+  const [session, setSession] = useState(null);
   const [brand, setBrand] = useState('');
   const [industry, setIndustry] = useState('');
   const [targetAudience, setTargetAudience] = useState('');
@@ -31,6 +36,17 @@ function SociaPlanPage() {
   const [loading, setLoading] = useState(false);
   const [calendarData, setCalendarData] = useState(null);
   const [error, setError] = useState('');
+
+  // Session management
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
   const platformOptions = [
     'Instagram', 'LinkedIn', 'X (Twitter)', 'Facebook', 
@@ -51,71 +67,99 @@ function SociaPlanPage() {
       return;
     }
 
+    // Check if user is logged in
+    if (!session || !session.user) {
+      setError('Please log in to use SociaPlan');
+      navigate('/login');
+      return;
+    }
+
     setLoading(true);
     setError('');
     setCalendarData(null);
 
     try {
-      console.log('🚀 Generating social media calendar...');
+      console.log('🚀 Starting SociaPlan with token deduction...');
       
-      const requestBody = {
-        "Brand/Business Name": brand,
-        "Industry/Niche": industry,
-        "Target Audience": targetAudience,
-        "Preferred Platforms": platforms,
-        "Tone & Style": toneStyle || "Professional, engaging, and informative",
-        "Weekly Theme or Focus": weeklyTheme || "General content mix",
-        "Hashtags or Keywords": hashtags,
-        "Content Type Ratio": contentRatio || "3 educational, 2 promotional, 2 engagement posts per week",
-        "CTA Preference": ctaPreference || "Visit website",
-        "Week Start Date": weekStartDate || new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' }) // YYYY-MM-DD format in IST
-      };
-      
-      console.log('📤 Request body:', requestBody);
-      
-      // Create AbortController with 5-minute timeout
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5 * 60 * 1000); // 5 minutes
-      
-      const response = await fetch('https://glowing-g79w8.crab.containers.automata.host/webhook/contentcalendar', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
+      // Execute with token deduction (250 tokens)
+      const tokenResult = await executeWithTokens(
+        session.user.id,
+        'SociaPlan',
+        async () => {
+          console.log('🚀 Generating social media calendar...');
+          
+          const requestBody = {
+            "Brand/Business Name": brand,
+            "Industry/Niche": industry,
+            "Target Audience": targetAudience,
+            "Preferred Platforms": platforms,
+            "Tone & Style": toneStyle || "Professional, engaging, and informative",
+            "Weekly Theme or Focus": weeklyTheme || "General content mix",
+            "Hashtags or Keywords": hashtags,
+            "Content Type Ratio": contentRatio || "3 educational, 2 promotional, 2 engagement posts per week",
+            "CTA Preference": ctaPreference || "Visit website",
+            "Week Start Date": weekStartDate || new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' })
+          };
+          
+          console.log('📤 Request body:', requestBody);
+          
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 5 * 60 * 1000);
+          
+          const response = await fetch('https://glowing-g79w8.crab.containers.automata.host/webhook/contentcalendar', {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            mode: 'cors',
+            body: JSON.stringify(requestBody),
+            signal: controller.signal
+          });
+          
+          clearTimeout(timeoutId);
+
+          console.log(`📥 Response received: ${response.status} ${response.statusText}`);
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Server error response:', errorText);
+            
+            if (response.status === 504) {
+              throw new Error('⏱️ Server timeout - The workflow is taking too long. Please check if your n8n workflow is active and try again.');
+            } else if (response.status === 502 || response.status === 503) {
+              throw new Error('🔧 Server unavailable - The n8n workflow might be offline. Please check your n8n instance.');
+            } else {
+              throw new Error(`Server error: ${response.status} ${response.statusText}${errorText ? ' - ' + errorText : ''}`);
+            }
+          }
+
+          const jsonResponse = await response.json();
+          console.log('📋 Calendar data received:', jsonResponse);
+          
+          const calendarOutput = jsonResponse[0]?.output || jsonResponse.output || jsonResponse;
+          return calendarOutput;
         },
-        mode: 'cors',
-        body: JSON.stringify(requestBody),
-        signal: controller.signal
-      });
-      
-      clearTimeout(timeoutId); // Clear timeout if request completes
+        { brand, industry, targetAudience, platforms },
+        1 // Token multiplier (fixed cost)
+      );
 
-      console.log(`📥 Response received: ${response.status} ${response.statusText}`);
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Server error response:', errorText);
-        
-        if (response.status === 504) {
-          throw new Error('⏱️ Server timeout - The workflow is taking too long. Please check if your n8n workflow is active and try again.');
-        } else if (response.status === 502 || response.status === 503) {
-          throw new Error('🔧 Server unavailable - The n8n workflow might be offline. Please check your n8n instance.');
-        } else {
-          throw new Error(`Server error: ${response.status} ${response.statusText}${errorText ? ' - ' + errorText : ''}`);
-        }
+      // Check result
+      if (!tokenResult.success) {
+        setError(tokenResult.error);
+        setLoading(false);
+        return;
       }
 
-      const jsonResponse = await response.json();
-      console.log('📋 Calendar data received:', jsonResponse);
+      // Success - tokens deducted
+      console.log(`✅ SociaPlan completed! Tokens deducted: ${tokenResult.tokensDeducted}`);
+      console.log(`💰 Remaining tokens: ${tokenResult.tokensRemaining}`);
       
-      // Handle both new and old response formats
-      const calendarOutput = jsonResponse[0]?.output || jsonResponse.output || jsonResponse;
-      setCalendarData(calendarOutput);
+      setCalendarData(tokenResult.data);
       console.log('✨ Calendar loaded successfully!');
     } catch (err) {
-      console.error('Error details:', err);
+      console.error('❌ SociaPlan error:', err);
       
-      // Better error messages for common issues
       if (err.name === 'AbortError') {
         setError('⏱️ Request timeout after 5 minutes - The workflow is taking longer than expected.\n\n' +
                 'This could mean:\n' +

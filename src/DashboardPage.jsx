@@ -30,7 +30,7 @@ function DashboardPage() {
     //{ id: 7, name: 'KeyMuse', icon: Key, desc: 'Generates high-performing marketing keywords', videoUrl: '', status: 'idle' },
     //{ id: 8, name: 'SalesCalla', icon: Phone, desc: 'AI-driven sales calling and lead management', videoUrl: '', status: 'idle' },
     { id: 9, name: 'EchoMind', icon: Headphones, desc: 'Analyzes customer recordings for sentiment patterns', videoUrl: 'https://res.cloudinary.com/dry1chfzv/video/upload/v1760383553/AI_Video_Intro_EchoMind_s_Emotional_Insight_xxcqga.mp4', status: 'active' },
-   // { id: 10, name: 'TrendIQ', icon: TrendingUp, desc: 'Predicts market trends using data-driven insights', videoUrl: '', status: 'idle' },
+    { id: 10, name: 'TrendIQ', icon: TrendingUp, desc: 'Scans news, social media, and on-chain data - 150 tokens (location) or 250 tokens (keyword)', videoUrl: '' /* Video coming soon: '' */, status: 'active' },
     //{ id: 11, name: 'Scriptly', icon: FileText, desc: 'Writes compelling video scripts instantly', videoUrl: '', status: 'idle' },
     //{ id: 12, name: 'LostLens', icon: Users, desc: 'Diagnoses customer loss reasons & retention patterns', videoUrl: '', status: 'idle' }
   ];
@@ -43,19 +43,34 @@ function DashboardPage() {
     };
     fetchAgents();
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
+    const checkSession = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) {
+          console.error('Session error:', error);
+          navigate('/login');
+          return;
+        }
+        if (!session) {
+          navigate('/login');
+        } else {
+          setSession(session);
+        }
+      } catch (err) {
+        console.error('Failed to get session:', err);
         navigate('/login');
-      } else {
-        setSession(session);
       }
-    });
+    };
+    checkSession();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session) {
-        navigate('/login');
-      } else {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('Auth state changed:', event);
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
         setSession(session);
+      } else if (event === 'SIGNED_OUT') {
+        navigate('/login');
+      } else if (!session) {
+        navigate('/login');
       }
     });
 
@@ -144,7 +159,32 @@ function DashboardPage() {
       backdropFilter: 'blur(12px)',
       background: 'rgba(255, 255, 255, 0.1)',
       borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
-      padding: '1rem 2rem'
+      padding: '1rem 2rem',
+      boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+    },
+    menuButton: {
+      width: '44px',
+      height: '44px',
+      borderRadius: '12px',
+      background: 'rgba(147, 51, 234, 0.15)',
+      border: 'none',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '5px',
+      cursor: 'pointer',
+      transition: 'all 0.3s',
+      padding: '10px',
+      boxShadow: 'none',
+      zIndex: 10
+    },
+    menuLine: {
+      width: '24px',
+      height: '2.5px',
+      background: '#ffffff',
+      borderRadius: '10px',
+      transition: 'all 0.3s'
     },
     navContent: {
       display: 'flex',
@@ -198,7 +238,53 @@ function DashboardPage() {
       borderRadius: '20px',
       fontSize: '0.875rem',
       fontWeight: '600',
-      boxShadow: '0 4px 12px rgba(147,51,234,0.3)'
+      boxShadow: '0 4px 12px rgba(147,51,234,0.3)',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.5rem',
+      position: 'relative',
+      overflow: 'hidden'
+    },
+    coinIcon: {
+      width: '20px',
+      height: '20px',
+      borderRadius: '50%',
+      background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontWeight: 'bold',
+      fontSize: '0.75rem',
+      color: '#78350f',
+      boxShadow: '0 0 10px rgba(251, 191, 36, 0.5)',
+      animation: 'coinSpin 3s linear infinite'
+    },
+    userAvatar: {
+      width: '40px',
+      height: '40px',
+      borderRadius: '50%',
+      border: '2px solid rgba(147, 51, 234, 0.5)',
+      objectFit: 'cover',
+      boxShadow: '0 0 15px rgba(147, 51, 234, 0.4)',
+      cursor: 'pointer',
+      transition: 'all 0.3s',
+      background: '#1a1a2e'
+    },
+    userInitial: {
+      width: '40px',
+      height: '40px',
+      borderRadius: '50%',
+      background: 'linear-gradient(135deg, #9333ea 0%, #ec4899 100%)',
+      border: '2px solid rgba(147, 51, 234, 0.5)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'pointer',
+      transition: 'all 0.3s',
+      fontWeight: 'bold',
+      fontSize: '1.1rem',
+      color: '#fff',
+      boxShadow: '0 0 15px rgba(147, 51, 234, 0.4)'
     },
     iconButton: {
       width: '40px',
@@ -211,7 +297,8 @@ function DashboardPage() {
       justifyContent: 'center',
       cursor: 'pointer',
       transition: 'all 0.3s',
-      color: '#fff'
+      color: '#fff',
+      position: 'relative'
     },
     mainContent: {
       display: 'flex',
@@ -432,6 +519,26 @@ function DashboardPage() {
         @keyframes spin {
           to { transform: rotate(360deg); }
         }
+        @keyframes coinSpin {
+          0% { transform: rotateY(0deg); }
+          50% { transform: rotateY(180deg); }
+          100% { transform: rotateY(360deg); }
+        }
+        @keyframes coinFloat {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-3px); }
+        }
+        .menu-button:hover {
+          background: rgba(147, 51, 234, 0.25);
+          transform: scale(1.05);
+        }
+        .menu-button:active {
+          transform: scale(0.95);
+        }
+        .user-avatar:hover, .user-initial:hover {
+          transform: scale(1.1);
+          box-shadow: 0 0 20px rgba(147, 51, 234, 0.6);
+        }
         .agent-card:hover {
           transform: translateY(-4px);
           box-shadow: 0 12px 30px rgba(147,51,234,0.3);
@@ -465,11 +572,13 @@ function DashboardPage() {
         <div style={styles.navContent}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
             <button 
-              style={{...styles.iconButton, marginRight: '1rem'}}
+              style={styles.menuButton}
               onClick={() => setShowSidebar(!showSidebar)}
-              className="icon-button"
+              className="menu-button"
             >
-              <Menu size={20} />
+              <div style={styles.menuLine}></div>
+              <div style={styles.menuLine}></div>
+              <div style={styles.menuLine}></div>
             </button>
             <div style={styles.logo}>
               <div style={styles.logoIcon}>M</div>
@@ -486,23 +595,33 @@ function DashboardPage() {
 
           <div style={styles.userSection}>
             <div style={styles.tokenBadge}>
+              <div style={styles.coinIcon}>₹</div>
               {profile.tokens_remaining || 0} Tokens
             </div>
-            <button 
-              style={styles.iconButton}
-              onClick={() => setShowNotifications(!showNotifications)}
-              className="icon-button"
-            >
-              <Bell size={20} />
-            </button>
             <div style={{ position: 'relative' }}>
-              <button 
-                style={styles.iconButton}
+              {(session.user.user_metadata?.avatar_url || session.user.user_metadata?.picture) ? (
+                <img 
+                  src={session.user.user_metadata?.avatar_url || session.user.user_metadata?.picture}
+                  alt="User Avatar"
+                  style={styles.userAvatar}
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  className="user-avatar"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.nextSibling.style.display = 'flex';
+                  }}
+                />
+              ) : null}
+              <div
+                style={{
+                  ...styles.userInitial,
+                  display: (session.user.user_metadata?.avatar_url || session.user.user_metadata?.picture) ? 'none' : 'flex'
+                }}
                 onClick={() => setShowUserMenu(!showUserMenu)}
-                className="icon-button"
+                className="user-initial"
               >
-                <Settings size={20} />
-              </button>
+                {displayName.charAt(0).toUpperCase()}
+              </div>
               {showUserMenu && (
                 <div style={{
                   position: 'absolute',
@@ -636,7 +755,13 @@ function DashboardPage() {
                   <p style={styles.agentDesc}>{agent.desc}</p>
                   <button 
                     style={styles.useButton}
-                    onClick={() => handleUseAgent(agent)}
+                    onClick={() => {
+                      if (agent.name === 'TrendIQ') {
+                        navigate('/trendiq');
+                      } else {
+                        handleUseAgent(agent);
+                      }
+                    }}
                     className="use-button"
                   >
                     <Play size={16} />
@@ -729,6 +854,8 @@ function DashboardPage() {
                   navigate('/leadgen');
                 } else if (selectedAgent.name === 'AdVisor') {
                   navigate('/advisor');
+                } else if (selectedAgent.name === 'TrendIQ') {
+                  navigate('/trendiq');
                 } else {
                   // For other agents, you can add their specific routes here
                   alert(`${selectedAgent.name} agent page coming soon!`);

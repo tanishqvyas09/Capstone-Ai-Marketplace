@@ -1,7 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Search, Users, Target, Mail, Building2, CheckCircle, AlertCircle, Loader2, Zap, UserPlus, TrendingUp, ChevronDown, ChevronUp, Globe, Phone, Briefcase, MapPin, Star, Award, ExternalLink, Shield } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '../supabaseClient';
+import { executeWithTokens } from './utils/tokenService';
 
 function LeadGenPage() {
+  const navigate = useNavigate();
+  const [session, setSession] = useState(null);
   const [industry, setIndustry] = useState('');
   const [location, setLocation] = useState('');
   const [loading, setLoading] = useState(false);
@@ -9,9 +14,27 @@ function LeadGenPage() {
   const [error, setError] = useState('');
   const [expanded, setExpanded] = useState({});
 
+  // Session management
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
   const handleSubmit = async () => {
     if (!industry || !location) {
       setError('Please enter both industry and location');
+      return;
+    }
+
+    // Check if user is logged in
+    if (!session || !session.user) {
+      setError('Please log in to use LeadGen');
+      navigate('/login');
       return;
     }
 
@@ -20,44 +43,68 @@ function LeadGenPage() {
     setResult(null);
 
     try {
-      console.log('Sending request with:', { industry, location });
+      console.log('🚀 Starting LeadGen with token deduction...');
       
-      const response = await fetch('https://glowing-g79w8.crab.containers.automata.host/webhook/leads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify([{ industry: industry, location: location }])
-      });
+      // Execute with token deduction (150 tokens)
+      const tokenResult = await executeWithTokens(
+        session.user.id,
+        'LeadGen',
+        async () => {
+          // Make API call
+          console.log('Sending request with:', { industry, location });
+          
+          const response = await fetch('https://glowing-g79w8.crab.containers.automata.host/webhook/leads', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify([{ industry: industry, location: location }])
+          });
 
-      console.log('Response status:', response.status);
-      console.log('Response headers:', response.headers);
+          console.log('Response status:', response.status);
 
-      if (!response.ok) {
-        throw new Error(`Server error: ${response.status} ${response.statusText}`);
+          if (!response.ok) {
+            throw new Error(`Server error: ${response.status} ${response.statusText}`);
+          }
+
+          // Check if response has content
+          const contentType = response.headers.get('content-type');
+          console.log('Content-Type:', contentType);
+
+          if (!contentType || !contentType.includes('application/json')) {
+            const text = await response.text();
+            console.log('Non-JSON response:', text);
+            throw new Error('Server returned non-JSON response. This is likely an n8n configuration issue.');
+          }
+
+          const text = await response.text();
+          console.log('Raw response:', text);
+
+          if (!text || text.trim() === '') {
+            throw new Error('Server returned empty response. The n8n workflow may not be returning data properly.');
+          }
+
+          const data = JSON.parse(text);
+          console.log('Parsed data:', data);
+          
+          return data[0]?.output || data;
+        },
+        { industry, location },
+        1 // Token multiplier (fixed cost)
+      );
+
+      // Check result
+      if (!tokenResult.success) {
+        setError(tokenResult.error);
+        setLoading(false);
+        return;
       }
 
-      // Check if response has content
-      const contentType = response.headers.get('content-type');
-      console.log('Content-Type:', contentType);
-
-      if (!contentType || !contentType.includes('application/json')) {
-        const text = await response.text();
-        console.log('Non-JSON response:', text);
-        throw new Error('Server returned non-JSON response. This is likely an n8n configuration issue.');
-      }
-
-      const text = await response.text();
-      console.log('Raw response:', text);
-
-      if (!text || text.trim() === '') {
-        throw new Error('Server returned empty response. The n8n workflow may not be returning data properly.');
-      }
-
-      const data = JSON.parse(text);
-      console.log('Parsed data:', data);
+      // Success - tokens deducted
+      console.log(`✅ LeadGen completed! Tokens deducted: ${tokenResult.tokensDeducted}`);
+      console.log(`💰 Remaining tokens: ${tokenResult.tokensRemaining}`);
       
-      setResult(data[0]?.output || data);
+      setResult(tokenResult.data);
     } catch (err) {
-      console.error('Error details:', err);
+      console.error('❌ LeadGen error:', err);
       setError(err.message || 'Lead generation failed');
     } finally {
       setLoading(false);

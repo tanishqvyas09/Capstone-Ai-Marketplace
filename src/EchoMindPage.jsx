@@ -1,13 +1,29 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, Upload, Headphones, Zap, FileAudio, Activity, Brain, Loader2, CheckCircle, AlertCircle, BarChart3, TrendingUp, Heart, MessageSquare, Target, Star } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '../supabaseClient';
+import { executeWithTokens } from './utils/tokenService';
 
 function EchoMindPage() {
+  const navigate = useNavigate();
+  const [session, setSession] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(null);
   const [error, setError] = useState('');
   const [dragOver, setDragOver] = useState(false);
   const fileInputRef = useRef(null);
+
+  // Session management
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
   const handleFileSelect = (event) => {
     const file = event.target.files[0];
@@ -55,27 +71,59 @@ function EchoMindPage() {
       return;
     }
 
+    // Check if user is logged in
+    if (!session || !session.user) {
+      setError('Please log in to use EchoMind');
+      navigate('/login');
+      return;
+    }
+
     setLoading(true);
     setError('');
     setAnalysisResult(null);
 
     try {
-      const formData = new FormData();
-      formData.append("file", selectedFile);
+      console.log('🚀 Starting EchoMind with token deduction...');
+      
+      // Execute with token deduction (150 tokens)
+      const tokenResult = await executeWithTokens(
+        session.user.id,
+        'EchoMind',
+        async () => {
+          const formData = new FormData();
+          formData.append("file", selectedFile);
 
-      const response = await fetch('https://glowing-g79w8.crab.containers.automata.host/webhook/audioanlayze', {
-        method: 'POST',
-        body: formData
-      });
+          const response = await fetch('https://glowing-g79w8.crab.containers.automata.host/webhook/audioanlayze', {
+            method: 'POST',
+            body: formData
+          });
 
-      if (!response.ok) {
-        throw new Error(`Analysis failed: ${response.status}`);
+          if (!response.ok) {
+            throw new Error(`Analysis failed: ${response.status}`);
+          }
+
+          const result = await response.json();
+          const analysisData = result[0]?.output || result;
+          return analysisData;
+        },
+        { fileName: selectedFile.name, fileSize: selectedFile.size },
+        1 // Token multiplier (fixed cost)
+      );
+
+      // Check result
+      if (!tokenResult.success) {
+        setError(tokenResult.error);
+        setLoading(false);
+        return;
       }
 
-      const result = await response.json();
-      const analysisData = result[0]?.output || result;
-      setAnalysisResult(analysisData);
+      // Success - tokens deducted
+      console.log(`✅ EchoMind completed! Tokens deducted: ${tokenResult.tokensDeducted}`);
+      console.log(`💰 Remaining tokens: ${tokenResult.tokensRemaining}`);
+      
+      setAnalysisResult(tokenResult.data);
     } catch (err) {
+      console.error('❌ EchoMind error:', err);
       setError(err.message || 'An error occurred during analysis');
     } finally {
       setLoading(false);

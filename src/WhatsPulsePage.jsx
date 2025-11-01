@@ -1,9 +1,12 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, MessageCircle, Upload, Send, CheckCircle, Clock, Users, FileText, Calendar, TrendingUp, Sparkles, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '../supabaseClient';
+import { executeWithTokens } from './utils/tokenService';
 
 function WhatsPulsePage() {
   const navigate = useNavigate();
+  const [session, setSession] = useState(null);
   const [formData, setFormData] = useState({
     offerTitle: '',
     messageContent: '',
@@ -15,6 +18,21 @@ function WhatsPulsePage() {
   const [completed, setCompleted] = useState(false);
   const [error, setError] = useState('');
   const fileInputRef = useRef(null);
+
+  // Session management
+  useEffect(() => {
+    // Get current session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -40,8 +58,16 @@ function WhatsPulsePage() {
 
 
   const handleSubmit = async () => {
+    // Validation
     if (!formData.offerTitle || !formData.messageContent || !formData.csvFile) {
       setError('Please fill all fields and upload a CSV file');
+      return;
+    }
+
+    // Check if user is logged in
+    if (!session || !session.user) {
+      setError('Please log in to use WhatsPulse');
+      navigate('/login');
       return;
     }
 
@@ -50,34 +76,74 @@ function WhatsPulsePage() {
     setCurrentMessage(0);
 
     try {
-      // Read CSV as plain text instead of base64
+      // Read CSV as plain text
       const csvText = await new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (e) => resolve(e.target.result);
         reader.onerror = reject;
         reader.readAsText(formData.csvFile);
       });
-      
-      const payload = {
-        offer_title: formData.offerTitle,
-        message_content: formData.messageContent,
-        customer_csv: csvText  // Send as plain text
-      };
 
-      const response = await fetch('https://glowing-g79w8.crab.containers.automata.host/webhook/whatsappauto', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
+      // Calculate token cost: 50 tokens per contact
+      const contactCount = totalMessages;
+      const totalCost = contactCount * 50;
 
-      if (!response.ok) {
-        throw new Error(`Failed to start broadcast: ${response.status}`);
+      console.log(`📊 WhatsPulse Cost Calculation:`);
+      console.log(`   Contacts: ${contactCount}`);
+      console.log(`   Rate: 50 tokens per contact`);
+      console.log(`   Total Cost: ${totalCost} tokens`);
+
+      // Execute with token deduction
+      const result = await executeWithTokens(
+        session.user.id,
+        'WhatsPulse',
+        async () => {
+          // Make API call
+          const payload = {
+            offer_title: formData.offerTitle,
+            message_content: formData.messageContent,
+            customer_csv: csvText
+          };
+
+          const response = await fetch(
+            'https://glowing-g79w8.crab.containers.automata.host/webhook/whatsappauto',
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error(`API request failed: ${response.status}`);
+          }
+
+          const data = await response.json();
+          return data;
+        },
+        { 
+          contactCount: contactCount,
+          campaignName: formData.offerTitle 
+        },
+        contactCount // Token multiplier (50 tokens × contactCount)
+      );
+
+      // Check result
+      if (!result.success) {
+        setError(result.error);
+        setLoading(false);
+        return;
       }
 
+      // Success - start animation
+      console.log(`✅ Broadcast started! Tokens deducted: ${result.tokensDeducted}`);
+      console.log(`💰 Remaining tokens: ${result.tokensRemaining}`);
+      
       simulateMessageSending();
 
     } catch (err) {
-      setError(err.message);
+      console.error('❌ Broadcast error:', err);
+      setError(err.message || 'Failed to start broadcast campaign');
       setLoading(false);
     }
   };

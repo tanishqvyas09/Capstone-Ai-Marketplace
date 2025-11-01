@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TrendIQ API Test</title>
+</head>
+<body>
+    <h1>TrendIQ API Test</h1>
+    <button onclick="testKeyword()">Test Keyword Mode</button>
+    <button onclick="testLocation()">Test Location Mode</button>
+    <pre id="output"></pre>
+
+    <script>
+        const output = document.getElementById('output');
+
+        async function testKeyword() {
+            output.textContent = 'Testing keyword mode...\n';
+            
+            const requestBody = {
+                trend: false,
+                keyword: "cyber security",
+                city: "none",
+                Type: "Top"
+            };
+
+            output.textContent += 'Request: ' + JSON.stringify(requestBody, null, 2) + '\n\n';
+
+            try {
+                const response = await fetch('https://glowing-g79w8.crab.containers.automata.host/webhook/trendiq', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                output.textContent += 'Status: ' + response.status + '\n';
+                output.textContent += 'Headers: ' + JSON.stringify(Object.fromEntries(response.headers.entries()), null, 2) + '\n\n';
+
+                const text = await response.text();
+                output.textContent += 'Response length: ' + text.length + '\n';
+                output.textContent += 'Response: ' + text.substring(0, 500) + '\n';
+
+                if (text) {
+                    const json = JSON.parse(text);
+                    output.textContent += '\nParsed JSON keys: ' + Object.keys(json).join(', ') + '\n';
+                }
+            } catch (error) {
+                output.textContent += 'ERROR: ' + error.message + '\n';
+            }
+        }
+
+        async function testLocation() {
+            output.textContent = 'Testing location mode...\n';
+            
+            const requestBody = {
+                trend: true,
+                city: "Tokyo",
+                keyword: "none",
+                Type: "none"
+            };
+
+            output.textContent += 'Request: ' + JSON.stringify(requestBody, null, 2) + '\n\n';
+
+            try {
+                const response = await fetch('https://glowing-g79w8.crab.containers.automata.host/webhook/trendiq', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                output.textContent += 'Status: ' + response.status + '\n';
+                output.textContent += 'Headers: ' + JSON.stringify(Object.fromEntries(response.headers.entries()), null, 2) + '\n\n';
+
+                const text = await response.text();
+                output.textContent += 'Response length: ' + text.length + '\n';
+                output.textContent += 'Response: ' + text.substring(0, 500) + '\n';
+
+                if (text) {
+                    const json = JSON.parse(text);
+                    output.textContent += '\nParsed JSON keys: ' + Object.keys(json).join(', ') + '\n';
+                }
+            } catch (error) {
+                output.textContent += 'ERROR: ' + error.message + '\n';
+            }
+        }
+    </script>
+</body>
+</html>

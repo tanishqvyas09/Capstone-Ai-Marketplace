@@ -7,6 +7,7 @@ import AdVisorPage from './AdVisorPage.jsx'
 import WhatsPulsePage from './WhatsPulsePage.jsx'
 import EchoMindPage from './EchoMindPage.jsx'
 import SociaPlanPage from './SociaPlanPage.jsx'
+import TrendIQPage from './TrendIQPage.jsx'
 
 import './App.css'
 
@@ -21,6 +22,7 @@ function App() {
       <Route path="/whatspulse" element={<WhatsPulsePage />} />
       <Route path="/echomind" element={<EchoMindPage />} />
       <Route path="/sociaplan" element={<SociaPlanPage />} />
+      <Route path="/trendiq" element={<TrendIQPage />} />
 
     </Routes>
   )
