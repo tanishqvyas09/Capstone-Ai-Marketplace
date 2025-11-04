@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Search, Users, Target, Mail, Building2, CheckCircle, AlertCircle, Loader2, Zap, UserPlus, TrendingUp, ChevronDown, ChevronUp, Globe, Phone, Briefcase, MapPin, Star, Award, ExternalLink, Shield } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import { executeWithTokens } from './utils/tokenService';
+import { handleCampaignTaskCompletion } from './services/campaignService';
 
 function LeadGenPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  // campaignId might be string or number - keep as-is from state
+  const campaignId = location.state?.campaignId;
   const [session, setSession] = useState(null);
   const [industry, setIndustry] = useState('');
-  const [location, setLocation] = useState('');
+  const [locationInput, setLocationInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
@@ -26,7 +30,7 @@ function LeadGenPage() {
   }, []);
 
   const handleSubmit = async () => {
-    if (!industry || !location) {
+    if (!industry || !locationInput) {
       setError('Please enter both industry and location');
       return;
     }
@@ -37,6 +41,9 @@ function LeadGenPage() {
       navigate('/login');
       return;
     }
+
+    console.log('🔍 Starting LeadGen for:', industry, locationInput);
+    console.log('📋 Campaign ID:', campaignId || 'Not part of campaign');
 
     setLoading(true);
     setError('');
@@ -51,12 +58,12 @@ function LeadGenPage() {
         'LeadGen',
         async () => {
           // Make API call
-          console.log('Sending request with:', { industry, location });
+          console.log('Sending request with:', { industry, location: locationInput });
           
           const response = await fetch('https://glowing-g79w8.crab.containers.automata.host/webhook/leads', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify([{ industry: industry, location: location }])
+            body: JSON.stringify([{ industry: industry, location: locationInput }])
           });
 
           console.log('Response status:', response.status);
@@ -87,8 +94,10 @@ function LeadGenPage() {
           
           return data[0]?.output || data;
         },
-        { industry, location },
-        1 // Token multiplier (fixed cost)
+        { industry, location: locationInput }, // Request data
+        1, // Token multiplier (fixed cost)
+        `Lead Generation: ${industry} in ${locationInput}`, // Output summary
+        campaignId // Campaign ID
       );
 
       // Check result
@@ -103,6 +112,55 @@ function LeadGenPage() {
       console.log(`💰 Remaining tokens: ${tokenResult.tokensRemaining}`);
       
       setResult(tokenResult.data);
+
+      // Handle campaign task completion if this is part of a campaign
+      if (campaignId) {
+        console.log('📁 This is part of campaign:', campaignId);
+        console.log('📁 Log ID from tokenResult:', tokenResult.logId);
+        
+        if (!tokenResult.logId) {
+          console.error('❌ No logId returned from tokenService!');
+        } else {
+          console.log('✅ LogId available, proceeding with campaign artifact save...');
+          
+          // Get agent ID from database
+          const { data: agentData, error: agentError } = await supabase
+            .from('agents')
+            .select('id')
+            .eq('name', 'LeadGen')
+            .single();
+          
+          if (agentError) {
+            console.error('❌ Error fetching agent ID:', agentError);
+          } else if (!agentData) {
+            console.error('❌ LeadGen agent not found in database');
+          } else {
+            const agentId = agentData.id;
+            console.log('✅ Agent ID:', agentId);
+            
+            const outputSummary = `Lead Generation: ${industry} in ${locationInput}`;
+            
+            const campaignResult = await handleCampaignTaskCompletion(
+              campaignId,
+              agentId,
+              'LeadGen',
+              tokenResult.logId,
+              tokenResult.data,
+              outputSummary
+            );
+            
+            if (campaignResult.success) {
+              console.log('✅ Campaign artifact saved successfully!');
+              alert('✅ Results saved to campaign! You can run this agent again to create additional artifacts.');
+            } else {
+              console.error('❌ Failed to save campaign artifact:', campaignResult.error);
+              alert('⚠️ Lead generation completed but failed to save to campaign: ' + campaignResult.error);
+            }
+          }
+        }
+      } else {
+        console.log('📝 Running as standalone agent (not part of campaign)');
+      }
     } catch (err) {
       console.error('❌ LeadGen error:', err);
       setError(err.message || 'Lead generation failed');
@@ -192,8 +250,8 @@ function LeadGenPage() {
               />
               <input
                 type="text"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
+                value={locationInput}
+                onChange={(e) => setLocationInput(e.target.value)}
                 placeholder="Location (e.g., Indore, Mumbai)"
                 style={s.input}
                 onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
@@ -227,9 +285,9 @@ function LeadGenPage() {
             <div style={s.resultHeader}>
               <div>
                 <h1 style={s.reportTitle}>Lead Generation Report</h1>
-                <p style={s.reportSub}>📍 {industry} in {location}</p>
+                <p style={s.reportSub}>📍 {industry} in {locationInput}</p>
               </div>
-              <button onClick={() => { setResult(null); setIndustry(''); setLocation(''); }} style={s.newBtn}>
+              <button onClick={() => { setResult(null); setIndustry(''); setLocationInput(''); }} style={s.newBtn}>
                 <Search size={16} /> New Search
               </button>
             </div>

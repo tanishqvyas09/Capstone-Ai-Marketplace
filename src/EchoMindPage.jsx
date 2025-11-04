@@ -1,11 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, Upload, Headphones, Zap, FileAudio, Activity, Brain, Loader2, CheckCircle, AlertCircle, BarChart3, TrendingUp, Heart, MessageSquare, Target, Star } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import { executeWithTokens } from './utils/tokenService';
+import { handleCampaignTaskCompletion } from './services/campaignService';
 
 function EchoMindPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  // campaignId can be string or number - keep as-is from state
+  const campaignId = location.state?.campaignId;
   const [session, setSession] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -78,6 +82,9 @@ function EchoMindPage() {
       return;
     }
 
+    console.log('🔍 Starting EchoMind for:', selectedFile.name);
+    console.log('📋 Campaign ID:', campaignId || 'Not part of campaign');
+
     setLoading(true);
     setError('');
     setAnalysisResult(null);
@@ -106,8 +113,10 @@ function EchoMindPage() {
           const analysisData = result[0]?.output || result;
           return analysisData;
         },
-        { fileName: selectedFile.name, fileSize: selectedFile.size },
-        1 // Token multiplier (fixed cost)
+        { fileName: selectedFile.name, fileSize: selectedFile.size }, // Request data
+        1, // Token multiplier (fixed cost)
+        `Audio Analysis: ${selectedFile.name}`, // Output summary
+        campaignId // Campaign ID
       );
 
       // Check result
@@ -122,6 +131,55 @@ function EchoMindPage() {
       console.log(`💰 Remaining tokens: ${tokenResult.tokensRemaining}`);
       
       setAnalysisResult(tokenResult.data);
+
+      // Handle campaign task completion if this is part of a campaign
+      if (campaignId) {
+        console.log('📁 This is part of campaign:', campaignId);
+        console.log('📁 Log ID from tokenResult:', tokenResult.logId);
+        
+        if (!tokenResult.logId) {
+          console.error('❌ No logId returned from tokenService!');
+        } else {
+          console.log('✅ LogId available, proceeding with campaign artifact save...');
+          
+          // Get agent ID from database
+          const { data: agentData, error: agentError } = await supabase
+            .from('agents')
+            .select('id')
+            .eq('name', 'EchoMind')
+            .single();
+          
+          if (agentError) {
+            console.error('❌ Error fetching agent ID:', agentError);
+          } else if (!agentData) {
+            console.error('❌ EchoMind agent not found in database');
+          } else {
+            const agentId = agentData.id;
+            console.log('✅ Agent ID:', agentId);
+            
+            const outputSummary = `Audio Analysis: ${selectedFile.name}`;
+            
+            const campaignResult = await handleCampaignTaskCompletion(
+              campaignId,
+              agentId,
+              'EchoMind',
+              tokenResult.logId,
+              tokenResult.data,
+              outputSummary
+            );
+            
+            if (campaignResult.success) {
+              console.log('✅ Campaign artifact saved successfully!');
+              alert('✅ Results saved to campaign! You can run this agent again to create additional artifacts.');
+            } else {
+              console.error('❌ Failed to save campaign artifact:', campaignResult.error);
+              alert('⚠️ Audio analysis completed but failed to save to campaign: ' + campaignResult.error);
+            }
+          }
+        }
+      } else {
+        console.log('📝 Running as standalone agent (not part of campaign)');
+      }
     } catch (err) {
       console.error('❌ EchoMind error:', err);
       setError(err.message || 'An error occurred during analysis');

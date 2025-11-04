@@ -1,11 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, Search, TrendingUp, Target, BarChart3, CheckCircle, AlertCircle, Loader2, Zap, Brain, FileText, ChevronDown, ChevronUp, Globe, Code, Activity, Clock, Award, Users, Link, ExternalLink, Sparkles, Download } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import { executeWithTokens } from './utils/tokenService';
+import { handleCampaignTaskCompletion } from './services/campaignService';
 
 function SEOrixPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  // campaignId can be string or number - keep as-is from state
+  const campaignId = location.state?.campaignId;
   const [session, setSession] = useState(null);
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
@@ -38,6 +42,9 @@ function SEOrixPage() {
       navigate('/login');
       return;
     }
+
+    console.log('🔍 Starting SEO analysis for:', url);
+    console.log('📋 Campaign ID:', campaignId || 'Not part of campaign');
 
     setLoading(true);
     setError('');
@@ -188,8 +195,10 @@ function SEOrixPage() {
             checkStatus();
           });
         },
-        { url },
-        1 // Token multiplier (fixed cost)
+        { url }, // Request data
+        1, // Token multiplier (fixed cost)
+        `SEO Report for ${url}`, // Output summary
+        campaignId // Campaign ID (if part of campaign)
       );
 
       // Check result
@@ -202,9 +211,94 @@ function SEOrixPage() {
       // Success - tokens deducted
       console.log(`✅ SEOrix completed! Tokens deducted: ${tokenResult.tokensDeducted}`);
       console.log(`💰 Remaining tokens: ${tokenResult.tokensRemaining}`);
+      console.log(`📊 Raw API data:`, tokenResult.data);
       
-      setResult(tokenResult.data);
+      // Parse the data - handle different response structures
+      let parsedData = tokenResult.data;
+      
+      // If data is wrapped in array
+      if (Array.isArray(parsedData) && parsedData.length > 0) {
+        parsedData = parsedData[0];
+      }
+      
+      // If data is wrapped in output or seo_report
+      if (parsedData?.output?.seo_report) {
+        parsedData = parsedData.output.seo_report;
+      } else if (parsedData?.seo_report) {
+        parsedData = parsedData.seo_report;
+      } else if (parsedData?.output) {
+        parsedData = parsedData.output;
+      }
+      
+      console.log(`📊 Parsed data for display:`, parsedData);
+      
+      if (!parsedData || typeof parsedData !== 'object') {
+        setError('Invalid response format from API');
+        setLoading(false);
+        return;
+      }
+      
+      setResult(parsedData);
       setExpanded({ critical: true, high: true });
+
+      // Handle campaign task completion if this is part of a campaign
+      if (campaignId) {
+        console.log('📁 This is part of campaign:', campaignId);
+        console.log('📁 Log ID from tokenResult:', tokenResult.logId);
+        
+        if (!tokenResult.logId) {
+          console.error('❌ No logId returned from tokenService!');
+        } else {
+          console.log('✅ LogId available, proceeding with campaign artifact save...');
+          
+          // Get agent ID from database
+          const { data: agentData, error: agentError } = await supabase
+            .from('agents')
+            .select('id')
+            .eq('name', 'SEOrix')
+            .single();
+          
+          if (agentError) {
+            console.error('❌ Error fetching agent ID:', agentError);
+          } else if (!agentData) {
+            console.error('❌ SEOrix agent not found in database');
+          } else {
+            const agentId = agentData.id;
+            console.log('✅ Agent ID:', agentId);
+            
+            const outputSummary = `SEO Report for ${url}`;
+            
+            console.log('📁 Calling handleCampaignTaskCompletion with:', {
+              campaignId,
+              agentId,
+              agentName: 'SEOrix',
+              logId: tokenResult.logId,
+              outputSummary
+            });
+            
+            const campaignResult = await handleCampaignTaskCompletion(
+              campaignId,
+              agentId,
+              'SEOrix',
+              tokenResult.logId,
+              parsedData,
+              outputSummary
+            );
+            
+            if (campaignResult.success) {
+              console.log('✅ Campaign artifact saved successfully!');
+              console.log('✅ Task marked as complete');
+              // Show success notification
+              alert('✅ Results saved to campaign! You can run this agent again to create additional artifacts.');
+            } else {
+              console.error('❌ Failed to save campaign artifact:', campaignResult.error);
+              alert('⚠️ SEO analysis completed but failed to save to campaign: ' + campaignResult.error);
+            }
+          }
+        }
+      } else {
+        console.log('📝 Running as standalone agent (not part of campaign)');
+      }
 
     } catch (err) {
       console.error('❌ SEOrix error:', err);
@@ -241,6 +335,26 @@ function SEOrixPage() {
   };
 
   const report = result;
+
+  // Debug: Log report structure when it changes
+  React.useEffect(() => {
+    if (report) {
+      console.log('🔍 Report data structure:', {
+        hasScore: report.score !== undefined,
+        hasGrade: report.grade !== undefined,
+        hasSummary: report.summary !== undefined,
+        hasUrl: report.url !== undefined,
+        hasDate: report.date !== undefined,
+        hasKeywords: report.keywords !== undefined,
+        hasContent: report.content !== undefined,
+        hasMeta: report.meta !== undefined,
+        hasTechnical: report.technical !== undefined,
+        hasBacklinks: report.backlinks !== undefined,
+        hasRecommendations: report.recommendations !== undefined,
+        fullReport: report
+      });
+    }
+  }, [report]);
 
   return (
     <div style={s.container}>
@@ -309,8 +423,8 @@ function SEOrixPage() {
               <div>
                 <div style={s.badge2}>✨ Analysis Complete</div>
                 <h1 style={s.reportTitle}>SEO Analysis Report</h1>
-                <p style={s.reportUrl}>{report.url}</p>
-                <p style={s.reportDate}>📅 {new Date(report.date).toLocaleDateString()}</p>
+                <p style={s.reportUrl}>{report.url || report.website_url || 'Website Analysis'}</p>
+                <p style={s.reportDate}>📅 {report.date ? new Date(report.date).toLocaleDateString() : new Date().toLocaleDateString()}</p>
               </div>
               <div style={s.headerActions}>
                 <button onClick={handlePrintPDF} style={s.pdfBtn} className="no-print">
@@ -328,19 +442,30 @@ function SEOrixPage() {
                 <div style={s.scoreCircleWrapper}>
                   <svg style={s.scoreSvg} viewBox="0 0 200 200">
                     <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="12"/>
-                    <circle cx="100" cy="100" r="90" fill="none" stroke={getColor(report.score)} strokeWidth="12" strokeDasharray={`${report.score * 5.65} 565`} strokeLinecap="round" transform="rotate(-90 100 100)" style={s.scoreProgress}/>
+                    <circle 
+                      cx="100" 
+                      cy="100" 
+                      r="90" 
+                      fill="none" 
+                      stroke={getColor(report.score || 0)} 
+                      strokeWidth="12" 
+                      strokeDasharray={`${(report.score || 0) * 5.65} 565`} 
+                      strokeLinecap="round" 
+                      transform="rotate(-90 100 100)" 
+                      style={s.scoreProgress}
+                    />
                   </svg>
                   <div style={s.scoreText}>
-                    <span style={{...s.scoreNum, color: getColor(report.score)}}>{report.score}</span>
+                    <span style={{...s.scoreNum, color: getColor(report.score || 0)}}>{report.score || 0}</span>
                     <span style={s.scoreMax}>/100</span>
                   </div>
                 </div>
                 <div style={s.scoreInfo}>
                   <h2 style={s.scoreTitle}>Overall SEO Score</h2>
                   <div style={s.gradeTag}>
-                    {getGrade(report.grade)} {report.grade}
+                    {getGrade(report.grade || 'Poor')} {report.grade || 'Not Available'}
                   </div>
-                  <p style={s.scoreSummary}>{report.summary}</p>
+                  <p style={s.scoreSummary}>{report.summary || 'Analysis complete. Check details below.'}</p>
                 </div>
               </div>
             </div>

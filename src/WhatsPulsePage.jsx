@@ -1,11 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, MessageCircle, Upload, Send, CheckCircle, Clock, Users, FileText, Calendar, TrendingUp, Sparkles, Zap } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import { executeWithTokens } from './utils/tokenService';
+import { handleCampaignTaskCompletion } from './services/campaignService';
 
 function WhatsPulsePage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  // campaignId can be string or number - keep as-is from state
+  const campaignId = location.state?.campaignId;
   const [session, setSession] = useState(null);
   const [formData, setFormData] = useState({
     offerTitle: '',
@@ -71,6 +75,9 @@ function WhatsPulsePage() {
       return;
     }
 
+    console.log('🔍 Starting WhatsPulse for:', formData.offerTitle);
+    console.log('📋 Campaign ID:', campaignId || 'Not part of campaign');
+
     setLoading(true);
     setError('');
     setCurrentMessage(0);
@@ -125,7 +132,9 @@ function WhatsPulsePage() {
           contactCount: contactCount,
           campaignName: formData.offerTitle 
         },
-        contactCount // Token multiplier (50 tokens × contactCount)
+        contactCount, // Token multiplier (50 tokens × contactCount)
+        `WhatsApp Broadcast: ${formData.offerTitle} (${contactCount} contacts)`, // Output summary
+        campaignId // Campaign ID
       );
 
       // Check result
@@ -140,6 +149,55 @@ function WhatsPulsePage() {
       console.log(`💰 Remaining tokens: ${result.tokensRemaining}`);
       
       simulateMessageSending();
+
+      // Handle campaign task completion if this is part of a campaign
+      if (campaignId) {
+        console.log('📁 This is part of campaign:', campaignId);
+        console.log('📁 Log ID from tokenResult:', result.logId);
+        
+        if (!result.logId) {
+          console.error('❌ No logId returned from tokenService!');
+        } else {
+          console.log('✅ LogId available, proceeding with campaign artifact save...');
+          
+          // Get agent ID from database
+          const { data: agentData, error: agentError } = await supabase
+            .from('agents')
+            .select('id')
+            .eq('name', 'WhatsPulse')
+            .single();
+          
+          if (agentError) {
+            console.error('❌ Error fetching agent ID:', agentError);
+          } else if (!agentData) {
+            console.error('❌ WhatsPulse agent not found in database');
+          } else {
+            const agentId = agentData.id;
+            console.log('✅ Agent ID:', agentId);
+            
+            const outputSummary = `WhatsApp Broadcast: ${formData.offerTitle} (${totalMessages} contacts)`;
+            
+            const campaignResult = await handleCampaignTaskCompletion(
+              campaignId,
+              agentId,
+              'WhatsPulse',
+              result.logId,
+              result.data,
+              outputSummary
+            );
+            
+            if (campaignResult.success) {
+              console.log('✅ Campaign artifact saved successfully!');
+              alert('✅ Results saved to campaign! You can run this agent again to create additional artifacts.');
+            } else {
+              console.error('❌ Failed to save campaign artifact:', campaignResult.error);
+              alert('⚠️ Broadcast sent but failed to save to campaign: ' + campaignResult.error);
+            }
+          }
+        }
+      } else {
+        console.log('📝 Running as standalone agent (not part of campaign)');
+      }
 
     } catch (err) {
       console.error('❌ Broadcast error:', err);
@@ -721,7 +779,7 @@ function WhatsPulsePage() {
       {/* Main Content */}
       <div style={styles.content}>
         {/* Back Button */}
-        <button style={styles.backButton} onClick={() => navigate('/dashboard')}>
+        <button style={styles.backButton} onClick={() => navigate('/')}>
           <ArrowLeft size={20} />
           <span>Back to Dashboard</span>
         </button>

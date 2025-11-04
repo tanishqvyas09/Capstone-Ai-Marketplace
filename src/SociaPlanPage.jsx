@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Calendar, Clock, Sparkles, Zap, TrendingUp, Hash, Image as ImageIcon, Send, Download, Eye, Copy, Share2, CheckCircle, AlertCircle, Target, Users, BarChart3, MessageSquare, Heart, Star, ChevronDown, ChevronUp } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import { executeWithTokens } from './utils/tokenService';
+import { handleCampaignTaskCompletion } from './services/campaignService';
 
 // Utility function to convert markdown-like text to formatted HTML
 const formatText = (text) => {
@@ -22,6 +23,9 @@ const formatText = (text) => {
 
 function SociaPlanPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  // campaignId can be string or number - keep as-is from state
+  const campaignId = location.state?.campaignId;
   const [session, setSession] = useState(null);
   const [brand, setBrand] = useState('');
   const [industry, setIndustry] = useState('');
@@ -73,6 +77,9 @@ function SociaPlanPage() {
       navigate('/login');
       return;
     }
+
+    console.log('🔍 Starting SociaPlan for:', brand);
+    console.log('📋 Campaign ID:', campaignId || 'Not part of campaign');
 
     setLoading(true);
     setError('');
@@ -134,14 +141,36 @@ function SociaPlanPage() {
             }
           }
 
-          const jsonResponse = await response.json();
-          console.log('📋 Calendar data received:', jsonResponse);
+          // Get response text first to check if it's empty
+          const responseText = await response.text();
+          console.log('📥 Raw response text:', responseText.substring(0, 200)); // Log first 200 chars
+          
+          if (!responseText || responseText.trim().length === 0) {
+            throw new Error('Empty response received from server. The n8n workflow may have crashed or returned no data.');
+          }
+
+          let jsonResponse;
+          try {
+            jsonResponse = JSON.parse(responseText);
+            console.log('📋 Calendar data received:', jsonResponse);
+          } catch (parseError) {
+            console.error('❌ JSON parse error:', parseError);
+            console.error('Response was:', responseText);
+            throw new Error('Invalid JSON response from server. The workflow may have returned HTML or plain text instead of JSON.');
+          }
           
           const calendarOutput = jsonResponse[0]?.output || jsonResponse.output || jsonResponse;
+          
+          if (!calendarOutput || Object.keys(calendarOutput).length === 0) {
+            throw new Error('No calendar data in response. The workflow completed but returned empty data.');
+          }
+          
           return calendarOutput;
         },
-        { brand, industry, targetAudience, platforms },
-        1 // Token multiplier (fixed cost)
+        { brand, industry, targetAudience, platforms }, // Request data
+        1, // Token multiplier (fixed cost)
+        `Social Media Calendar: ${brand}`, // Output summary
+        campaignId // Campaign ID
       );
 
       // Check result
@@ -157,6 +186,55 @@ function SociaPlanPage() {
       
       setCalendarData(tokenResult.data);
       console.log('✨ Calendar loaded successfully!');
+
+      // Handle campaign task completion if this is part of a campaign
+      if (campaignId) {
+        console.log('📁 This is part of campaign:', campaignId);
+        console.log('📁 Log ID from tokenResult:', tokenResult.logId);
+        
+        if (!tokenResult.logId) {
+          console.error('❌ No logId returned from tokenService!');
+        } else {
+          console.log('✅ LogId available, proceeding with campaign artifact save...');
+          
+          // Get agent ID from database
+          const { data: agentData, error: agentError } = await supabase
+            .from('agents')
+            .select('id')
+            .eq('name', 'SociaPlan')
+            .single();
+          
+          if (agentError) {
+            console.error('❌ Error fetching agent ID:', agentError);
+          } else if (!agentData) {
+            console.error('❌ SociaPlan agent not found in database');
+          } else {
+            const agentId = agentData.id;
+            console.log('✅ Agent ID:', agentId);
+            
+            const outputSummary = `Social Media Calendar: ${brand}`;
+            
+            const campaignResult = await handleCampaignTaskCompletion(
+              campaignId,
+              agentId,
+              'SociaPlan',
+              tokenResult.logId,
+              tokenResult.data,
+              outputSummary
+            );
+            
+            if (campaignResult.success) {
+              console.log('✅ Campaign artifact saved successfully!');
+              alert('✅ Results saved to campaign! You can run this agent again to create additional artifacts.');
+            } else {
+              console.error('❌ Failed to save campaign artifact:', campaignResult.error);
+              alert('⚠️ Calendar created but failed to save to campaign: ' + campaignResult.error);
+            }
+          }
+        }
+      } else {
+        console.log('📝 Running as standalone agent (not part of campaign)');
+      }
     } catch (err) {
       console.error('❌ SociaPlan error:', err);
       

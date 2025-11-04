@@ -4,7 +4,7 @@ import { supabase } from "../supabaseClient";
 import { 
   Search, MessageCircle, Image, Target, Key, Phone, Headphones, 
   TrendingUp, FileText, Users, Bell, Settings, LogOut, 
-  ChevronDown, Menu, X, Play, Zap, BarChart3, Clock, CheckCircle, UserPlus, Calendar
+  ChevronDown, Menu, X, Play, Zap, BarChart3, Clock, CheckCircle, UserPlus, Calendar, Sparkles
 } from 'lucide-react';
 
 function DashboardPage() {
@@ -18,6 +18,11 @@ function DashboardPage() {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showSidebar, setShowSidebar] = useState(true);
   const [showNotifications, setShowNotifications] = useState(false);
+  
+  // KPI States
+  const [totalRuns, setTotalRuns] = useState(0);
+  const [tokensSpent, setTokensSpent] = useState(0);
+  const [favoriteAgent, setFavoriteAgent] = useState('--');
 
   // Predefined agents with video links
   const agentDetails = [
@@ -31,8 +36,9 @@ function DashboardPage() {
     //{ id: 8, name: 'SalesCalla', icon: Phone, desc: 'AI-driven sales calling and lead management', videoUrl: '', status: 'idle' },
     { id: 9, name: 'EchoMind', icon: Headphones, desc: 'Analyzes customer recordings for sentiment patterns', videoUrl: 'https://res.cloudinary.com/dry1chfzv/video/upload/v1760383553/AI_Video_Intro_EchoMind_s_Emotional_Insight_xxcqga.mp4', status: 'active' },
     { id: 10, name: 'TrendIQ', icon: TrendingUp, desc: 'Scans news, social media, and on-chain data - 150 tokens (location) or 250 tokens (keyword)', videoUrl: '' /* Video coming soon: '' */, status: 'active' },
-    //{ id: 11, name: 'Scriptly', icon: FileText, desc: 'Writes compelling video scripts instantly', videoUrl: '', status: 'idle' },
-    //{ id: 12, name: 'LostLens', icon: Users, desc: 'Diagnoses customer loss reasons & retention patterns', videoUrl: '', status: 'idle' }
+    { id: 11, name: 'Scriptly', icon: FileText, desc: 'Generates viral short-form video scripts with AI - 300 tokens', videoUrl: '', status: 'active' },
+    { id: 12, name: 'Adbrief', icon: Sparkles, desc: 'Creates strategic ad briefs with multiple creative angles - 75 tokens', videoUrl: '', status: 'active' },
+    //{ id: 13, name: 'LostLens', icon: Users, desc: 'Diagnoses customer loss reasons & retention patterns', videoUrl: '', status: 'idle' }
   ];
 
   useEffect(() => {
@@ -95,6 +101,67 @@ function DashboardPage() {
       
       return () => {
         supabase.removeChannel(profileListener);
+      };
+    }
+  }, [session]);
+
+  // Fetch KPI data
+  useEffect(() => {
+    if (session?.user) {
+      const fetchKPIs = async () => {
+        try {
+          // Fetch total runs
+          const { count: runsCount, error: runsError } = await supabase
+            .from('usage_logs')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', session.user.id)
+            .eq('status', 'success');
+          
+          if (!runsError) {
+            setTotalRuns(runsCount || 0);
+          }
+
+          // Fetch tokens spent
+          const { data: spendData, error: spendError } = await supabase
+            .from('usage_logs')
+            .select('tokens_spent')
+            .eq('user_id', session.user.id)
+            .eq('status', 'success');
+          
+          if (!spendError && spendData) {
+            const total = spendData.reduce((acc, run) => acc + (run.tokens_spent || 0), 0);
+            setTokensSpent(total);
+          }
+
+          // Fetch favorite agent
+          const { data: favoriteData, error: favoriteError } = await supabase
+            .rpc('get_favorite_agent');
+          
+          if (!favoriteError && favoriteData && favoriteData.length > 0) {
+            setFavoriteAgent(favoriteData[0].agent_name || '--');
+          }
+        } catch (error) {
+          console.error('Error fetching KPIs:', error);
+        }
+      };
+      
+      fetchKPIs();
+
+      // Subscribe to updates
+      const usageListener = supabase
+        .channel('usage_logs_changes')
+        .on('postgres_changes', { 
+          event: '*', 
+          schema: 'public', 
+          table: 'usage_logs', 
+          filter: `user_id=eq.${session.user.id}` 
+        }, () => {
+          fetchKPIs(); // Refresh KPIs when usage_logs change
+        })
+        .subscribe();
+      
+      return () => {
+        supabase.removeChannel(usageListener);
       };
     }
   }, [session]);
@@ -587,9 +654,9 @@ function DashboardPage() {
           </div>
 
           <div style={styles.navLinks}>
-            <a style={styles.navLink} className="nav-link">Dashboard</a>
-            <a style={styles.navLink} className="nav-link">Campaigns</a>
-            <a style={styles.navLink} className="nav-link">Analytics</a>
+            <a style={styles.navLink} className="nav-link" onClick={() => navigate('/')}>Dashboard</a>
+            <a style={styles.navLink} className="nav-link" onClick={() => navigate('/campaigns')}>Campaigns</a>
+            <a style={styles.navLink} className="nav-link" onClick={() => navigate('/analytics')}>Analytics</a>
             <a style={styles.navLink} className="nav-link">Docs</a>
           </div>
 
@@ -668,23 +735,23 @@ function DashboardPage() {
         {/* Sidebar */}
         <aside style={styles.sidebar}>
           <div style={styles.sidebarContent}>
-            <div style={styles.sidebarItem} className="sidebar-item">
+            <div style={styles.sidebarItem} className="sidebar-item" onClick={() => navigate('/')}>
               <Zap size={20} />
               <span>Dashboard</span>
             </div>
-            <div style={styles.sidebarItem} className="sidebar-item">
+            <div style={styles.sidebarItem} className="sidebar-item" onClick={() => navigate('/my-agents')}>
               <Users size={20} />
               <span>My Agents</span>
             </div>
-            <div style={styles.sidebarItem} className="sidebar-item">
+            <div style={styles.sidebarItem} className="sidebar-item" onClick={() => navigate('/campaigns')}>
               <BarChart3 size={20} />
               <span>Campaigns</span>
             </div>
-            <div style={styles.sidebarItem} className="sidebar-item">
+            <div style={styles.sidebarItem} className="sidebar-item" onClick={() => navigate('/analytics')}>
               <TrendingUp size={20} />
               <span>Analytics</span>
             </div>
-            <div style={styles.sidebarItem} className="sidebar-item">
+            <div style={styles.sidebarItem} className="sidebar-item" onClick={() => navigate('/settings')}>
               <Settings size={20} />
               <span>Settings</span>
             </div>
@@ -706,20 +773,20 @@ function DashboardPage() {
           {/* Stats Grid */}
           <div style={styles.statsGrid}>
             <div style={styles.statCard} className="stat-card">
-              <div style={styles.statValue}>10</div>
-              <div style={styles.statLabel}>Active Agents</div>
+              <div style={styles.statValue}>{totalRuns}</div>
+              <div style={styles.statLabel}>Total Agents Run</div>
             </div>
             <div style={styles.statCard} className="stat-card">
-              <div style={styles.statValue}>24</div>
-              <div style={styles.statLabel}>Campaigns Running</div>
+              <div style={styles.statValue}>{tokensSpent.toLocaleString()}</div>
+              <div style={styles.statLabel}>Tokens Spent</div>
             </div>
             <div style={styles.statCard} className="stat-card">
-              <div style={styles.statValue}>1,247</div>
-              <div style={styles.statLabel}>Tasks Automated Today</div>
+              <div style={styles.statValue}>{favoriteAgent}</div>
+              <div style={styles.statLabel}>Favorite Agent</div>
             </div>
             <div style={styles.statCard} className="stat-card">
-              <div style={styles.statValue}>8</div>
-              <div style={styles.statLabel}>Pending Insights</div>
+              <div style={styles.statValue}>{profile.tokens_remaining || 0}</div>
+              <div style={styles.statLabel}>Tokens Remaining</div>
             </div>
           </div>
 
@@ -856,6 +923,10 @@ function DashboardPage() {
                   navigate('/advisor');
                 } else if (selectedAgent.name === 'TrendIQ') {
                   navigate('/trendiq');
+                } else if (selectedAgent.name === 'Scriptly') {
+                  navigate('/scriptly');
+                } else if (selectedAgent.name === 'Adbrief') {
+                  navigate('/adbrief');
                 } else {
                   // For other agents, you can add their specific routes here
                   alert(`${selectedAgent.name} agent page coming soon!`);

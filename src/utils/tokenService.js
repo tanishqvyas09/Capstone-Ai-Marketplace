@@ -25,7 +25,9 @@ export const AGENT_COSTS = {
   'EchoMind': 150,
   'TrendIQ': 1, // Base cost - multiply by actual cost (150 for location, 250 for keyword)
   'TrendIQ-Keyword': 250, // For reference only
-  'TrendIQ-Location': 150 // For reference only
+  'TrendIQ-Location': 150, // For reference only
+  'Scriptly': 300, // Fixed cost for generating viral video scripts
+  'Adbrief': 75 // Fixed cost for generating ad briefs with multiple angles
 };
 
 /**
@@ -84,9 +86,12 @@ export async function checkUserTokens(userId, agentName, tokenMultiplier = 1) {
  * @param {string} errorMessage - Optional error message if operation failed
  * @param {object} requestData - Optional request data for logging
  * @param {number} tokenMultiplier - Multiplier for token cost (default: 1). For WhatsPulse, use contact count
- * @returns {Promise<{success: boolean, tokensDeducted: number, tokensRemaining: number, message: string}>}
+ * @param {string} outputSummary - Brief summary of the output for display
+ * @param {object} outputData - Full output data (optional)
+ * @param {number} campaignId - Optional campaign ID if this execution is part of a campaign
+ * @returns {Promise<{success: boolean, tokensDeducted: number, tokensRemaining: number, message: string, logId: number|null}>}
  */
-export async function deductTokens(userId, agentName, success = true, errorMessage = null, requestData = null, tokenMultiplier = 1) {
+export async function deductTokens(userId, agentName, success = true, errorMessage = null, requestData = null, tokenMultiplier = 1, outputSummary = null, outputData = null, campaignId = null) {
   try {
     console.log(`💰 ${success ? 'Deducting' : 'Logging failed attempt for'} tokens for ${agentName}...`);
     if (tokenMultiplier > 1) {
@@ -117,11 +122,92 @@ export async function deductTokens(userId, agentName, success = true, errorMessa
     
     console.log(`✅ Token deduction result:`, result);
 
+    // Also log to usage_logs table for the new dashboard features
+    let logId = null;
+    try {
+      const { data: agent, error: agentError } = await supabase
+        .from('agents')
+        .select('id')
+        .eq('name', agentName)
+        .single();
+      
+      if (agentError) {
+        console.error('❌ Error fetching agent:', agentError);
+      } else if (!agentError && agent) {
+        console.log('📝 Inserting into usage_logs...');
+        
+        // Prepare log entry - sanitize large data to avoid insert errors
+        let sanitizedOutputData = outputData;
+        if (outputData) {
+          try {
+            const dataStr = JSON.stringify(outputData);
+            // If output data is too large (>1MB), truncate it
+            if (dataStr.length > 1000000) {
+              console.warn('⚠️ Output data too large, truncating...');
+              sanitizedOutputData = { 
+                _truncated: true, 
+                _size: dataStr.length,
+                _message: 'Data too large to store'
+              };
+            }
+          } catch (e) {
+            console.warn('⚠️ Could not stringify output data:', e);
+            sanitizedOutputData = { _error: 'Could not serialize data' };
+          }
+        }
+        
+        const logEntry = {
+          user_id: userId,
+          agent_id: agent.id,
+          agent_name: agentName,
+          tokens_spent: success ? result.tokens_deducted : 0,
+          status: success ? 'success' : 'error',
+          ran_at: new Date().toISOString(),
+          campaign_id: campaignId, // Tag with campaign ID if provided
+          input_data: requestData,
+          output_summary: outputSummary,
+          output_data: sanitizedOutputData
+        };
+        
+        console.log('📋 Log entry data:', {
+          user_id: userId,
+          agent_id: agent.id,
+          agent_name: agentName,
+          tokens_spent: logEntry.tokens_spent,
+          status: logEntry.status,
+          campaign_id: campaignId || 'none',
+          has_output_data: !!sanitizedOutputData
+        });
+        
+        const { data: insertResult, error: logInsertError } = await supabase
+          .from('usage_logs')
+          .insert(logEntry)
+          .select('id');
+        
+        if (logInsertError) {
+          console.error('❌ Error inserting usage log:', logInsertError);
+          console.error('Error details:', JSON.stringify(logInsertError, null, 2));
+        } else if (insertResult && insertResult.length > 0) {
+          logId = insertResult[0].id;
+          console.log('✅ Usage log entry created with ID:', logId);
+          if (campaignId) {
+            console.log('🏷️ Tagged with campaign ID:', campaignId);
+          }
+        } else {
+          console.warn('⚠️ Insert succeeded but no data returned');
+        }
+      }
+    } catch (logError) {
+      console.warn('⚠️ Failed to log to usage_logs (non-critical):', logError);
+      // Don't throw - this is a non-critical feature
+    }
+
     return {
       success: result.success,
       tokensDeducted: result.tokens_deducted,
       tokensRemaining: result.tokens_remaining,
-      message: result.message
+      message: result.message,
+      logId: logId // Return the usage log ID for campaign artifacts
     };
   } catch (error) {
     console.error('❌ Token deduction error:', error);
@@ -217,34 +303,23 @@ export function getAgentCost(agentName) {
  *     const response = await fetch('...');
  *     return await response.json();
  *   },
- *   { url: 'https://example.com' }
+ *   { url: 'https://example.com' },
+ *   1,
+ *   'SEO analysis for example.com',  // Summary
+ *   null  // Campaign ID (optional)
  * );
- * ```
- * 
- * Usage Example (WhatsPulse with contact count):
- * ```javascript
- * const contactCount = 150; // From CSV
- * const result = await executeWithTokens(
- *   session.user.id,
- *   'WhatsPulse',
- *   async () => {
- *     const response = await fetch('...');
- *     return await response.json();
- *   },
- *   { contactCount: contactCount },
- *   contactCount // Token multiplier
- * );
- * // Cost: 50 tokens × 150 contacts = 7,500 tokens
  * ```
  * 
  * @param {string} userId - The authenticated user's ID
  * @param {string} agentName - Name of the agent
  * @param {Function} apiCallFunction - Async function that makes the API call
  * @param {object} requestData - Optional request data for logging
- * @param {number} tokenMultiplier - Multiplier for token cost (default: 1). For WhatsPulse, use contact count
- * @returns {Promise<{success: boolean, data?: any, error?: string, tokensRemaining?: number, tokensDeducted?: number}>}
+ * @param {number} tokenMultiplier - Multiplier for token cost (default: 1)
+ * @param {string} outputSummary - Brief summary for display in history
+ * @param {number} campaignId - Optional campaign ID if this is part of a campaign
+ * @returns {Promise<{success: boolean, data?: any, error?: string, tokensRemaining?: number, tokensDeducted?: number, logId?: number|null}>}
  */
-export async function executeWithTokens(userId, agentName, apiCallFunction, requestData = null, tokenMultiplier = 1) {
+export async function executeWithTokens(userId, agentName, apiCallFunction, requestData = null, tokenMultiplier = 1, outputSummary = null, campaignId = null) {
   try {
     // Step 1: Check if user has sufficient tokens
     console.log(`🔍 Checking tokens for ${agentName}...`);
@@ -277,7 +352,7 @@ export async function executeWithTokens(userId, agentName, apiCallFunction, requ
       console.error(`❌ API call failed for ${agentName}:`, apiError);
       
       // Log failed attempt (no tokens deducted)
-      await deductTokens(userId, agentName, false, errorMessage, requestData, tokenMultiplier);
+      await deductTokens(userId, agentName, false, errorMessage, requestData, tokenMultiplier, outputSummary, null, campaignId);
       
       return {
         success: false,
@@ -288,7 +363,7 @@ export async function executeWithTokens(userId, agentName, apiCallFunction, requ
 
     // Step 3: Deduct tokens only if API call was successful
     console.log(`💰 Deducting ${tokenCheck.requiredTokens} tokens...`);
-    const deductionResult = await deductTokens(userId, agentName, true, null, requestData, tokenMultiplier);
+    const deductionResult = await deductTokens(userId, agentName, true, null, requestData, tokenMultiplier, outputSummary, apiResult, campaignId);
 
     if (!deductionResult.success) {
       console.warn(`⚠️ Token deduction failed but API call succeeded`);
@@ -302,7 +377,8 @@ export async function executeWithTokens(userId, agentName, apiCallFunction, requ
       data: apiResult,
       tokensDeducted: deductionResult.tokensDeducted,
       tokensRemaining: deductionResult.tokensRemaining,
-      message: deductionResult.message
+      message: deductionResult.message,
+      logId: deductionResult.logId // Return log ID for campaign artifacts
     };
 
   } catch (error) {

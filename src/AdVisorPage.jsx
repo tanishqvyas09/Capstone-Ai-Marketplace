@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Search, Image, Sparkles, Palette, Wand2, CheckCircle, AlertCircle, Loader2, Zap, Target, Download, Eye, RefreshCw, Copy, Share2, Layers, Upload, X } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import { executeWithTokens } from './utils/tokenService';
+import { handleCampaignTaskCompletion } from './services/campaignService';
+import AdbriefPopup from './AdbriefPopup';
 
 function AdVisorPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  // campaignId can be string or number - keep as-is from state
+  const campaignId = location.state?.campaignId;
   const [session, setSession] = useState(null);
   const [headline, setHeadline] = useState('');
 
@@ -22,6 +27,7 @@ function AdVisorPage() {
   const [imageUrl, setImageUrl] = useState(null);
   const [imageData, setImageData] = useState(null);
   const [error, setError] = useState('');
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   // Session management
   useEffect(() => {
@@ -75,6 +81,9 @@ function AdVisorPage() {
       navigate('/login');
       return;
     }
+
+    console.log('🔍 Starting AdVisor for:', headline);
+    console.log('📋 Campaign ID:', campaignId || 'Not part of campaign');
 
     setLoading(true);
     setError('');
@@ -142,8 +151,10 @@ function AdVisorPage() {
           // Return the response for token service to handle
           return response;
         },
-        { headline, subHeading, cta, buttonText, resolution },
-        1 // Token multiplier (fixed cost)
+        { headline, subHeading, cta, buttonText, resolution }, // Request data
+        1, // Token multiplier (fixed cost)
+        `Ad Creative: ${headline}`, // Output summary
+        campaignId // Campaign ID
       );
 
       // Check result
@@ -324,6 +335,55 @@ function AdVisorPage() {
       });
       
       console.log('✨ Image loaded and ready to display!');
+
+      // Handle campaign task completion if this is part of a campaign
+      if (campaignId) {
+        console.log('📁 This is part of campaign:', campaignId);
+        console.log('📁 Log ID from tokenResult:', tokenResult.logId);
+        
+        if (!tokenResult.logId) {
+          console.error('❌ No logId returned from tokenService!');
+        } else {
+          console.log('✅ LogId available, proceeding with campaign artifact save...');
+          
+          // Get agent ID from database
+          const { data: agentData, error: agentError } = await supabase
+            .from('agents')
+            .select('id')
+            .eq('name', 'AdVisor')
+            .single();
+          
+          if (agentError) {
+            console.error('❌ Error fetching agent ID:', agentError);
+          } else if (!agentData) {
+            console.error('❌ AdVisor agent not found in database');
+          } else {
+            const agentId = agentData.id;
+            console.log('✅ Agent ID:', agentId);
+            
+            const outputSummary = `Ad Creative: ${headline}`;
+            
+            const campaignResult = await handleCampaignTaskCompletion(
+              campaignId,
+              agentId,
+              'AdVisor',
+              tokenResult.logId,
+              { imageUrl: url, headline, subHeading, cta, buttonText },
+              outputSummary
+            );
+            
+            if (campaignResult.success) {
+              console.log('✅ Campaign artifact saved successfully!');
+              alert('✅ Results saved to campaign! You can run this agent again to create additional artifacts.');
+            } else {
+              console.error('❌ Failed to save campaign artifact:', campaignResult.error);
+              alert('⚠️ Ad created but failed to save to campaign: ' + campaignResult.error);
+            }
+          }
+        }
+      } else {
+        console.log('📝 Running as standalone agent (not part of campaign)');
+      }
     } catch (err) {
       console.error('Error details:', err);
       console.error('Stack trace:', err.stack);
@@ -350,8 +410,27 @@ function AdVisorPage() {
     alert('Image link copied to clipboard!');
   };
 
+  const handleSelectBrief = (briefData) => {
+    // Auto-fill the form with selected brief data
+    setHeadline(briefData.headline || '');
+    setSubHeading(briefData.subHeading || '');
+    setPointers(briefData.primaryText || '');
+    setCta(briefData.callToAction || '');
+    setButtonText(briefData.buttonText || '');
+    
+    // Show success message
+    alert('✨ Brief applied successfully! Your ad form is now pre-filled.');
+  };
+
   return (
     <div style={s.container}>
+      <AdbriefPopup 
+        isOpen={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+        onSelectBrief={handleSelectBrief}
+        userId={session?.user?.id}
+      />
+      
       <div style={s.header}>
         <button style={s.backBtn} onClick={() => window.history.back()}>
           <ArrowLeft size={18} /> Back
@@ -365,6 +444,16 @@ function AdVisorPage() {
           </div>
           <h1 style={s.title}>AdVisor AI</h1>
           <p style={s.subtitle}>Create stunning, on-brand ad images from text prompts</p>
+          
+          {/* Create Brief Button */}
+          <button 
+            style={s.createBriefBtn} 
+            onClick={() => setIsPopupOpen(true)}
+            disabled={!session?.user?.id}
+          >
+            <Sparkles size={18} style={{marginRight: '8px'}} />
+            Create Brief with AI
+          </button>
         </div>
       )}
 
@@ -712,7 +801,8 @@ const s = {
   hero: { textAlign: 'center', padding: '4rem 2rem' },
   heroIcon: { display: 'inline-flex', padding: '1.5rem', background: 'linear-gradient(135deg, rgba(139,92,246,0.2), rgba(236,72,153,0.2))', borderRadius: '20px', marginBottom: '1.5rem', border: '1px solid rgba(139,92,246,0.3)', color: '#8b5cf6', boxShadow: '0 8px 32px rgba(139,92,246,0.3)' },
   title: { fontSize: '3rem', fontWeight: '700', background: 'linear-gradient(135deg, #8b5cf6, #ec4899, #f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: '1rem' },
-  subtitle: { fontSize: '1.25rem', color: '#94a3b8' },
+  subtitle: { fontSize: '1.25rem', color: '#94a3b8', marginBottom: '2rem' },
+  createBriefBtn: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #f59e0b 0%, #ec4899 100%)', border: 'none', color: 'white', padding: '1rem 2rem', borderRadius: '14px', fontSize: '1.05rem', fontWeight: '600', cursor: 'pointer', transition: 'all 0.3s', boxShadow: '0 8px 24px rgba(245, 158, 11, 0.4)', marginTop: '1rem' },
   main: { maxWidth: '1200px', margin: '0 auto', padding: '2rem' },
   card: { background: 'linear-gradient(135deg, rgba(139,92,246,0.05), rgba(236,72,153,0.05))', backdropFilter: 'blur(20px)', border: '1px solid rgba(139,92,246,0.2)', borderRadius: '24px', padding: '2.5rem', marginBottom: '1.5rem', boxShadow: '0 8px 32px rgba(0,0,0,0.2)' },
   

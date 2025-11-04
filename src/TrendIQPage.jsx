@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, TrendingUp, MapPin, Search, Globe, Loader2, AlertCircle, CheckCircle, BarChart3, Activity, Zap, Sparkles, Target, Users } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import { executeWithTokens } from './utils/tokenService';
+import { handleCampaignTaskCompletion } from './services/campaignService';
 
 function TrendIQPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const campaignId = location.state?.campaignId;
   const progressIntervalRef = useRef(null);
   const [session, setSession] = useState(null);
   const [analysisMode, setAnalysisMode] = useState('keyword'); // 'keyword' or 'location'
@@ -352,8 +355,12 @@ function TrendIQPage() {
             throw fetchError;
           }
         },
-        { keyword: keyword || selectedCity, mode: analysisMode },
-        tokenCost // Token multiplier based on mode
+        { keyword: keyword || selectedCity, mode: analysisMode }, // Request data
+        tokenCost, // Token multiplier based on mode
+        analysisMode === 'keyword' 
+          ? `Keyword Analysis: ${keyword}`
+          : `Location Trends: ${selectedCity}`, // Output summary
+        campaignId // Campaign ID (if part of campaign)
       );
 
       if (progressIntervalRef.current) {
@@ -378,6 +385,57 @@ function TrendIQPage() {
       console.log(`💰 Remaining tokens: ${tokenResult.tokensRemaining}`);
       
       setResult(tokenResult.data);
+
+      // Handle campaign task completion if this is part of a campaign
+      if (campaignId) {
+        console.log('📁 This is part of campaign:', campaignId);
+        console.log('📁 Log ID from tokenResult:', tokenResult.logId);
+        
+        if (!tokenResult.logId) {
+          console.error('❌ No logId returned from tokenService!');
+        } else {
+          console.log('✅ LogId available, proceeding with campaign artifact save...');
+          
+          // Get agent ID from database
+          const { data: agentData, error: agentError } = await supabase
+            .from('agents')
+            .select('id')
+            .eq('name', 'TrendIQ')
+            .single();
+          
+          if (agentError) {
+            console.error('❌ Error fetching agent ID:', agentError);
+          } else if (!agentData) {
+            console.error('❌ TrendIQ agent not found in database');
+          } else {
+            const agentId = agentData.id;
+            console.log('✅ Agent ID:', agentId);
+            
+            const outputSummary = analysisMode === 'keyword' 
+              ? `Keyword Analysis: ${keyword}`
+              : `Location Trends: ${selectedCity}`;
+            
+            const campaignResult = await handleCampaignTaskCompletion(
+              campaignId,
+              agentId,
+              'TrendIQ',
+              tokenResult.logId,
+              tokenResult.data,
+              outputSummary
+            );
+            
+            if (campaignResult.success) {
+              console.log('✅ Campaign artifact saved successfully!');
+              alert('✅ Results saved to campaign! You can run this agent again to create additional artifacts.');
+            } else {
+              console.error('❌ Failed to save campaign artifact:', campaignResult.error);
+              alert('⚠️ Analysis completed but failed to save to campaign: ' + campaignResult.error);
+            }
+          }
+        }
+      } else {
+        console.log('📝 Running as standalone agent (not part of campaign)');
+      }
 
     } catch (err) {
       console.error('❌ TrendIQ error:', err);
@@ -1405,7 +1463,7 @@ const s = {
   label: { display: 'block', color: '#a5b4fc', fontSize: '0.95rem', marginBottom: '0.75rem', fontWeight: '500' },
   modeButtons: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' },
   modeBtn: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', padding: '1rem', background: 'rgba(139,92,246,0.05)', border: '2px solid rgba(139,92,246,0.2)', borderRadius: '12px', color: '#a5b4fc', cursor: 'pointer', fontSize: '0.95rem', fontWeight: '600', transition: 'all 0.3s ease' },
-  modeBtnActive: { background: 'rgba(139,92,246,0.2)', borderColor: '#8b5cf6', color: '#c4b5fd' },
+  modeBtnActive: { background: 'rgba(139,92,246,0.2)', border: '2px solid #8b5cf6', color: '#c4b5fd' },
   inputSection: { marginBottom: '2rem' },
   inputWrapper: { position: 'relative' },
   inputIcon: { position: 'absolute', left: '1.25rem', top: '50%', transform: 'translateY(-50%)', color: '#8b5cf6', zIndex: 1 },
