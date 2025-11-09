@@ -60,21 +60,37 @@ CREATE INDEX IF NOT EXISTS idx_token_usage_log_created_at ON public.token_usage_
 -- Step 5: Insert agent data with token costs
 -- NOTE: WhatsPulse has a base cost of 50 tokens PER CONTACT (will be multiplied by contact count in frontend)
 -- NOTE: TrendIQ has a base cost of 1 token (will be multiplied by 150 for location mode or 250 for keyword mode in frontend)
-INSERT INTO public.agents (name, description, tokens_cost) 
+
+-- First, clean up any duplicate agents with wrong IDs
+-- Update foreign key references before deleting
+UPDATE public.token_usage_log SET agent_id = 8 WHERE agent_id = 29 AND agent_name = 'Scriptly';
+UPDATE public.token_usage_log SET agent_id = 9 WHERE agent_id = 30 AND agent_name = 'Adbrief';
+UPDATE public.usage_logs SET agent_id = 8 WHERE agent_id = 29 AND agent_name = 'Scriptly';
+UPDATE public.usage_logs SET agent_id = 9 WHERE agent_id = 30 AND agent_name = 'Adbrief';
+
+-- Now safe to delete duplicates
+DELETE FROM public.agents WHERE id > 10;
+
+INSERT INTO public.agents (id, name, description, tokens_cost) 
 VALUES 
-    ('SEOrix', 'AI agent for search engine optimization', 200),
-    ('LeadGen', 'Intelligent lead generation and contact discovery', 150),
-    ('WhatsPulse', 'Automates WhatsApp marketing campaigns - 50 tokens per contact', 50),
-    ('AdVisor', 'Creates optimized ad titles and visuals', 200),
-    ('SociaPlan', 'Social Media Calendar Generator - Full week content planning', 250),
-    ('EchoMind', 'Analyzes customer recordings for sentiment patterns', 150),
-    ('TrendIQ', 'Scans news, social media, and on-chain data - 150 tokens (location) or 250 tokens (keyword)', 1),
-    ('Scriptly', 'Generate viral short-form video scripts for YouTube Shorts, Instagram Reels, TikTok, and LinkedIn', 300),
-    ('Adbrief', 'Generate creative ad briefs with multiple strategic angles and variations', 75)
-ON CONFLICT (name) 
+    (1, 'SEOrix', 'AI agent for search engine optimization', 200),
+    (2, 'LeadGen', 'Intelligent lead generation and contact discovery', 150),
+    (3, 'WhatsPulse', 'Automates WhatsApp marketing campaigns - 50 tokens per contact', 50),
+    (4, 'AdVisor', 'Creates optimized ad titles and visuals', 200),
+    (5, 'SociaPlan', 'Social Media Calendar Generator - Full week content planning', 250),
+    (6, 'EchoMind', 'Analyzes customer recordings for sentiment patterns', 150),
+    (7, 'TrendIQ', 'Scans news, social media, and on-chain data - 150 tokens (location) or 250 tokens (keyword)', 1),
+    (8, 'Scriptly', 'Generate viral short-form video scripts for YouTube Shorts, Instagram Reels, TikTok, and LinkedIn', 300),
+    (9, 'Adbrief', 'Generate creative ad briefs with multiple strategic angles and variations', 75),
+    (10, 'ClipGen', 'Transform long-form content into viral short-form social media clips with AI-powered virality scoring', 350)
+ON CONFLICT (id) 
 DO UPDATE SET 
+    name = EXCLUDED.name,
     description = EXCLUDED.description,
     tokens_cost = EXCLUDED.tokens_cost;
+
+-- Update the sequence to continue from 10
+SELECT setval('agents_id_seq', 10, true);
 
 -- Step 6: Create function to check if user has sufficient tokens
 -- Now supports token_multiplier for agents like WhatsPulse (50 tokens per contact)
@@ -430,6 +446,10 @@ CREATE INDEX IF NOT EXISTS idx_campaigns_user_id ON public.campaigns(user_id);
 -- Returns the most frequently used agent for the current user
 -- ============================================================================
 
+-- Drop existing function if it exists (handles both with and without parameters)
+DROP FUNCTION IF EXISTS public.get_favorite_agent();
+DROP FUNCTION IF EXISTS public.get_favorite_agent(UUID);
+
 CREATE OR REPLACE FUNCTION public.get_favorite_agent()
 RETURNS TABLE(agent_name TEXT, run_count BIGINT)
 LANGUAGE plpgsql
@@ -453,6 +473,10 @@ GRANT EXECUTE ON FUNCTION public.get_favorite_agent TO authenticated;
 -- STEP 15: Create function to get campaign stats
 -- Returns stats for all campaigns
 -- ============================================================================
+
+-- Drop existing function if it exists
+DROP FUNCTION IF EXISTS public.get_campaign_stats();
+DROP FUNCTION IF EXISTS public.get_campaign_stats(UUID);
 
 CREATE OR REPLACE FUNCTION public.get_campaign_stats()
 RETURNS TABLE(

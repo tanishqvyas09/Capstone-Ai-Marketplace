@@ -487,6 +487,194 @@ const CampaignDetailPage = () => {
         }
       }
 
+      // ClipGen - Viral Clip Generator
+      if (agent_name === 'ClipGen') {
+        const clipData = Array.isArray(output_data) ? output_data[0]?.output : output_data.output || output_data;
+        console.log('ClipGen artifact data:', { 
+          raw: output_data, 
+          extracted: clipData,
+          hasMetadata: !!clipData?.metadata,
+          hasClips: !!clipData?.clips,
+          clipCount: clipData?.clips?.length || 0
+        });
+        
+        if (clipData) {
+          return (
+            <div style={styles.formattedOutput}>
+              <h3 style={styles.outputTitle}>🎬 ClipGen - Viral Clips</h3>
+              
+              {/* Metadata */}
+              {clipData.metadata && (
+                <div style={styles.clipgenMetadata}>
+                  <div style={styles.metadataGrid}>
+                    <div style={styles.metadataItem}>
+                      <span style={styles.metadataLabel}>Source</span>
+                      <span style={styles.metadataValue}>{clipData.metadata.source_title || 'N/A'}</span>
+                    </div>
+                    <div style={styles.metadataItem}>
+                      <span style={styles.metadataLabel}>Duration</span>
+                      <span style={styles.metadataValue}>
+                        {clipData.metadata.source_duration_sec 
+                          ? `${Math.floor(clipData.metadata.source_duration_sec / 60)}:${(clipData.metadata.source_duration_sec % 60).toFixed(0).padStart(2, '0')}` 
+                          : 'N/A'}
+                      </span>
+                    </div>
+                    <div style={styles.metadataItem}>
+                      <span style={styles.metadataLabel}>Clips Generated</span>
+                      <span style={{...styles.metadataValue, color: '#8b5cf6'}}>{clipData.metadata.clips_generated || 0}</span>
+                    </div>
+                    <div style={styles.metadataItem}>
+                      <span style={styles.metadataLabel}>Total Virality</span>
+                      <span style={{...styles.metadataValue, color: '#ec4899'}}>{clipData.metadata.total_virality_score || 0}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Clips */}
+              {clipData.clips && clipData.clips.length > 0 ? (
+                <div style={styles.clipsGrid}>
+                  {clipData.clips.map((clip, idx) => {
+                    const viralityColor = clip.virality_score >= 80 ? '#10b981' : 
+                                         clip.virality_score >= 60 ? '#f59e0b' : '#ef4444';
+                    return (
+                      <div key={idx} style={styles.clipCard}>
+                        {/* Clip Header */}
+                        <div style={styles.clipHeader}>
+                          <div style={styles.clipRankSection}>
+                            <span style={{...styles.rankBadge, background: 'linear-gradient(135deg, #8b5cf6, #ec4899)'}}>
+                              #{clip.rank}
+                            </span>
+                            <span style={styles.clipId}>Clip {clip.clip_id}</span>
+                          </div>
+                          <div style={{
+                            ...styles.viralityBadge,
+                            backgroundColor: `${viralityColor}20`,
+                            color: viralityColor,
+                            borderColor: viralityColor
+                          }}>
+                            🔥 {clip.virality_score}/100
+                          </div>
+                        </div>
+
+                        {/* Timestamps */}
+                        {clip.timestamps && (
+                          <div style={styles.clipTimestamps}>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <circle cx="12" cy="12" r="10"/>
+                              <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                            <span>
+                              {clip.timestamps.start}s - {clip.timestamps.end}s 
+                              <span style={styles.clipDuration}> ({clip.timestamps.duration_sec}s)</span>
+                            </span>
+                          </div>
+                        )}
+
+                        {/* Transcript */}
+                        {clip.transcript && (
+                          <div style={styles.clipTranscript}>
+                            <strong style={styles.clipTranscriptLabel}>📝 Transcript:</strong>
+                            <p style={styles.clipTranscriptText}>"{clip.transcript}"</p>
+                          </div>
+                        )}
+
+                        {/* Caption */}
+                        {clip.caption && (
+                          <div style={styles.clipCaption}>
+                            <strong style={styles.clipCaptionLabel}>💬 Caption:</strong>
+                            <p style={styles.clipCaptionText}>{clip.caption}</p>
+                          </div>
+                        )}
+
+                        {/* Platforms */}
+                        {clip.platforms && clip.platforms.length > 0 && (
+                          <div style={styles.clipPlatforms}>
+                            <strong style={styles.platformsLabel}>📱 Best for:</strong>
+                            <div style={styles.platformTags}>
+                              {clip.platforms.map((platform, pidx) => {
+                                const isBest = platform === clip.best_platform;
+                                const platformColors = {
+                                  'TikTok': '#00f2ea',
+                                  'Instagram Reels': '#e4405f',
+                                  'Instagram': '#e4405f',
+                                  'YouTube Shorts': '#ff0000',
+                                  'YouTube': '#ff0000',
+                                  'LinkedIn': '#0077b5'
+                                };
+                                const color = platformColors[platform] || '#6366f1';
+                                return (
+                                  <span 
+                                    key={pidx}
+                                    style={{
+                                      ...styles.platformTag,
+                                      ...(isBest ? {
+                                        borderColor: color,
+                                        color: color,
+                                        fontWeight: '600'
+                                      } : {})
+                                    }}
+                                  >
+                                    {platform}{isBest && ' ⭐'}
+                                  </span>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <p style={styles.noData}>No clips were generated</p>
+              )}
+
+              {/* Strategy */}
+              {clipData.strategy && (
+                <div style={styles.clipgenStrategy}>
+                  <h4 style={styles.strategyTitle}>📅 Content Strategy</h4>
+                  
+                  {clipData.strategy.hashtags && clipData.strategy.hashtags.length > 0 && (
+                    <div style={styles.strategySection}>
+                      <strong>Hashtags:</strong>
+                      <div style={styles.hashtagsContainer}>
+                        {clipData.strategy.hashtags.map((tag, idx) => (
+                          <span key={idx} style={styles.hashtag}>{tag}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {clipData.strategy.posting_schedule && clipData.strategy.posting_schedule.length > 0 && (
+                    <div style={styles.strategySection}>
+                      <strong>Posting Schedule:</strong>
+                      <div style={styles.scheduleGrid}>
+                        {clipData.strategy.posting_schedule.map((schedule, idx) => (
+                          <div key={idx} style={styles.scheduleItem}>
+                            <span style={styles.scheduleClip}>Clip {schedule.clip_id}</span>
+                            <span style={styles.scheduleDay}>{schedule.day}</span>
+                            <span style={styles.scheduleTime}>{schedule.time}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Notes */}
+              {clipData.notes && (
+                <div style={styles.clipgenNotes}>
+                  <strong>💡 Notes:</strong>
+                  <p>{clipData.notes}</p>
+                </div>
+              )}
+            </div>
+          );
+        }
+      }
+
       // Fallback - show formatted JSON for unknown formats
       console.warn(`No rendering case for agent: ${agent_name}, showing raw data`);
       return (
@@ -1883,6 +2071,228 @@ const styles = {
     background: 'rgba(239, 68, 68, 0.1)',
     borderRadius: '8px',
     border: '1px solid rgba(239, 68, 68, 0.3)',
+  },
+  // ClipGen specific styles
+  clipgenMetadata: {
+    padding: '20px',
+    background: 'rgba(139, 92, 246, 0.1)',
+    borderRadius: '12px',
+    border: '1px solid rgba(139, 92, 246, 0.3)',
+    marginBottom: '20px',
+  },
+  metadataGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+    gap: '16px',
+  },
+  metadataItem: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '6px',
+  },
+  metadataLabel: {
+    fontSize: '12px',
+    color: 'rgba(255, 255, 255, 0.6)',
+    textTransform: 'uppercase',
+    letterSpacing: '0.05em',
+  },
+  metadataValue: {
+    fontSize: '16px',
+    fontWeight: '600',
+    color: '#e2e8f0',
+  },
+  clipsGrid: {
+    display: 'grid',
+    gap: '16px',
+    marginBottom: '20px',
+  },
+  clipCard: {
+    background: 'rgba(255, 255, 255, 0.08)',
+    border: '1px solid rgba(139, 92, 246, 0.2)',
+    borderRadius: '12px',
+    padding: '18px',
+  },
+  clipHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '14px',
+    paddingBottom: '14px',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+  },
+  clipRankSection: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+  },
+  rankBadge: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '30px',
+    height: '30px',
+    borderRadius: '8px',
+    fontWeight: '700',
+    fontSize: '13px',
+    color: 'white',
+  },
+  clipId: {
+    fontSize: '15px',
+    fontWeight: '600',
+    color: '#e2e8f0',
+  },
+  viralityBadge: {
+    padding: '6px 12px',
+    borderRadius: '16px',
+    fontWeight: '600',
+    fontSize: '13px',
+    border: '2px solid',
+  },
+  clipTimestamps: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    padding: '10px',
+    background: 'rgba(139, 92, 246, 0.1)',
+    borderRadius: '8px',
+    marginBottom: '12px',
+    color: '#e2e8f0',
+    fontSize: '14px',
+  },
+  clipDuration: {
+    color: 'rgba(255, 255, 255, 0.6)',
+    marginLeft: '6px',
+  },
+  clipTranscript: {
+    marginBottom: '12px',
+    padding: '12px',
+    background: 'rgba(0, 0, 0, 0.2)',
+    borderRadius: '8px',
+    borderLeft: '3px solid #8b5cf6',
+  },
+  clipTranscriptLabel: {
+    fontSize: '13px',
+    fontWeight: '600',
+    color: 'rgba(255, 255, 255, 0.7)',
+    display: 'block',
+    marginBottom: '6px',
+  },
+  clipTranscriptText: {
+    color: '#cbd5e1',
+    lineHeight: '1.6',
+    fontStyle: 'italic',
+    margin: 0,
+  },
+  clipCaption: {
+    marginBottom: '12px',
+    padding: '12px',
+    background: 'rgba(236, 72, 153, 0.1)',
+    borderRadius: '8px',
+    borderLeft: '3px solid #ec4899',
+  },
+  clipCaptionLabel: {
+    fontSize: '13px',
+    fontWeight: '600',
+    color: 'rgba(255, 255, 255, 0.7)',
+    display: 'block',
+    marginBottom: '6px',
+  },
+  clipCaptionText: {
+    color: '#cbd5e1',
+    lineHeight: '1.6',
+    margin: 0,
+  },
+  clipPlatforms: {
+    marginTop: '12px',
+  },
+  platformsLabel: {
+    fontSize: '13px',
+    fontWeight: '600',
+    color: 'rgba(255, 255, 255, 0.7)',
+    display: 'block',
+    marginBottom: '8px',
+  },
+  platformTags: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '8px',
+  },
+  platformTag: {
+    padding: '6px 12px',
+    background: 'rgba(255, 255, 255, 0.08)',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
+    borderRadius: '16px',
+    fontSize: '13px',
+    color: 'rgba(255, 255, 255, 0.8)',
+  },
+  clipgenStrategy: {
+    padding: '20px',
+    background: 'rgba(236, 72, 153, 0.1)',
+    borderRadius: '12px',
+    border: '1px solid rgba(236, 72, 153, 0.3)',
+    marginBottom: '16px',
+  },
+  strategyTitle: {
+    fontSize: '16px',
+    fontWeight: '700',
+    color: '#e2e8f0',
+    marginBottom: '16px',
+  },
+  strategySection: {
+    marginBottom: '16px',
+  },
+  hashtagsContainer: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '8px',
+    marginTop: '8px',
+  },
+  hashtag: {
+    padding: '6px 12px',
+    background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(236, 72, 153, 0.3))',
+    border: '1px solid rgba(139, 92, 246, 0.5)',
+    borderRadius: '16px',
+    color: 'white',
+    fontWeight: '500',
+    fontSize: '13px',
+  },
+  scheduleGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
+    gap: '12px',
+    marginTop: '8px',
+  },
+  scheduleItem: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '6px',
+    padding: '12px',
+    background: 'rgba(255, 255, 255, 0.08)',
+    border: '1px solid rgba(236, 72, 153, 0.3)',
+    borderRadius: '10px',
+  },
+  scheduleClip: {
+    fontSize: '13px',
+    color: '#ec4899',
+    fontWeight: '600',
+  },
+  scheduleDay: {
+    fontSize: '14px',
+    color: 'white',
+    fontWeight: '600',
+  },
+  scheduleTime: {
+    fontSize: '13px',
+    color: 'rgba(255, 255, 255, 0.7)',
+  },
+  clipgenNotes: {
+    padding: '16px',
+    background: 'rgba(139, 92, 246, 0.1)',
+    border: '1px solid rgba(139, 92, 246, 0.3)',
+    borderRadius: '10px',
+    fontSize: '14px',
+    color: '#cbd5e1',
+    lineHeight: '1.6',
   },
 };
 

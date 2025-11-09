@@ -39,7 +39,7 @@ Market Muse AI is a comprehensive marketing automation platform that provides:
 ## ✨ Key Features
 
 ### 🤖 Agent Marketplace
-- 9 specialized AI marketing agents
+- 10 specialized AI marketing agents
 - Video preview modals with autoplay
 - Agent descriptions and token costs
 - Direct navigation to agent pages
@@ -138,7 +138,7 @@ npm run preview
 ### Step 1: Run the Main SQL Setup
 
 Execute `supabase-setup.sql` in your Supabase SQL Editor. This will:
-- Create `agents` table with all 9 agents
+- Create `agents` table with all 10 agents
 - Create `profiles` table with token management
 - Create `token_usage_log` for usage tracking
 - Create `usage_logs` table for chat history
@@ -192,6 +192,7 @@ WHERE id = '<your-user-id>';
 | **TrendIQ** | 150/250 | Market trend analysis (location/keyword modes) |
 | **Scriptly** | 300 | Viral video script generator for short-form content |
 | **Adbrief** | 75 | Creative ad brief generator with multiple angles |
+| **ClipGen** | 350 | Transform long-form videos into viral short-form clips |
 
 ---
 
@@ -217,6 +218,7 @@ Capstone-Ai-Marketplace/
 │   ├── TrendIQPage.jsx              # Market trends agent
 │   ├── ScriptlyPage.jsx             # Video script generator agent
 │   ├── AdbriefPage.jsx              # Ad brief generator agent
+│   ├── ClipGenPage.jsx              # Viral clip generator agent
 │   │
 │   ├── components/
 │   │   └── AdbriefPopup.jsx         # Popup for AdVisor integration

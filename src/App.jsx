@@ -10,6 +10,7 @@ import SociaPlanPage from './SociaPlanPage.jsx'
 import TrendIQPage from './TrendIQPage.jsx'
 import ScriptlyPage from './ScriptlyPage.jsx'
 import AdbriefPage from './AdbriefPage.jsx'
+import ClipGenPage from './ClipGenPage.jsx'
 import MyAgentsPage from './MyAgentsPage.jsx'
 import AnalyticsPage from './AnalyticsPage.jsx'
 import CampaignsPage from './CampaignsPage.jsx'
@@ -32,6 +33,7 @@ function App() {
       <Route path="/trendiq" element={<TrendIQPage />} />
       <Route path="/scriptly" element={<ScriptlyPage />} />
       <Route path="/adbrief" element={<AdbriefPage />} />
+      <Route path="/clipgen" element={<ClipGenPage />} />
       <Route path="/my-agents" element={<MyAgentsPage />} />
       <Route path="/analytics" element={<AnalyticsPage />} />
       <Route path="/campaigns" element={<CampaignsPage />} />

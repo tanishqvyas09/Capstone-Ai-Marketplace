@@ -4,7 +4,7 @@ import { supabase } from "../supabaseClient";
 import { 
   Search, MessageCircle, Image, Target, Key, Phone, Headphones, 
   TrendingUp, FileText, Users, Bell, Settings, LogOut, 
-  ChevronDown, Menu, X, Play, Zap, BarChart3, Clock, CheckCircle, UserPlus, Calendar, Sparkles
+  ChevronDown, Menu, X, Play, Zap, BarChart3, Clock, CheckCircle, UserPlus, Calendar, Sparkles, Film
 } from 'lucide-react';
 
 function DashboardPage() {
@@ -30,15 +30,14 @@ function DashboardPage() {
     { id: 2, name: 'LeadGen', icon: UserPlus, desc: 'Intelligent lead generation and contact discovery', videoUrl: 'https://player.cloudinary.com/embed/?cloud_name=dry1chfzv&public_id=WhatsApp_Video_2025-10-15_at_13.23.05_ztnmkn&profile=cld-default', status: 'active' },
     { id: 3, name: 'WhatsPulse', icon: MessageCircle, desc: 'Automates WhatsApp marketing campaigns', videoUrl: 'https://res.cloudinary.com/dry1chfzv/video/upload/v1760383595/AI_Marketing_Intro_Video_Generation_rucbpj.mp4', status: 'active' },
    // { id: 4, name: 'GraphiGen', icon: Image, desc: 'Generates stunning graphics for ads & social posts', videoUrl: 'https://res.cloudinary.com/dry1chfzv/video/upload/v1760383593/AI_Design_Agent_Intro_Video_Generation_iguoka.mp4', status: 'active' },
-    { id: 5, name: 'AdVisor', icon: Target, desc: 'Creates optimized ad titles and visuals', videoUrl: 'https://res.cloudinary.com/dry1chfzv/video/upload/v1760383601/AI_Ad_Strategist_Promo_Video_Generated_c1leqv.mp4', status: 'active' },
-    { id: 6, name: 'SociaPlan', icon: Calendar, desc: 'Social Media Calendar Generator - Full week content planning', videoUrl: 'https://player.cloudinary.com/embed/?cloud_name=dry1chfzv&public_id=AI_Social_Media_Content_Calendar_Generation_nddmb9&profile=cld-default', status: 'active' },
-    //{ id: 7, name: 'KeyMuse', icon: Key, desc: 'Generates high-performing marketing keywords', videoUrl: '', status: 'idle' },
-    //{ id: 8, name: 'SalesCalla', icon: Phone, desc: 'AI-driven sales calling and lead management', videoUrl: '', status: 'idle' },
-    { id: 9, name: 'EchoMind', icon: Headphones, desc: 'Analyzes customer recordings for sentiment patterns', videoUrl: 'https://res.cloudinary.com/dry1chfzv/video/upload/v1760383553/AI_Video_Intro_EchoMind_s_Emotional_Insight_xxcqga.mp4', status: 'active' },
-    { id: 10, name: 'TrendIQ', icon: TrendingUp, desc: 'Scans news, social media, and on-chain data - 150 tokens (location) or 250 tokens (keyword)', videoUrl: '' /* Video coming soon: '' */, status: 'active' },
-    { id: 11, name: 'Scriptly', icon: FileText, desc: 'Generates viral short-form video scripts with AI - 300 tokens', videoUrl: '', status: 'active' },
-    { id: 12, name: 'Adbrief', icon: Sparkles, desc: 'Creates strategic ad briefs with multiple creative angles - 75 tokens', videoUrl: '', status: 'active' },
-    //{ id: 13, name: 'LostLens', icon: Users, desc: 'Diagnoses customer loss reasons & retention patterns', videoUrl: '', status: 'idle' }
+    { id: 4, name: 'AdVisor', icon: Target, desc: 'Creates optimized ad titles and visuals', videoUrl: 'https://res.cloudinary.com/dry1chfzv/video/upload/v1760383601/AI_Ad_Strategist_Promo_Video_Generated_c1leqv.mp4', status: 'active' },
+    { id: 5, name: 'SociaPlan', icon: Calendar, desc: 'Social Media Calendar Generator - Full week content planning', videoUrl: 'https://player.cloudinary.com/embed/?cloud_name=dry1chfzv&public_id=AI_Social_Media_Content_Calendar_Generation_nddmb9&profile=cld-default', status: 'active' },
+    { id: 6, name: 'EchoMind', icon: Headphones, desc: 'Analyzes customer recordings for sentiment patterns', videoUrl: 'https://res.cloudinary.com/dry1chfzv/video/upload/v1760383553/AI_Video_Intro_EchoMind_s_Emotional_Insight_xxcqga.mp4', status: 'active' },
+    { id: 7, name: 'TrendIQ', icon: TrendingUp, desc: 'Scans news, social media, and on-chain data - 150 tokens (location) or 250 tokens (keyword)', videoUrl: '' /* Video coming soon: '' */, status: 'active' },
+    { id: 8, name: 'Scriptly', icon: FileText, desc: 'Generates viral short-form video scripts with AI - 300 tokens', videoUrl: '', status: 'active' },
+    { id: 9, name: 'Adbrief', icon: Sparkles, desc: 'Creates strategic ad briefs with multiple creative angles - 75 tokens', videoUrl: '', status: 'active' },
+    { id: 10, name: 'ClipGen', icon: Film, desc: 'Transforms long-form content into viral short-form clips - 350 tokens', videoUrl: '', status: 'active' },
+    //{ id: 11, name: 'LostLens', icon: Users, desc: 'Diagnoses customer loss reasons & retention patterns', videoUrl: '', status: 'idle' }
   ];
 
   useEffect(() => {
@@ -927,6 +926,8 @@ function DashboardPage() {
                   navigate('/scriptly');
                 } else if (selectedAgent.name === 'Adbrief') {
                   navigate('/adbrief');
+                } else if (selectedAgent.name === 'ClipGen') {
+                  navigate('/clipgen');
                 } else {
                   // For other agents, you can add their specific routes here
                   alert(`${selectedAgent.name} agent page coming soon!`);
