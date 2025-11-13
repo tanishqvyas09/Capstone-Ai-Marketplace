@@ -27,7 +27,9 @@ export const AGENT_COSTS = {
   'TrendIQ-Keyword': 250, // For reference only
   'TrendIQ-Location': 150, // For reference only
   'Scriptly': 300, // Fixed cost for generating viral video scripts
-  'Adbrief': 75 // Fixed cost for generating ad briefs with multiple angles
+  'Adbrief': 75, // Fixed cost for generating ad briefs with multiple angles
+  'RingCast': 40, // Per call - multiply by number of calls
+  'InfluenceScope': 100 // Fixed cost for Instagram influencer analysis
 };
 
 /**
