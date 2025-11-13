@@ -4,7 +4,7 @@ import { supabase } from "../supabaseClient";
 import { 
   Search, MessageCircle, Image, Target, Key, Phone, Headphones, 
   TrendingUp, FileText, Users, Bell, Settings, LogOut, 
-  ChevronDown, Menu, X, Play, Zap, BarChart3, Clock, CheckCircle, UserPlus, Calendar, Sparkles, Film, PhoneCall, Instagram
+  ChevronDown, Menu, X, Play, Zap, BarChart3, Clock, CheckCircle, UserPlus, Calendar, Sparkles, Film, PhoneCall, Instagram, Youtube
 } from 'lucide-react';
 
 function DashboardPage() {
@@ -39,7 +39,8 @@ function DashboardPage() {
     { id: 10, name: 'ClipGen', icon: Film, desc: 'Transforms long-form content into viral short-form clips - 350 tokens', videoUrl: '', status: 'active' },
     { id: 11, name: 'RingCast', icon: PhoneCall, desc: 'Automated voice broadcast system - Upload CSV with contacts and send personalized voice messages', videoUrl: '', status: 'active' },
     { id: 12, name: 'InfluenceScope', icon: Instagram, desc: 'Deep Instagram influencer analysis - Enter username to get detailed engagement metrics, authenticity scores, and partnership insights', videoUrl: '', status: 'active' },
-    //{ id: 13, name: 'LostLens', icon: Users, desc: 'Diagnoses customer loss reasons & retention patterns', videoUrl: '', status: 'idle' }
+    { id: 13, name: 'SocialInsight', icon: Youtube, desc: 'AI-powered YouTube & Instagram content Transcriber ', videoUrl: '', status: 'active' },
+    //{ id: 14, name: 'LostLens', icon: Users, desc: 'Diagnoses customer loss reasons & retention patterns', videoUrl: '', status: 'idle' }
   ];
 
   useEffect(() => {
@@ -934,6 +935,8 @@ function DashboardPage() {
                   navigate('/ringcast');
                 } else if (selectedAgent.name === 'InfluenceScope') {
                   navigate('/influencescope');
+                } else if (selectedAgent.name === 'SocialInsight') {
+                  navigate('/socialinsight');
                 } else {
                   // For other agents, you can add their specific routes here
                   alert(`${selectedAgent.name} agent page coming soon!`);

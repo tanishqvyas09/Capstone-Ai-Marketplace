@@ -44,6 +44,7 @@ function InfluenceScopePage() {
     }
 
     console.log('🔍 Starting InfluenceScope analysis for:', username);
+    console.log('📋 Campaign ID:', campaignId || 'Not part of campaign');
 
     setLoading(true);
     setError('');
@@ -53,38 +54,118 @@ function InfluenceScopePage() {
     try {
       const cleanUsername = username.replace('@', '').trim();
       
-      // TEMPORARY: Direct webhook call without token check
-      const payload = { username: cleanUsername };
-      console.log('📤 Sending payload to webhook:', payload);
+      console.log('🚀 Starting InfluenceScope with token deduction...');
+      
+      // Execute with token deduction (100 tokens)
+      const tokenResult = await executeWithTokens(
+        session.user.id,
+        'InfluenceScope',
+        async () => {
+          // API call logic
+          const payload = { username: cleanUsername };
+          console.log('📤 Sending payload to webhook:', payload);
 
-      const response = await fetch(
-        'https://glowing-g79w8.crab.containers.automata.host/webhook/influencescope',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        }
+          const response = await fetch(
+            'https://glowing-g79w8.crab.containers.automata.host/webhook/influencescope',
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error(`API request failed: ${response.status}`);
+          }
+
+          const data = await response.json();
+          console.log('📥 Raw response data:', data);
+
+          // Extract the output from the response
+          const output = data[0]?.output || data.output || data;
+          console.log('📊 Extracted output:', output);
+
+          return output;
+        },
+        { username: cleanUsername }, // Request data
+        1, // Token multiplier (fixed cost)
+        `Instagram analysis for @${cleanUsername}`, // Output summary
+        campaignId // Campaign ID (if part of campaign)
       );
 
-      if (!response.ok) {
-        throw new Error(`API request failed: ${response.status}`);
+      // Check result
+      if (!tokenResult.success) {
+        setError(tokenResult.error);
+        setLoading(false);
+        return;
       }
 
-      const data = await response.json();
-      console.log('📥 Raw response data:', data);
-
-      // Extract the output from the response
-      const output = data[0]?.output || data.output || data;
-      console.log('📊 Extracted output:', output);
-
-      console.log('✅ Analysis complete (no tokens deducted - testing mode)');
+      // Success - tokens deducted
+      console.log(`✅ InfluenceScope completed! Tokens deducted: ${tokenResult.tokensDeducted}`);
+      console.log(`💰 Remaining tokens: ${tokenResult.tokensRemaining}`);
       
-      setAnalysisData(output);
+      setAnalysisData(tokenResult.data);
       setLoading(false);
       setCompleted(true);
 
+      // Handle campaign task completion if this is part of a campaign
+      if (campaignId) {
+        console.log('📁 This is part of campaign:', campaignId);
+        console.log('📁 Log ID from tokenResult:', tokenResult.logId);
+        
+        if (!tokenResult.logId) {
+          console.error('❌ No logId returned from tokenService!');
+        } else {
+          console.log('✅ LogId available, proceeding with campaign artifact save...');
+          
+          // Get agent ID from database
+          const { data: agentData, error: agentError } = await supabase
+            .from('agents')
+            .select('id')
+            .eq('name', 'InfluenceScope')
+            .single();
+          
+          if (agentError) {
+            console.error('❌ Error fetching agent ID:', agentError);
+          } else if (!agentData) {
+            console.error('❌ InfluenceScope agent not found in database');
+          } else {
+            const agentId = agentData.id;
+            console.log('✅ Agent ID:', agentId);
+            
+            const outputSummary = `Instagram analysis for @${cleanUsername}`;
+            
+            console.log('📁 Calling handleCampaignTaskCompletion with:', {
+              campaignId,
+              agentId,
+              agentName: 'InfluenceScope',
+              logId: tokenResult.logId,
+              outputSummary
+            });
+            
+            const campaignResult = await handleCampaignTaskCompletion(
+              campaignId,
+              agentId,
+              'InfluenceScope',
+              tokenResult.logId,
+              tokenResult.data,
+              outputSummary
+            );
+            
+            if (campaignResult.success) {
+              console.log('✅ Campaign artifact saved successfully!');
+              console.log('✅ Task marked as complete');
+            } else {
+              console.error('❌ Failed to save campaign artifact:', campaignResult.error);
+            }
+          }
+        }
+      } else {
+        console.log('📝 Running as standalone agent (not part of campaign)');
+      }
+
     } catch (err) {
-      console.error('❌ Analysis error:', err);
+      console.error('❌ InfluenceScope error:', err);
       setError(err.message || 'Failed to analyze Instagram profile');
       setLoading(false);
     }

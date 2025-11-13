@@ -82,12 +82,6 @@ function ClipGenPage() {
     setLoading(true);
     setResult(null);
 
-    const requestData = {
-      source_url: sourceUrl,
-      clip_style: clipStyle,
-      max_clips: maxClips
-    };
-
     const outputSummary = `Generated ${maxClips} viral clips from YouTube video using ${clipStyle} style`;
 
     try {
@@ -96,14 +90,14 @@ function ClipGenPage() {
         'ClipGen',
         async () => {
           console.log('🚀 Sending request to ClipGen webhook...');
-          console.log('Request data:', JSON.stringify([requestData], null, 2));
+          console.log('Sending only URL:', sourceUrl);
           
           const response = await fetch('https://glowing-g79w8.crab.containers.automata.host/webhook/Clipgen', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify([requestData])
+            body: JSON.stringify({ url: sourceUrl }) // Send only URL
           });
 
           console.log('📡 Response status:', response.status);
@@ -137,7 +131,7 @@ function ClipGenPage() {
           console.log('✅ ClipGen Response:', JSON.stringify(data, null, 2));
           return data;
         },
-        requestData,
+        { url: sourceUrl }, // Request data for logging
         1,
         outputSummary
       );
@@ -194,14 +188,48 @@ function ClipGenPage() {
         console.log('Validation passed! Setting result with', outputData.clips.length, 'clips');
         setResult(outputData);
 
-        if (campaignId) {
-          await handleCampaignTaskCompletion(
-            campaignId,
-            session.user.id,
-            'ClipGen',
-            outputData,
-            outputSummary
-          );
+        if (campaignId && tokenResult.logId) {
+          console.log('📁 This is part of campaign:', campaignId);
+          console.log('📁 Log ID from tokenResult:', tokenResult.logId);
+          
+          // Get agent ID from database
+          const { data: agentData, error: agentError } = await supabase
+            .from('agents')
+            .select('id')
+            .eq('name', 'ClipGen')
+            .single();
+          
+          if (agentError) {
+            console.error('❌ Error fetching agent ID:', agentError);
+          } else if (!agentData) {
+            console.error('❌ ClipGen agent not found in database');
+          } else {
+            const agentId = agentData.id;
+            console.log('✅ Agent ID:', agentId);
+            
+            console.log('📁 Calling handleCampaignTaskCompletion with:', {
+              campaignId,
+              agentId,
+              agentName: 'ClipGen',
+              logId: tokenResult.logId,
+              outputSummary
+            });
+            
+            const campaignResult = await handleCampaignTaskCompletion(
+              campaignId,
+              agentId,
+              'ClipGen',
+              tokenResult.logId,
+              outputData,
+              outputSummary
+            );
+            
+            if (campaignResult.success) {
+              console.log('✅ Campaign artifact saved successfully!');
+            } else {
+              console.error('❌ Failed to save campaign artifact:', campaignResult.error);
+            }
+          }
         }
       } else {
         alert(tokenResult.error || 'Failed to generate clips');

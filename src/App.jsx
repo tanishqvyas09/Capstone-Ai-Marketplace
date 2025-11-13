@@ -13,6 +13,7 @@ import AdbriefPage from './AdbriefPage.jsx'
 import ClipGenPage from './ClipGenPage.jsx'
 import RingCastPage from './RingCastPage.jsx'
 import InfluenceScopePage from './InfluenceScopePage.jsx'
+import SocialInsightPage from './SocialInsightPage.jsx'
 import MyAgentsPage from './MyAgentsPage.jsx'
 import AnalyticsPage from './AnalyticsPage.jsx'
 import CampaignsPage from './CampaignsPage.jsx'
@@ -38,6 +39,7 @@ function App() {
       <Route path="/clipgen" element={<ClipGenPage />} />
       <Route path="/ringcast" element={<RingCastPage />} />
       <Route path="/influencescope" element={<InfluenceScopePage />} />
+      <Route path="/socialinsight" element={<SocialInsightPage />} />
       <Route path="/my-agents" element={<MyAgentsPage />} />
       <Route path="/analytics" element={<AnalyticsPage />} />
       <Route path="/campaigns" element={<CampaignsPage />} />

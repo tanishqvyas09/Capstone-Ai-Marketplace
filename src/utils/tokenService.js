@@ -29,7 +29,8 @@ export const AGENT_COSTS = {
   'Scriptly': 300, // Fixed cost for generating viral video scripts
   'Adbrief': 75, // Fixed cost for generating ad briefs with multiple angles
   'RingCast': 40, // Per call - multiply by number of calls
-  'InfluenceScope': 100 // Fixed cost for Instagram influencer analysis
+  'InfluenceScope': 100, // Fixed cost for Instagram influencer analysis
+  'SocialInsight': 150 // Fixed cost for YouTube/Instagram download and analysis
 };
 
 /**
