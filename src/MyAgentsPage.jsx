@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { supabase } from "../supabaseClient";
 import { 
-  ArrowLeft, Clock, CheckCircle, XCircle, Filter, Search, Calendar,
-  Zap, TrendingUp, Download, MessageSquare, ChevronRight, Eye, Info
+  ArrowLeft, Clock, CheckCircle, XCircle, Search,
+  Zap, MessageSquare, ChevronRight
 } from 'lucide-react';
+import HistoryBackground3D from './components/HistoryBackground3D';
 
 function MyAgentsPage() {
   const navigate = useNavigate();
@@ -13,9 +14,9 @@ function MyAgentsPage() {
   const [filteredLogs, setFilteredLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all'); // all, success, error
-  const [dateFilter, setDateFilter] = useState('all'); // all, today, week, month
-  const [selectedLog, setSelectedLog] = useState(null); // For viewing details modal
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [dateFilter, setDateFilter] = useState('all');
+  const [selectedLog, setSelectedLog] = useState(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
 
   useEffect(() => {
@@ -63,19 +64,16 @@ function MyAgentsPage() {
   const filterLogs = () => {
     let filtered = [...usageLogs];
 
-    // Search filter
     if (searchTerm) {
       filtered = filtered.filter(log => 
         log.agent_name.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
-    // Status filter
     if (statusFilter !== 'all') {
       filtered = filtered.filter(log => log.status === statusFilter);
     }
 
-    // Date filter
     if (dateFilter !== 'all') {
       const now = new Date();
       const filterDate = new Date();
@@ -126,7 +124,6 @@ function MyAgentsPage() {
     });
   };
 
-  // Generate a meaningful title from agent name and input data
   const generateTitle = (log) => {
     if (log.output_summary) return log.output_summary;
     
@@ -135,7 +132,6 @@ function MyAgentsPage() {
     
     if (!inputData) return `${agentName} Run`;
     
-    // Generate titles based on agent type and input
     switch(agentName) {
       case 'TrendIQ':
         if (inputData.keyword) return `Analyzed "${inputData.keyword}" trends`;
@@ -188,645 +184,854 @@ function MyAgentsPage() {
 
   const stats = getTotalStats();
 
-  const styles = {
-    container: {
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #0a0a0f 0%, #1a0a2e 50%, #16001e 100%)',
-      color: '#fff',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif'
-    },
-    header: {
-      position: 'sticky',
-      top: 0,
-      zIndex: 100,
-      backdropFilter: 'blur(12px)',
-      background: 'rgba(255, 255, 255, 0.1)',
-      borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
-      padding: '1.5rem 2rem'
-    },
-    headerContent: {
-      maxWidth: '1400px',
-      margin: '0 auto',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between'
-    },
-    backButton: {
-      background: 'rgba(255, 255, 255, 0.1)',
-      border: 'none',
-      borderRadius: '12px',
-      padding: '0.75rem 1.5rem',
-      color: '#fff',
-      cursor: 'pointer',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.5rem',
-      fontSize: '0.95rem',
-      fontWeight: '500',
-      transition: 'all 0.3s'
-    },
-    title: {
-      fontSize: '1.75rem',
-      fontWeight: 'bold',
-      background: 'linear-gradient(135deg, #c084fc 0%, #f9a8d4 100%)',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.75rem'
-    },
-    mainContent: {
-      maxWidth: '1400px',
-      margin: '0 auto',
-      padding: '2rem'
-    },
-    statsGrid: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-      gap: '1.5rem',
-      marginBottom: '2rem'
-    },
-    statCard: {
-      background: 'rgba(255, 255, 255, 0.05)',
-      borderRadius: '16px',
-      padding: '1.5rem',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      backdropFilter: 'blur(16px)'
-    },
-    statValue: {
-      fontSize: '2rem',
-      fontWeight: 'bold',
-      background: 'linear-gradient(135deg, #c084fc 0%, #f9a8d4 100%)',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-      marginBottom: '0.5rem'
-    },
-    statLabel: {
-      fontSize: '0.875rem',
-      color: '#9ca3af'
-    },
-    filterSection: {
-      background: 'rgba(255, 255, 255, 0.05)',
-      borderRadius: '16px',
-      padding: '1.5rem',
-      marginBottom: '2rem',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      backdropFilter: 'blur(16px)'
-    },
-    filterRow: {
-      display: 'flex',
-      gap: '1rem',
-      flexWrap: 'wrap',
-      alignItems: 'center'
-    },
-    searchBox: {
-      flex: '1',
-      minWidth: '250px',
-      position: 'relative'
-    },
-    searchInput: {
-      width: '100%',
-      padding: '0.75rem 1rem 0.75rem 2.5rem',
-      background: 'rgba(255, 255, 255, 0.05)',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      borderRadius: '12px',
-      color: '#fff',
-      fontSize: '0.95rem',
-      outline: 'none'
-    },
-    searchIcon: {
-      position: 'absolute',
-      left: '0.75rem',
-      top: '50%',
-      transform: 'translateY(-50%)',
-      color: '#9ca3af'
-    },
-    filterButton: {
-      padding: '0.75rem 1.25rem',
-      background: 'rgba(255, 255, 255, 0.05)',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      borderRadius: '12px',
-      color: '#fff',
-      fontSize: '0.95rem',
-      cursor: 'pointer',
-      transition: 'all 0.3s'
-    },
-    filterButtonActive: {
-      background: 'linear-gradient(135deg, #9333ea 0%, #ec4899 100%)',
-      border: '1px solid rgba(147,51,234,0.5)'
-    },
-    tableContainer: {
-      background: 'rgba(255, 255, 255, 0.05)',
-      borderRadius: '16px',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      backdropFilter: 'blur(16px)',
-      overflow: 'hidden'
-    },
-    cardsGrid: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
-      gap: '1.5rem',
-      padding: '1.5rem'
-    },
-    historyCard: {
-      background: 'rgba(255, 255, 255, 0.05)',
-      borderRadius: '16px',
-      padding: '1.5rem',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      backdropFilter: 'blur(16px)',
-      cursor: 'pointer',
-      transition: 'all 0.3s',
-      '&:hover': {
-        background: 'rgba(255, 255, 255, 0.08)',
-        transform: 'translateY(-2px)',
-        borderColor: 'rgba(147,51,234,0.3)'
-      }
-    },
-    cardHeader: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginBottom: '1rem',
-      paddingBottom: '0.75rem',
-      borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
-    },
-    cardHeaderLeft: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.5rem'
-    },
-    cardHeaderRight: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.75rem'
-    },
-    agentBadge: {
-      padding: '0.25rem 0.75rem',
-      background: 'rgba(147,51,234,0.2)',
-      color: '#c084fc',
-      borderRadius: '8px',
-      fontSize: '0.85rem',
-      fontWeight: '600'
-    },
-    dateText: {
-      fontSize: '0.875rem',
-      color: '#9ca3af'
-    },
-    cardTitle: {
-      fontSize: '1.1rem',
-      fontWeight: '600',
-      color: '#fff',
-      marginBottom: '0.75rem',
-      lineHeight: '1.4'
-    },
-    cardSummary: {
-      fontSize: '0.95rem',
-      color: '#d1d5db',
-      lineHeight: '1.6',
-      marginBottom: '1rem',
-      display: '-webkit-box',
-      WebkitLineClamp: 2,
-      WebkitBoxOrient: 'vertical',
-      overflow: 'hidden'
-    },
-    cardSummaryPlaceholder: {
-      fontSize: '0.95rem',
-      color: '#6b7280',
-      fontStyle: 'italic',
-      marginBottom: '1rem'
-    },
-    cardFooter: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      paddingTop: '0.75rem',
-      borderTop: '1px solid rgba(255, 255, 255, 0.1)'
-    },
-    tokensBadge: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.35rem',
-      padding: '0.35rem 0.75rem',
-      background: 'rgba(236,72,153,0.1)',
-      borderRadius: '8px',
-      fontSize: '0.875rem',
-      color: '#ec4899',
-      fontWeight: '600'
-    },
-    viewDetailsBtn: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.25rem',
-      fontSize: '0.875rem',
-      color: '#9ca3af',
-      fontWeight: '500'
-    },
-    modalOverlay: {
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      background: 'rgba(0, 0, 0, 0.75)',
-      backdropFilter: 'blur(8px)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 1000,
-      padding: '2rem'
-    },
-    modalContent: {
-      background: 'linear-gradient(135deg, #1a1a2e 0%, #16001e 100%)',
-      borderRadius: '20px',
-      border: '1px solid rgba(255, 255, 255, 0.2)',
-      maxWidth: '700px',
-      width: '100%',
-      maxHeight: '90vh',
-      overflow: 'auto',
-      boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5)'
-    },
-    modalHeader: {
-      padding: '1.5rem 2rem',
-      borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      position: 'sticky',
-      top: 0,
-      background: 'inherit',
-      zIndex: 1
-    },
-    modalTitle: {
-      fontSize: '1.5rem',
-      fontWeight: 'bold',
-      background: 'linear-gradient(135deg, #c084fc 0%, #f9a8d4 100%)',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent'
-    },
-    modalCloseBtn: {
-      background: 'rgba(255, 255, 255, 0.05)',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      borderRadius: '50%',
-      width: '36px',
-      height: '36px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      cursor: 'pointer',
-      fontSize: '1.5rem',
-      color: '#9ca3af',
-      transition: 'all 0.3s'
-    },
-    modalBody: {
-      padding: '2rem'
-    },
-    detailSection: {
-      marginBottom: '1.5rem'
-    },
-    detailLabel: {
-      fontSize: '0.875rem',
-      color: '#9ca3af',
-      fontWeight: '600',
-      textTransform: 'uppercase',
-      letterSpacing: '0.05em',
-      marginBottom: '0.5rem'
-    },
-    detailValue: {
-      fontSize: '1rem',
-      color: '#e2e8f0',
-      lineHeight: '1.6'
-    },
-    codeBlock: {
-      background: 'rgba(0, 0, 0, 0.3)',
-      borderRadius: '12px',
-      padding: '1rem',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      maxHeight: '300px',
-      overflow: 'auto'
-    },
-    codeContent: {
-      margin: 0,
-      fontSize: '0.875rem',
-      color: '#d1d5db',
-      fontFamily: 'monospace',
-      whiteSpace: 'pre-wrap',
-      wordBreak: 'break-word'
-    },
-    table: {
-      width: '100%',
-      borderCollapse: 'collapse'
-    },
-    tableHeader: {
-      background: 'rgba(255, 255, 255, 0.05)',
-      borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
-    },
-    th: {
-      padding: '1rem 1.5rem',
-      textAlign: 'left',
-      fontSize: '0.875rem',
-      fontWeight: '600',
-      color: '#9ca3af',
-      textTransform: 'uppercase',
-      letterSpacing: '0.05em'
-    },
-    td: {
-      padding: '1rem 1.5rem',
-      borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
-      fontSize: '0.95rem'
-    },
-    statusBadge: {
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: '0.5rem',
-      padding: '0.35rem 0.75rem',
-      borderRadius: '12px',
-      fontSize: '0.85rem',
-      fontWeight: '600'
-    },
-    successBadge: {
-      background: 'rgba(34,197,94,0.2)',
-      color: '#86efac',
-      border: '1px solid rgba(34,197,94,0.3)'
-    },
-    errorBadge: {
-      background: 'rgba(239,68,68,0.2)',
-      color: '#fca5a5',
-      border: '1px solid rgba(239,68,68,0.3)'
-    },
-    agentName: {
-      fontWeight: '600',
-      color: '#e2e8f0'
-    },
-    tokensCell: {
-      fontWeight: '600',
-      color: '#c084fc'
-    },
-    emptyState: {
-      textAlign: 'center',
-      padding: '4rem 2rem',
-      color: '#9ca3af'
-    },
-    emptyIcon: {
-      width: '80px',
-      height: '80px',
-      background: 'rgba(255, 255, 255, 0.05)',
-      borderRadius: '50%',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      margin: '0 auto 1.5rem'
-    }
-  };
-
   return (
-    <div style={styles.container}>
+    <div className="agents-container">
+      {/* 3D Interactive Background */}
+      <HistoryBackground3D />
+      
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        .agents-container {
+          min-height: 100vh;
+          background: #000000;
+          color: #FFFFFF;
+          font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+          position: relative;
+          overflow-x: hidden;
+        }
+
+        /* Subtle animated background gradient - reduced opacity for 3D elements */
+        .agents-container::before {
+          content: '';
+          position: fixed;
+          top: -50%;
+          left: -50%;
+          width: 200%;
+          height: 200%;
+          background: radial-gradient(
+            circle at 20% 50%,
+            rgba(0, 217, 255, 0.015) 0%,
+            transparent 25%
+          ),
+          radial-gradient(
+            circle at 80% 80%,
+            rgba(14, 165, 233, 0.015) 0%,
+            transparent 25%
+          ),
+          radial-gradient(
+            circle at 40% 20%,
+            rgba(0, 217, 255, 0.01) 0%,
+            transparent 25%
+          );
+          animation: gradientShift 15s ease infinite;
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        @keyframes gradientShift {
+          0%, 100% { transform: translate(0, 0) rotate(0deg); }
+          33% { transform: translate(2%, -3%) rotate(1deg); }
+          66% { transform: translate(-2%, 2%) rotate(-1deg); }
+        }
+
+        .content-wrapper {
+          position: relative;
+          z-index: 1;
+        }
+
+        /* Header */
+        .header {
+          position: sticky;
+          top: 0;
+          z-index: 100;
+          backdrop-filter: blur(20px) saturate(180%);
+          background: rgba(0, 0, 0, 0.85);
+          border-bottom: 1px solid rgba(0, 217, 255, 0.15);
+          padding: 1.5rem 2rem;
+          box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        .header-content {
+          max-width: 1400px;
+          margin: 0 auto;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .back-button {
+          background: rgba(0, 217, 255, 0.05);
+          border: 1px solid rgba(0, 217, 255, 0.3);
+          border-radius: 12px;
+          padding: 0.75rem 1.5rem;
+          color: #FFFFFF;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 0.95rem;
+          font-weight: 500;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         .back-button:hover {
-          background: rgba(255, 255, 255, 0.15);
+          background: rgba(0, 217, 255, 0.1);
+          border-color: rgba(0, 217, 255, 0.5);
           transform: translateX(-4px);
+          box-shadow: 0 4px 16px rgba(0, 217, 255, 0.2);
         }
-        .filter-button:hover {
-          background: rgba(255, 255, 255, 0.1);
+
+        .title {
+          font-size: 1.75rem;
+          font-weight: 700;
+          color: #FFFFFF;
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          letter-spacing: -0.02em;
         }
+
+        .title-icon {
+          color: #00D9FF;
+        }
+
+        /* Main Content */
+        .main-content {
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 2rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 1.5rem;
+          margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+          background: rgba(10, 20, 30, 0.6);
+          border-radius: 20px;
+          padding: 2rem;
+          border: 1px solid rgba(0, 217, 255, 0.2);
+          backdrop-filter: blur(20px);
+          position: relative;
+          overflow: hidden;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stat-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background: linear-gradient(90deg, transparent, #00D9FF, transparent);
+          opacity: 0;
+          transition: opacity 0.4s;
+        }
+
+        .stat-card:hover::before {
+          opacity: 1;
+        }
+
+        .stat-card:hover {
+          background: rgba(10, 20, 30, 0.8);
+          border-color: rgba(0, 217, 255, 0.4);
+          transform: translateY(-4px);
+          box-shadow: 0 12px 32px rgba(0, 217, 255, 0.15);
+        }
+
+        .stat-value {
+          font-size: 2.5rem;
+          font-weight: 700;
+          background: linear-gradient(135deg, #00D9FF 0%, #0EA5E9 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          margin-bottom: 0.5rem;
+          letter-spacing: -0.03em;
+        }
+
+        .stat-label {
+          font-size: 0.875rem;
+          color: #9CA3AF;
+          font-weight: 500;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+        }
+
+        /* Filter Section */
+        .filter-section {
+          background: rgba(10, 20, 30, 0.6);
+          border-radius: 20px;
+          padding: 1.5rem;
+          margin-bottom: 2.5rem;
+          border: 1px solid rgba(0, 217, 255, 0.2);
+          backdrop-filter: blur(20px);
+        }
+
+        .filter-row {
+          display: flex;
+          gap: 1rem;
+          flex-wrap: wrap;
+          align-items: center;
+        }
+
+        .search-box {
+          flex: 1;
+          min-width: 250px;
+          position: relative;
+        }
+
+        .search-input {
+          width: 100%;
+          padding: 0.875rem 1rem 0.875rem 3rem;
+          background: rgba(0, 0, 0, 0.4);
+          border: 1px solid rgba(0, 217, 255, 0.2);
+          border-radius: 12px;
+          color: #FFFFFF;
+          font-size: 0.95rem;
+          outline: none;
+          transition: all 0.3s;
+          font-family: 'Space Grotesk', sans-serif;
+        }
+
         .search-input:focus {
-          border-color: rgba(147,51,234,0.5);
+          border-color: #00D9FF;
+          background: rgba(0, 0, 0, 0.6);
+          box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.1);
         }
+
+        .search-input::placeholder {
+          color: #6B7280;
+        }
+
+        .search-icon {
+          position: absolute;
+          left: 1rem;
+          top: 50%;
+          transform: translateY(-50%);
+          color: #6B7280;
+          pointer-events: none;
+        }
+
+        .filter-button {
+          padding: 0.875rem 1.5rem;
+          background: rgba(0, 0, 0, 0.4);
+          border: 1px solid rgba(0, 217, 255, 0.2);
+          border-radius: 12px;
+          color: #FFFFFF;
+          font-size: 0.95rem;
+          cursor: pointer;
+          transition: all 0.3s;
+          font-weight: 500;
+          font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .filter-button:hover {
+          background: rgba(0, 217, 255, 0.1);
+          border-color: #00D9FF;
+        }
+
+        .filter-button-active {
+          background: rgba(0, 217, 255, 0.15);
+          border-color: #00D9FF;
+          box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.1);
+        }
+
+        .filter-divider {
+          width: 1px;
+          height: 30px;
+          background: rgba(0, 217, 255, 0.2);
+        }
+
+        /* Cards Grid */
+        .table-container {
+          background: rgba(10, 20, 30, 0.4);
+          border-radius: 20px;
+          border: 1px solid rgba(0, 217, 255, 0.2);
+          backdrop-filter: blur(20px);
+          overflow: hidden;
+        }
+
+        .cards-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+          gap: 1.5rem;
+          padding: 2rem;
+        }
+
+        .history-card {
+          background: rgba(0, 0, 0, 0.6);
+          border-radius: 16px;
+          padding: 1.75rem;
+          border: 1px solid rgba(0, 217, 255, 0.2);
+          backdrop-filter: blur(10px);
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          position: relative;
+        }
+
         .history-card:hover {
-          background: rgba(255, 255, 255, 0.08) !important;
-          transform: translateY(-2px);
-          border-color: rgba(147,51,234,0.3);
-          box-shadow: 0 8px 24px rgba(147,51,234,0.2);
+          background: rgba(0, 0, 0, 0.8);
+          border-color: #00D9FF;
+          transform: translateY(-4px);
+          box-shadow: 0 12px 32px rgba(0, 217, 255, 0.2);
         }
-        .history-card:hover .viewDetailsBtn {
-          color: #c084fc;
+
+        .card-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 1rem;
+          padding-bottom: 0.75rem;
+          border-bottom: 1px solid rgba(0, 217, 255, 0.1);
         }
-        tbody tr:hover {
-          background: rgba(255, 255, 255, 0.02);
+
+        .card-header-left {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
         }
+
+        .card-header-right {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+        }
+
+        .agent-badge {
+          padding: 0.4rem 1rem;
+          background: rgba(0, 217, 255, 0.1);
+          color: #00D9FF;
+          border-radius: 8px;
+          font-size: 0.85rem;
+          font-weight: 600;
+          border: 1px solid rgba(0, 217, 255, 0.3);
+        }
+
+        .date-text {
+          font-size: 0.875rem;
+          color: #6B7280;
+          font-weight: 500;
+        }
+
+        .card-title {
+          font-size: 1.15rem;
+          font-weight: 600;
+          color: #FFFFFF;
+          margin-bottom: 0.75rem;
+          line-height: 1.4;
+          letter-spacing: -0.01em;
+        }
+
+        .card-summary {
+          font-size: 0.95rem;
+          color: #D1D5DB;
+          line-height: 1.6;
+          margin-bottom: 1rem;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        .card-summary-placeholder {
+          font-size: 0.95rem;
+          color: #6B7280;
+          font-style: italic;
+          margin-bottom: 1rem;
+        }
+
+        .card-footer {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding-top: 0.75rem;
+          border-top: 1px solid rgba(0, 217, 255, 0.1);
+        }
+
+        .tokens-badge {
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+          padding: 0.4rem 1rem;
+          background: rgba(0, 217, 255, 0.1);
+          border-radius: 8px;
+          font-size: 0.875rem;
+          color: #00D9FF;
+          font-weight: 600;
+          border: 1px solid rgba(0, 217, 255, 0.3);
+        }
+
+        .view-details-btn {
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+          font-size: 0.875rem;
+          color: #6B7280;
+          font-weight: 500;
+          transition: color 0.3s;
+        }
+
+        .history-card:hover .view-details-btn {
+          color: #00D9FF;
+        }
+
+        /* Modal */
+        .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.9);
+          backdrop-filter: blur(8px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+          padding: 2rem;
+          animation: fadeIn 0.2s;
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        .modal-content {
+          background: rgba(10, 20, 30, 0.95);
+          border-radius: 24px;
+          border: 1px solid rgba(0, 217, 255, 0.3);
+          max-width: 700px;
+          width: 100%;
+          max-height: 90vh;
+          overflow: auto;
+          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+          animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .modal-header {
+          padding: 2rem;
+          border-bottom: 1px solid rgba(0, 217, 255, 0.2);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          position: sticky;
+          top: 0;
+          background: rgba(10, 20, 30, 0.98);
+          backdrop-filter: blur(20px);
+          z-index: 1;
+        }
+
+        .modal-title {
+          font-size: 1.5rem;
+          font-weight: 700;
+          background: linear-gradient(135deg, #00D9FF 0%, #0EA5E9 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          letter-spacing: -0.02em;
+        }
+
+        .modal-close-btn {
+          background: rgba(0, 0, 0, 0.4);
+          border: 1px solid rgba(0, 217, 255, 0.3);
+          border-radius: 50%;
+          width: 40px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          font-size: 1.5rem;
+          color: #6B7280;
+          transition: all 0.3s;
+        }
+
+        .modal-close-btn:hover {
+          background: rgba(0, 217, 255, 0.1);
+          color: #00D9FF;
+          border-color: #00D9FF;
+          transform: rotate(90deg);
+        }
+
+        .modal-body {
+          padding: 2rem;
+        }
+
+        .detail-section {
+          margin-bottom: 1.5rem;
+        }
+
+        .detail-label {
+          font-size: 0.75rem;
+          color: #6B7280;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          margin-bottom: 0.5rem;
+        }
+
+        .detail-value {
+          font-size: 1rem;
+          color: #D1D5DB;
+          line-height: 1.6;
+        }
+
+        .code-block {
+          background: rgba(0, 0, 0, 0.6);
+          border-radius: 12px;
+          padding: 1.25rem;
+          border: 1px solid rgba(0, 217, 255, 0.2);
+          max-height: 300px;
+          overflow: auto;
+        }
+
+        .code-content {
+          margin: 0;
+          font-size: 0.875rem;
+          color: #D1D5DB;
+          font-family: 'SF Mono', 'Monaco', 'Cascadia Code', monospace;
+          white-space: pre-wrap;
+          word-break: break-word;
+        }
+
+        .status-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.4rem 1rem;
+          border-radius: 8px;
+          font-size: 0.875rem;
+          font-weight: 600;
+        }
+
+        .success-badge {
+          background: rgba(0, 217, 255, 0.1);
+          color: #00D9FF;
+          border: 1px solid rgba(0, 217, 255, 0.3);
+        }
+
+        .error-badge {
+          background: rgba(239, 68, 68, 0.1);
+          color: #FF6B6B;
+          border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        /* Empty State */
+        .empty-state {
+          text-align: center;
+          padding: 4rem 2rem;
+          color: #6B7280;
+        }
+
+        .empty-icon {
+          width: 100px;
+          height: 100px;
+          background: rgba(0, 217, 255, 0.05);
+          border: 2px solid rgba(0, 217, 255, 0.2);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto 1.5rem;
+        }
+
+        .loading-spinner {
+          width: 60px;
+          height: 60px;
+          border: 4px solid rgba(0, 217, 255, 0.2);
+          border-top-color: #00D9FF;
+          border-radius: 50%;
+          animation: spin 0.8s linear infinite;
+          margin: 3rem auto;
+        }
+
         @keyframes spin {
           to { transform: rotate(360deg); }
         }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+          width: 10px;
+          height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+          background: rgba(0, 0, 0, 0.3);
+        }
+
+        ::-webkit-scrollbar-thumb {
+          background: rgba(0, 217, 255, 0.3);
+          border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+          background: rgba(0, 217, 255, 0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+          .cards-grid {
+            grid-template-columns: 1fr;
+            padding: 1rem;
+          }
+
+          .stats-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .filter-row {
+            flex-direction: column;
+            align-items: stretch;
+          }
+
+          .search-box {
+            width: 100%;
+          }
+
+          .header-content {
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-start;
+          }
+
+          .title {
+            font-size: 1.5rem;
+          }
+        }
       `}</style>
 
-      {/* Header */}
-      <div style={styles.header}>
-        <div style={styles.headerContent}>
-          <button 
-            style={styles.backButton}
-            onClick={() => navigate('/')}
-            className="back-button"
-          >
-            <ArrowLeft size={20} />
-            Back to Dashboard
-          </button>
-          <div style={styles.title}>
-            <Clock size={28} />
-            My Agents Activity
-          </div>
-          <div style={{ width: '160px' }} />
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div style={styles.mainContent}>
-        {/* Stats Grid */}
-        <div style={styles.statsGrid}>
-          <div style={styles.statCard}>
-            <div style={styles.statValue}>{stats.totalRuns}</div>
-            <div style={styles.statLabel}>Successful Runs</div>
-          </div>
-          <div style={styles.statCard}>
-            <div style={styles.statValue}>{stats.totalTokens.toLocaleString()}</div>
-            <div style={styles.statLabel}>Tokens Spent</div>
-          </div>
-          <div style={styles.statCard}>
-            <div style={styles.statValue}>{stats.errorRuns}</div>
-            <div style={styles.statLabel}>Failed Runs</div>
-          </div>
-          <div style={styles.statCard}>
-            <div style={styles.statValue}>{filteredLogs.length}</div>
-            <div style={styles.statLabel}>Total Entries</div>
-          </div>
-        </div>
-
-        {/* Filters */}
-        <div style={styles.filterSection}>
-          <div style={styles.filterRow}>
-            <div style={styles.searchBox}>
-              <Search size={18} style={styles.searchIcon} />
-              <input
-                type="text"
-                placeholder="Search by agent name..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                style={styles.searchInput}
-                className="search-input"
-              />
+      {/* Content Wrapper */}
+      <div className="content-wrapper">
+        {/* Header */}
+        <div className="header">
+          <div className="header-content">
+            <button 
+              className="back-button"
+              onClick={() => navigate('/')}
+            >
+              <ArrowLeft size={20} />
+              <span>Back to Dashboard</span>
+            </button>
+            <div className="title">
+              <Clock size={28} className="title-icon" />
+              Agent Activity Log
             </div>
-            
-            <button
-              style={{...styles.filterButton, ...(statusFilter === 'all' ? styles.filterButtonActive : {})}}
-              onClick={() => setStatusFilter('all')}
-              className="filter-button"
-            >
-              All Status
-            </button>
-            <button
-              style={{...styles.filterButton, ...(statusFilter === 'success' ? styles.filterButtonActive : {})}}
-              onClick={() => setStatusFilter('success')}
-              className="filter-button"
-            >
-              Success
-            </button>
-            <button
-              style={{...styles.filterButton, ...(statusFilter === 'error' ? styles.filterButtonActive : {})}}
-              onClick={() => setStatusFilter('error')}
-              className="filter-button"
-            >
-              Error
-            </button>
-            
-            <div style={{ width: '1px', height: '30px', background: 'rgba(255,255,255,0.1)' }} />
-            
-            <button
-              style={{...styles.filterButton, ...(dateFilter === 'all' ? styles.filterButtonActive : {})}}
-              onClick={() => setDateFilter('all')}
-              className="filter-button"
-            >
-              All Time
-            </button>
-            <button
-              style={{...styles.filterButton, ...(dateFilter === 'today' ? styles.filterButtonActive : {})}}
-              onClick={() => setDateFilter('today')}
-              className="filter-button"
-            >
-              Today
-            </button>
-            <button
-              style={{...styles.filterButton, ...(dateFilter === 'week' ? styles.filterButtonActive : {})}}
-              onClick={() => setDateFilter('week')}
-              className="filter-button"
-            >
-              This Week
-            </button>
-            <button
-              style={{...styles.filterButton, ...(dateFilter === 'month' ? styles.filterButtonActive : {})}}
-              onClick={() => setDateFilter('month')}
-              className="filter-button"
-            >
-              This Month
-            </button>
+            <div style={{ width: '160px' }} />
           </div>
         </div>
 
-        {/* Activity History Cards */}
-        <div style={styles.tableContainer}>
-          {loading ? (
-            <div style={styles.emptyState}>
-              <div style={{...styles.emptyIcon, animation: 'spin 1s linear infinite', border: '4px solid rgba(147,51,234,0.3)', borderTop: '4px solid #9333ea', borderRadius: '50%', width: '50px', height: '50px', margin: '2rem auto'}}></div>
-              <div>Loading your activity...</div>
+        {/* Main Content */}
+        <div className="main-content">
+          {/* Stats Grid */}
+          <div className="stats-grid">
+            <div className="stat-card">
+              <div className="stat-value">{stats.totalRuns}</div>
+              <div className="stat-label">Successful Runs</div>
             </div>
-          ) : filteredLogs.length === 0 ? (
-            <div style={styles.emptyState}>
-              <div style={styles.emptyIcon}>
-                <Clock size={40} color="#9ca3af" />
+            <div className="stat-card">
+              <div className="stat-value">{stats.totalTokens.toLocaleString()}</div>
+              <div className="stat-label">Tokens Spent</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-value">{stats.errorRuns}</div>
+              <div className="stat-label">Failed Runs</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-value">{filteredLogs.length}</div>
+              <div className="stat-label">Total Entries</div>
+            </div>
+          </div>
+
+          {/* Filters */}
+          <div className="filter-section">
+            <div className="filter-row">
+              <div className="search-box">
+                <Search size={18} className="search-icon" />
+                <input
+                  type="text"
+                  placeholder="Search by agent name..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="search-input"
+                />
               </div>
-              <h3 style={{ marginBottom: '0.5rem', fontSize: '1.25rem' }}>No activity found</h3>
-              <p>Start using agents to see your activity history here.</p>
+              
+              <button
+                className={`filter-button ${statusFilter === 'all' ? 'filter-button-active' : ''}`}
+                onClick={() => setStatusFilter('all')}
+              >
+                All Status
+              </button>
+              <button
+                className={`filter-button ${statusFilter === 'success' ? 'filter-button-active' : ''}`}
+                onClick={() => setStatusFilter('success')}
+              >
+                Success
+              </button>
+              <button
+                className={`filter-button ${statusFilter === 'error' ? 'filter-button-active' : ''}`}
+                onClick={() => setStatusFilter('error')}
+              >
+                Error
+              </button>
+              
+              <div className="filter-divider" />
+              
+              <button
+                className={`filter-button ${dateFilter === 'all' ? 'filter-button-active' : ''}`}
+                onClick={() => setDateFilter('all')}
+              >
+                All Time
+              </button>
+              <button
+                className={`filter-button ${dateFilter === 'today' ? 'filter-button-active' : ''}`}
+                onClick={() => setDateFilter('today')}
+              >
+                Today
+              </button>
+              <button
+                className={`filter-button ${dateFilter === 'week' ? 'filter-button-active' : ''}`}
+                onClick={() => setDateFilter('week')}
+              >
+                This Week
+              </button>
+              <button
+                className={`filter-button ${dateFilter === 'month' ? 'filter-button-active' : ''}`}
+                onClick={() => setDateFilter('month')}
+              >
+                This Month
+              </button>
             </div>
-          ) : (
-            <div style={styles.cardsGrid}>
-              {filteredLogs.map((log) => (
-                <div 
-                  key={log.id} 
-                  style={styles.historyCard}
-                  className="history-card"
-                  onClick={() => {
-                    setSelectedLog(log);
-                    setShowDetailsModal(true);
-                  }}
-                >
-                  {/* Header Row */}
-                  <div style={styles.cardHeader}>
-                    <div style={styles.cardHeaderLeft}>
-                      <MessageSquare size={18} color="#c084fc" />
-                      <span style={styles.agentBadge}>{log.agent_name}</span>
-                    </div>
-                    <div style={styles.cardHeaderRight}>
-                      <span style={styles.dateText}>{formatDate(log.ran_at)}</span>
-                      {log.status === 'success' ? (
-                        <CheckCircle size={18} color="#10b981" />
-                      ) : (
-                        <XCircle size={18} color="#ef4444" />
-                      )}
-                    </div>
-                  </div>
+          </div>
 
-                  {/* Title */}
-                  <h3 style={styles.cardTitle}>{generateTitle(log)}</h3>
-
-                  {/* Summary or Placeholder */}
-                  {log.output_summary ? (
-                    <p style={styles.cardSummary}>{log.output_summary}</p>
-                  ) : (
-                    <p style={styles.cardSummaryPlaceholder}>
-                      {log.status === 'success' 
-                        ? 'Task completed successfully' 
-                        : 'Task encountered an error'}
-                    </p>
-                  )}
-
-                  {/* Footer Row */}
-                  <div style={styles.cardFooter}>
-                    <div style={styles.tokensBadge}>
-                      <Zap size={14} />
-                      <span>{log.tokens_spent} tokens</span>
-                    </div>
-                    <div style={styles.viewDetailsBtn}>
-                      <span>View Details</span>
-                      <ChevronRight size={16} />
-                    </div>
-                  </div>
+          {/* Activity History Cards */}
+          <div className="table-container">
+            {loading ? (
+              <div className="empty-state">
+                <div className="loading-spinner"></div>
+                <div>Loading your activity...</div>
+              </div>
+            ) : filteredLogs.length === 0 ? (
+              <div className="empty-state">
+                <div className="empty-icon">
+                  <Clock size={40} color="#00D9FF" />
                 </div>
-              ))}
-            </div>
-          )}
+                <h3 style={{ marginBottom: '0.5rem', fontSize: '1.25rem', color: '#D1D5DB' }}>No activity found</h3>
+                <p>Start using agents to see your activity history here.</p>
+              </div>
+            ) : (
+              <div className="cards-grid">
+                {filteredLogs.map((log) => (
+                  <div 
+                    key={log.id} 
+                    className="history-card"
+                    onClick={() => {
+                      setSelectedLog(log);
+                      setShowDetailsModal(true);
+                    }}
+                  >
+                    <div className="card-header">
+                      <div className="card-header-left">
+                        <MessageSquare size={18} color="#00D9FF" />
+                        <span className="agent-badge">{log.agent_name}</span>
+                      </div>
+                      <div className="card-header-right">
+                        <span className="date-text">{formatDate(log.ran_at)}</span>
+                        {log.status === 'success' ? (
+                          <CheckCircle size={18} color="#00D9FF" />
+                        ) : (
+                          <XCircle size={18} color="#FF6B6B" />
+                        )}
+                      </div>
+                    </div>
+
+                    <h3 className="card-title">{generateTitle(log)}</h3>
+
+                    {log.output_summary ? (
+                      <p className="card-summary">{log.output_summary}</p>
+                    ) : (
+                      <p className="card-summary-placeholder">
+                        {log.status === 'success' 
+                          ? 'Task completed successfully' 
+                          : 'Task encountered an error'}
+                      </p>
+                    )}
+
+                    <div className="card-footer">
+                      <div className="tokens-badge">
+                        <Zap size={14} />
+                        <span>{log.tokens_spent} tokens</span>
+                      </div>
+                      <div className="view-details-btn">
+                        <span>View Details</span>
+                        <ChevronRight size={16} />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Details Modal */}
       {showDetailsModal && selectedLog && (
-        <div style={styles.modalOverlay} onClick={() => setShowDetailsModal(false)}>
-          <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            <div style={styles.modalHeader}>
-              <h2 style={styles.modalTitle}>Run Details</h2>
+        <div className="modal-overlay" onClick={() => setShowDetailsModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2 className="modal-title">Run Details</h2>
               <button 
-                style={styles.modalCloseBtn}
+                className="modal-close-btn"
                 onClick={() => setShowDetailsModal(false)}
               >
                 ×
               </button>
             </div>
 
-            <div style={styles.modalBody}>
-              {/* Agent & Status */}
-              <div style={styles.detailSection}>
-                <div style={styles.detailLabel}>Agent</div>
-                <div style={styles.detailValue}>
-                  <span style={styles.agentBadge}>{selectedLog.agent_name}</span>
+            <div className="modal-body">
+              <div className="detail-section">
+                <div className="detail-label">Agent</div>
+                <div className="detail-value">
+                  <span className="agent-badge">{selectedLog.agent_name}</span>
                 </div>
               </div>
 
-              <div style={styles.detailSection}>
-                <div style={styles.detailLabel}>Status</div>
-                <div style={styles.detailValue}>
+              <div className="detail-section">
+                <div className="detail-label">Status</div>
+                <div className="detail-value">
                   {selectedLog.status === 'success' ? (
-                    <span style={{...styles.statusBadge, background: 'rgba(16,185,129,0.1)', color: '#10b981', gap: '0.5rem'}}>
+                    <span className="status-badge success-badge">
                       <CheckCircle size={16} />
                       Success
                     </span>
                   ) : (
-                    <span style={{...styles.statusBadge, background: 'rgba(239,68,68,0.1)', color: '#ef4444', gap: '0.5rem'}}>
+                    <span className="status-badge error-badge">
                       <XCircle size={16} />
                       Error
                     </span>
@@ -834,47 +1039,44 @@ function MyAgentsPage() {
                 </div>
               </div>
 
-              <div style={styles.detailSection}>
-                <div style={styles.detailLabel}>Date & Time</div>
-                <div style={styles.detailValue}>{formatFullDate(selectedLog.ran_at)}</div>
+              <div className="detail-section">
+                <div className="detail-label">Date & Time</div>
+                <div className="detail-value">{formatFullDate(selectedLog.ran_at)}</div>
               </div>
 
-              <div style={styles.detailSection}>
-                <div style={styles.detailLabel}>Tokens Spent</div>
-                <div style={styles.detailValue}>
-                  <span style={styles.tokensBadge}>
+              <div className="detail-section">
+                <div className="detail-label">Tokens Spent</div>
+                <div className="detail-value">
+                  <span className="tokens-badge">
                     <Zap size={14} />
                     {selectedLog.tokens_spent} tokens
                   </span>
                 </div>
               </div>
 
-              {/* Input Data */}
               {selectedLog.input_data && (
-                <div style={styles.detailSection}>
-                  <div style={styles.detailLabel}>Input Parameters</div>
-                  <div style={styles.codeBlock}>
-                    <pre style={styles.codeContent}>
+                <div className="detail-section">
+                  <div className="detail-label">Input Parameters</div>
+                  <div className="code-block">
+                    <pre className="code-content">
                       {JSON.stringify(selectedLog.input_data, null, 2)}
                     </pre>
                   </div>
                 </div>
               )}
 
-              {/* Output Summary */}
               {selectedLog.output_summary && (
-                <div style={styles.detailSection}>
-                  <div style={styles.detailLabel}>Summary</div>
-                  <div style={styles.detailValue}>{selectedLog.output_summary}</div>
+                <div className="detail-section">
+                  <div className="detail-label">Summary</div>
+                  <div className="detail-value">{selectedLog.output_summary}</div>
                 </div>
               )}
 
-              {/* Full Output Data */}
               {selectedLog.output_data && (
-                <div style={styles.detailSection}>
-                  <div style={styles.detailLabel}>Full Output</div>
-                  <div style={styles.codeBlock}>
-                    <pre style={styles.codeContent}>
+                <div className="detail-section">
+                  <div className="detail-label">Full Output</div>
+                  <div className="code-block">
+                    <pre className="code-content">
                       {JSON.stringify(selectedLog.output_data, null, 2)}
                     </pre>
                   </div>

@@ -104,10 +104,10 @@ function LoginPage() {
       uniform float opacity;
       varying float vShapeType;
       void main() {
-        // Brand colors: purple (#9333ea) and pink (#ec4899)
-        vec3 purple = vec3(0.576, 0.2, 0.918);
-        vec3 pink = vec3(0.925, 0.282, 0.6);
-        vec3 glowColor = mix(purple, pink, gl_PointCoord.x);
+        // Brand colors: cyan (#00D9FF) and steel blue (#0EA5E9)
+        vec3 cyan = vec3(0.0, 0.851, 1.0);
+        vec3 steelBlue = vec3(0.055, 0.647, 0.914);
+        vec3 glowColor = mix(cyan, steelBlue, gl_PointCoord.x);
         
         if (vShapeType < 0.5) {
           // Circle with glow
@@ -400,9 +400,9 @@ function LoginPage() {
   const styles = {
     container: {
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #0a0a0f 0%, #1a0a2e 50%, #16001e 100%)',
+      background: 'linear-gradient(180deg, #000000 0%, #0a0a0a 50%, #141414 100%)',
       color: '#fff',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif',
+      fontFamily: '"Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       position: 'relative',
       overflow: 'hidden'
     },
@@ -416,60 +416,72 @@ function LoginPage() {
       alignItems: 'center',
       justifyContent: 'space-between',
       padding: '1rem 3rem',
-      backdropFilter: 'blur(10px)',
-      background: scrolled ? 'rgba(10, 10, 15, 0.9)' : 'rgba(255, 255, 255, 0.05)',
-      borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-      transition: 'all 0.3s'
+      backdropFilter: 'blur(20px) saturate(180%)',
+      background: scrolled ? 'rgba(0, 0, 0, 0.85)' : 'rgba(0, 0, 0, 0.6)',
+      borderBottom: '1px solid rgba(0, 217, 255, 0.2)',
+      transition: 'all 0.3s',
+      boxShadow: scrolled ? '0 4px 30px rgba(0, 217, 255, 0.1), inset 0 -1px 0 rgba(0, 217, 255, 0.3)' : 'none'
     },
     logo: {
       display: 'flex',
       alignItems: 'center',
-      gap: '0.5rem',
+      gap: '0.75rem',
       cursor: 'pointer'
     },
     logoIcon: {
       width: '40px',
       height: '40px',
-      background: 'linear-gradient(135deg, #9333ea 0%, #ec4899 100%)',
       borderRadius: '8px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       fontWeight: 'bold',
       fontSize: '1.25rem',
-      boxShadow: '0 0 20px rgba(147,51,234,0.5)'
+      objectFit: 'contain'
     },
     logoText: {
-      fontSize: '1.5rem',
-      fontWeight: 'bold',
-      background: 'linear-gradient(135deg, #c084fc 0%, #f9a8d4 100%)',
+      fontSize: '1.25rem',
+      fontWeight: '700',
+      background: 'linear-gradient(135deg, #FFFFFF 0%, #00D9FF 100%)',
       WebkitBackgroundClip: 'text',
       WebkitTextFillColor: 'transparent',
-      backgroundClip: 'text'
+      letterSpacing: '0.05em',
+      textTransform: 'uppercase',
+      filter: 'drop-shadow(0 0 10px rgba(0, 217, 255, 0.5))'
     },
     navLinks: {
       display: 'flex',
-      gap: '2rem',
+      gap: '2.5rem',
       alignItems: 'center'
     },
     navLink: {
-      color: '#d1d5db',
+      color: '#D1D5DB',
       textDecoration: 'none',
-      transition: 'color 0.3s',
+      transition: 'all 0.3s',
       cursor: 'pointer',
-      fontSize: '0.95rem'
+      fontSize: '0.875rem',
+      fontWeight: '500',
+      letterSpacing: '0.05em',
+      textTransform: 'uppercase',
+      position: 'relative',
+      padding: '0.5rem 0'
     },
     loginButton: {
-      padding: '0.5rem 1.5rem',
-      background: 'linear-gradient(135deg, #9333ea 0%, #ec4899 100%)',
+      padding: '0.625rem 1.5rem',
+      background: 'linear-gradient(135deg, #00D9FF 0%, #0EA5E9 100%)',
       border: 'none',
       borderRadius: '8px',
-      color: '#fff',
-      fontWeight: '600',
+      color: '#000',
+      fontWeight: '700',
       cursor: 'pointer',
       transition: 'all 0.3s',
-      boxShadow: '0 5px 15px rgba(147,51,234,0.4)',
-      fontSize: '0.95rem'
+      boxShadow: '0 0 30px rgba(0, 217, 255, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.1)',
+      fontSize: '0.875rem',
+      letterSpacing: '0.05em',
+      textTransform: 'uppercase',
+      border: '1px solid rgba(255, 255, 255, 0.2)',
+      position: 'relative',
+      overflow: 'hidden'
     },
     heroSection: {
       position: 'relative',
@@ -485,23 +497,26 @@ function LoginPage() {
     },
     headline: {
       fontSize: 'clamp(2.5rem, 5vw, 4.5rem)',
-      fontWeight: 'bold',
+      fontWeight: '700',
       lineHeight: '1.2',
       marginBottom: '1rem',
-      animation: 'fadeIn 0.8s ease-out'
+      animation: 'fadeIn 0.8s ease-out',
+      letterSpacing: '-0.02em'
     },
     gradientText: {
-      background: 'linear-gradient(135deg, #c084fc 0%, #f9a8d4 50%, #93c5fd 100%)',
+      background: 'linear-gradient(135deg, #FFFFFF 0%, #00D9FF 100%)',
       WebkitBackgroundClip: 'text',
       WebkitTextFillColor: 'transparent',
-      backgroundClip: 'text'
+      backgroundClip: 'text',
+      filter: 'drop-shadow(0 0 20px rgba(0, 217, 255, 0.3))'
     },
     subheading: {
       fontSize: '1.25rem',
-      color: '#9ca3af',
+      color: '#9CA3AF',
       maxWidth: '800px',
       margin: '0 auto 2rem',
-      lineHeight: '1.6'
+      lineHeight: '1.6',
+      fontWeight: '400'
     },
     ctaButtons: {
       display: 'flex',
@@ -512,26 +527,34 @@ function LoginPage() {
     },
     primaryButton: {
       padding: '0.875rem 2rem',
-      background: 'linear-gradient(135deg, #9333ea 0%, #ec4899 100%)',
+      background: 'linear-gradient(135deg, #00D9FF 0%, #0EA5E9 100%)',
       border: 'none',
       borderRadius: '8px',
-      color: '#fff',
+      color: '#000',
       fontSize: '1rem',
-      fontWeight: '600',
+      fontWeight: '700',
       cursor: 'pointer',
       transition: 'all 0.3s',
-      boxShadow: '0 10px 30px rgba(147,51,234,0.5)'
+      boxShadow: '0 0 30px rgba(0, 217, 255, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.1)',
+      letterSpacing: '0.05em',
+      textTransform: 'uppercase',
+      border: '1px solid rgba(255, 255, 255, 0.2)',
+      position: 'relative',
+      overflow: 'hidden'
     },
     secondaryButton: {
       padding: '0.875rem 2rem',
-      background: 'rgba(255, 255, 255, 0.1)',
-      border: '1px solid rgba(255, 255, 255, 0.2)',
+      background: 'rgba(0, 217, 255, 0.05)',
+      border: '1px solid rgba(0, 217, 255, 0.3)',
       borderRadius: '8px',
-      color: '#fff',
+      color: '#00D9FF',
       fontSize: '1rem',
-      fontWeight: '600',
+      fontWeight: '700',
       cursor: 'pointer',
-      transition: 'all 0.3s'
+      transition: 'all 0.3s',
+      backdropFilter: 'blur(20px) saturate(180%)',
+      letterSpacing: '0.05em',
+      textTransform: 'uppercase'
     },
     section: {
       position: 'relative',
@@ -542,17 +565,19 @@ function LoginPage() {
     },
     sectionTitle: {
       fontSize: 'clamp(2rem, 4vw, 3rem)',
-      fontWeight: 'bold',
+      fontWeight: '700',
       textAlign: 'center',
-      marginBottom: '1rem'
+      marginBottom: '1rem',
+      letterSpacing: '0.02em'
     },
     sectionSubtitle: {
       fontSize: '1.125rem',
-      color: '#9ca3af',
+      color: '#9CA3AF',
       textAlign: 'center',
       marginBottom: '3rem',
       maxWidth: '700px',
-      margin: '0 auto 3rem'
+      margin: '0 auto 3rem',
+      fontWeight: '400'
     },
     grid: {
       display: 'grid',
@@ -560,57 +585,74 @@ function LoginPage() {
       gap: '2rem'
     },
     card: {
-      backdropFilter: 'blur(16px)',
-      background: 'rgba(255, 255, 255, 0.05)',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      borderRadius: '16px',
+      backdropFilter: 'blur(20px) saturate(180%)',
+      background: 'rgba(0, 0, 0, 0.6)',
+      border: '1px solid rgba(0, 217, 255, 0.15)',
+      borderRadius: '12px',
       padding: '2rem',
-      transition: 'all 0.3s',
-      cursor: 'pointer'
+      transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+      cursor: 'pointer',
+      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+      position: 'relative',
+      overflow: 'hidden'
     },
     agentCard: {
-      backdropFilter: 'blur(16px)',
-      background: 'rgba(255, 255, 255, 0.05)',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      borderRadius: '16px',
+      backdropFilter: 'blur(20px) saturate(180%)',
+      background: 'rgba(0, 0, 0, 0.8)',
+      border: '1px solid rgba(0, 217, 255, 0.2)',
+      borderRadius: '12px',
       padding: '2rem',
-      transition: 'all 0.3s',
+      transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
       cursor: 'pointer',
-      position: 'relative'
+      position: 'relative',
+      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+      transformStyle: 'preserve-3d',
+      perspective: '1000px'
     },
     iconWrapper: {
-      width: '50px',
-      height: '50px',
-      background: 'linear-gradient(135deg, #9333ea 0%, #ec4899 100%)',
+      width: '56px',
+      height: '56px',
+      background: 'linear-gradient(135deg, #00D9FF 0%, #0EA5E9 100%)',
       borderRadius: '12px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       marginBottom: '1rem',
-      boxShadow: '0 0 20px rgba(147,51,234,0.5)'
+      boxShadow: '0 0 30px rgba(0, 217, 255, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.2)',
+      border: '1px solid rgba(255, 255, 255, 0.2)',
+      position: 'relative',
+      overflow: 'hidden'
     },
     cardTitle: {
-      fontSize: '1.5rem',
-      fontWeight: 'bold',
-      marginBottom: '0.5rem'
+      fontSize: '1.25rem',
+      fontWeight: '700',
+      marginBottom: '0.5rem',
+      color: '#FFFFFF',
+      letterSpacing: '0.02em',
+      filter: 'drop-shadow(0 0 5px rgba(0, 217, 255, 0.3))'
     },
     cardDesc: {
       fontSize: '0.875rem',
-      color: '#9ca3af',
-      marginBottom: '1rem'
+      color: '#9CA3AF',
+      marginBottom: '1rem',
+      fontWeight: '400',
+      lineHeight: '1.6'
     },
     button: {
       width: '100%',
-      padding: '0.5rem',
-      background: 'rgba(255, 255, 255, 0.1)',
-      border: '1px solid rgba(255, 255, 255, 0.2)',
-      borderRadius: '6px',
-      color: '#c084fc',
+      padding: '0.75rem',
+      background: 'rgba(0, 217, 255, 0.1)',
+      border: '1px solid rgba(0, 217, 255, 0.3)',
+      borderRadius: '8px',
+      color: '#00D9FF',
       fontSize: '0.875rem',
-      fontWeight: '600',
+      fontWeight: '700',
       cursor: 'pointer',
       transition: 'all 0.3s',
-      marginTop: '0.5rem'
+      marginTop: '0.5rem',
+      letterSpacing: '0.05em',
+      textTransform: 'uppercase',
+      backdropFilter: 'blur(10px)'
     },
     statsGrid: {
       display: 'grid',
@@ -620,20 +662,34 @@ function LoginPage() {
     },
     statCard: {
       textAlign: 'center',
-      padding: '2rem'
+      padding: '2rem',
+      background: 'rgba(0, 0, 0, 0.6)',
+      borderRadius: '12px',
+      border: '1px solid rgba(0, 217, 255, 0.15)',
+      backdropFilter: 'blur(20px) saturate(180%)',
+      transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+      cursor: 'pointer',
+      position: 'relative',
+      overflow: 'hidden'
     },
     statValue: {
       fontSize: '3rem',
-      fontWeight: 'bold',
-      background: 'linear-gradient(135deg, #c084fc 0%, #f9a8d4 100%)',
+      fontWeight: '700',
+      background: 'linear-gradient(135deg, #FFFFFF 0%, #00D9FF 100%)',
       WebkitBackgroundClip: 'text',
       WebkitTextFillColor: 'transparent',
       backgroundClip: 'text',
-      marginBottom: '0.5rem'
+      marginBottom: '0.5rem',
+      letterSpacing: '-0.03em',
+      filter: 'drop-shadow(0 0 10px rgba(0, 217, 255, 0.5))',
+      fontFamily: '"Space Grotesk", monospace'
     },
     statLabel: {
-      fontSize: '1rem',
-      color: '#9ca3af'
+      fontSize: '0.875rem',
+      color: '#6B7280',
+      fontWeight: '500',
+      letterSpacing: '0.05em',
+      textTransform: 'uppercase'
     },
     stepsContainer: {
       display: 'flex',
@@ -645,49 +701,58 @@ function LoginPage() {
     stepCard: {
       flex: '1 1 300px',
       maxWidth: '400px',
-      backdropFilter: 'blur(16px)',
-      background: 'rgba(255, 255, 255, 0.05)',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      borderRadius: '16px',
+      backdropFilter: 'blur(20px) saturate(180%)',
+      background: 'rgba(0, 0, 0, 0.6)',
+      border: '1px solid rgba(0, 217, 255, 0.15)',
+      borderRadius: '12px',
       padding: '2rem',
-      position: 'relative'
+      position: 'relative',
+      transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+      cursor: 'pointer'
     },
     stepNumber: {
       fontSize: '3rem',
-      fontWeight: 'bold',
-      background: 'linear-gradient(135deg, #9333ea 0%, #ec4899 100%)',
+      fontWeight: '700',
+      background: 'linear-gradient(135deg, #00D9FF 0%, #0EA5E9 100%)',
       WebkitBackgroundClip: 'text',
       WebkitTextFillColor: 'transparent',
       backgroundClip: 'text',
-      marginBottom: '1rem'
+      marginBottom: '1rem',
+      filter: 'drop-shadow(0 0 10px rgba(0, 217, 255, 0.5))'
     },
     testimonialCard: {
-      backdropFilter: 'blur(16px)',
-      background: 'rgba(255, 255, 255, 0.05)',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      borderRadius: '16px',
+      backdropFilter: 'blur(20px) saturate(180%)',
+      background: 'rgba(0, 0, 0, 0.6)',
+      border: '1px solid rgba(0, 217, 255, 0.15)',
+      borderRadius: '12px',
       padding: '2rem',
-      minHeight: '200px'
+      minHeight: '200px',
+      transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+      cursor: 'pointer'
     },
     avatar: {
       fontSize: '3rem',
-      marginBottom: '1rem'
+      marginBottom: '1rem',
+      filter: 'drop-shadow(0 0 10px rgba(0, 217, 255, 0.3))'
     },
     quote: {
       fontSize: '1rem',
-      color: '#d1d5db',
+      color: '#D1D5DB',
       marginBottom: '1rem',
       fontStyle: 'italic',
-      lineHeight: '1.6'
+      lineHeight: '1.6',
+      fontWeight: '400'
     },
     author: {
       fontSize: '0.95rem',
-      fontWeight: '600',
-      marginBottom: '0.25rem'
+      fontWeight: '700',
+      marginBottom: '0.25rem',
+      color: '#FFFFFF'
     },
     authorRole: {
       fontSize: '0.875rem',
-      color: '#9ca3af'
+      color: '#9CA3AF',
+      fontWeight: '400'
     },
     modal: {
       position: 'fixed',
@@ -695,92 +760,98 @@ function LoginPage() {
       left: 0,
       right: 0,
       bottom: 0,
-      background: 'rgba(0, 0, 0, 0.8)',
+      background: 'rgba(0, 0, 0, 0.9)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      zIndex: 1000,
-      backdropFilter: 'blur(5px)',
+      zIndex: 2000,
+      backdropFilter: 'blur(10px)',
       padding: '1rem'
     },
     modalContent: {
-      backdropFilter: 'blur(20px)',
-      background: 'rgba(255, 255, 255, 0.1)',
-      border: '1px solid rgba(255, 255, 255, 0.2)',
-      borderRadius: '20px',
+      backdropFilter: 'blur(40px) saturate(180%)',
+      background: 'rgba(0, 0, 0, 0.95)',
+      border: '1px solid rgba(0, 217, 255, 0.3)',
+      borderRadius: '16px',
       padding: '2.5rem',
       width: '90%',
       maxWidth: '420px',
-      boxShadow: '0 20px 60px rgba(147,51,234,0.3)',
+      boxShadow: '0 30px 80px rgba(0, 217, 255, 0.2), inset 0 0 60px rgba(0, 217, 255, 0.05)',
       position: 'relative',
       animation: 'slideUp 0.3s ease-out'
     },
     videoModal: {
-      backdropFilter: 'blur(20px)',
-      background: 'rgba(10, 10, 15, 0.95)',
-      border: '1px solid rgba(255, 255, 255, 0.2)',
-      borderRadius: '20px',
+      backdropFilter: 'blur(40px) saturate(180%)',
+      background: 'rgba(0, 0, 0, 0.95)',
+      border: '1px solid rgba(0, 217, 255, 0.3)',
+      borderRadius: '16px',
       padding: '2rem',
       width: '90%',
       maxWidth: '800px',
-      boxShadow: '0 20px 60px rgba(147,51,234,0.3)',
+      boxShadow: '0 30px 80px rgba(0, 217, 255, 0.2), inset 0 0 60px rgba(0, 217, 255, 0.05)',
       position: 'relative'
     },
     videoPlaceholder: {
       width: '100%',
       aspectRatio: '16/9',
-      background: 'linear-gradient(135deg, rgba(147,51,234,0.2) 0%, rgba(236,72,153,0.2) 100%)',
+      background: 'linear-gradient(135deg, rgba(0, 217, 255, 0.1) 0%, rgba(14, 165, 233, 0.1) 100%)',
       borderRadius: '12px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       fontSize: '1rem',
-      color: '#9ca3af',
-      border: '2px dashed rgba(255, 255, 255, 0.2)',
-      marginTop: '1rem'
+      color: '#9CA3AF',
+      border: '2px dashed rgba(0, 217, 255, 0.2)',
+      marginTop: '1rem',
+      backdropFilter: 'blur(20px)'
     },
     closeButton: {
       position: 'absolute',
-      top: '1rem',
-      right: '1rem',
-      background: 'rgba(255, 255, 255, 0.1)',
-      border: 'none',
-      color: '#fff',
-      fontSize: '1.5rem',
+      top: '1.5rem',
+      right: '1.5rem',
+      background: 'rgba(0, 217, 255, 0.1)',
+      border: '1px solid rgba(0, 217, 255, 0.3)',
+      color: '#00D9FF',
+      fontSize: '1.25rem',
       cursor: 'pointer',
-      padding: '0.5rem',
-      borderRadius: '50%',
+      padding: '0.625rem',
+      borderRadius: '8px',
       width: '40px',
       height: '40px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      transition: 'all 0.3s'
+      transition: 'all 0.3s',
+      boxShadow: '0 0 20px rgba(0, 217, 255, 0.2)'
     },
     toast: {
       position: 'fixed',
       top: '6rem',
       right: '2rem',
-      background: 'linear-gradient(135deg, #9333ea 0%, #ec4899 100%)',
-      color: '#fff',
+      background: 'linear-gradient(135deg, #00D9FF 0%, #0EA5E9 100%)',
+      color: '#000',
       padding: '1rem 1.5rem',
       borderRadius: '12px',
-      boxShadow: '0 10px 30px rgba(147,51,234,0.5)',
+      boxShadow: '0 0 30px rgba(0, 217, 255, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.1)',
       zIndex: 1001,
       fontSize: '0.875rem',
-      fontWeight: '600',
+      fontWeight: '700',
       transform: showToast ? 'translateX(0)' : 'translateX(400px)',
       transition: 'transform 0.3s ease-in-out',
-      backdropFilter: 'blur(10px)',
-      border: '1px solid rgba(255,255,255,0.2)'
+      backdropFilter: 'blur(20px)',
+      border: '1px solid rgba(255, 255, 255, 0.2)',
+      letterSpacing: '0.05em'
     },
     ctaSection: {
       textAlign: 'center',
       padding: '5rem 3rem',
-      background: 'rgba(147,51,234,0.05)',
+      background: 'rgba(0, 217, 255, 0.03)',
       borderRadius: '20px',
       margin: '5rem auto',
-      maxWidth: '900px'
+      maxWidth: '900px',
+      border: '1px solid rgba(0, 217, 255, 0.15)',
+      backdropFilter: 'blur(20px) saturate(180%)',
+      boxShadow: '0 20px 60px rgba(0, 217, 255, 0.1), inset 0 0 60px rgba(0, 217, 255, 0.03)'
     }
   };
 
@@ -788,8 +859,8 @@ function LoginPage() {
     <div style={styles.container}>
       <style>{`
         @keyframes pulse {
-          0%, 100% { opacity: 0.3; transform: scale(1); }
-          50% { opacity: 0.5; transform: scale(1.05); }
+          0%, 100% { opacity: 0.4; transform: scale(1); }
+          50% { opacity: 0.7; transform: scale(1.05); }
         }
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(20px); }
@@ -799,27 +870,52 @@ function LoginPage() {
           from { opacity: 0; transform: translateY(30px); }
           to { opacity: 1; transform: translateY(0); }
         }
+        @keyframes float {
+          0%, 100% { 
+            transform: translateY(0px) translateX(0px) scale(1); 
+          }
+          33% { 
+            transform: translateY(-40px) translateX(20px) scale(1.1); 
+          }
+          66% { 
+            transform: translateY(-20px) translateX(-15px) scale(0.95); 
+          }
+        }
+        @keyframes twinkle {
+          0%, 100% { 
+            opacity: 1;
+            filter: brightness(1);
+          }
+          50% { 
+            opacity: 0.3;
+            filter: brightness(0.6);
+          }
+        }
+        @keyframes scanlines {
+          0% { transform: translateY(0); }
+          100% { transform: translateY(50px); }
+        }
         .background-blob {
           position: fixed;
           border-radius: 50%;
-          filter: blur(60px);
-          animation: pulse 4s ease-in-out infinite;
+          filter: blur(100px);
+          animation: pulse 6s ease-in-out infinite;
           pointer-events: none;
         }
-        .blob-1 { top: 80px; left: 80px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(147,51,234,0.3) 0%, transparent 70%); }
-        .blob-2 { bottom: 80px; right: 80px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(59,130,246,0.3) 0%, transparent 70%); animation-delay: 1s; }
-        .blob-3 { top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; height: 400px; background: radial-gradient(circle, rgba(236,72,153,0.2) 0%, transparent 70%); animation-delay: 2s; }
+        .blob-1 { top: 80px; left: 80px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(0,217,255,0.15) 0%, transparent 70%); }
+        .blob-2 { bottom: 80px; right: 80px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(14,165,233,0.15) 0%, transparent 70%); animation-delay: 2s; }
+        .blob-3 { top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(0,217,255,0.1) 0%, transparent 70%); animation-delay: 4s; }
         button:hover:not(:disabled) { transform: translateY(-2px); }
-        .login-btn:hover { box-shadow: 0 8px 25px rgba(147,51,234,0.6) !important; }
-        .primary-btn:hover { box-shadow: 0 15px 40px rgba(147,51,234,0.7) !important; }
-        .secondary-btn:hover { background: rgba(255, 255, 255, 0.15) !important; }
+        .login-btn:hover { box-shadow: 0 8px 25px rgba(0,217,255,0.6), 0 0 40px rgba(0,217,255,0.3) !important; border-color: rgba(0,217,255,0.6) !important; }
+        .primary-btn:hover { box-shadow: 0 15px 40px rgba(0,217,255,0.7), 0 0 60px rgba(0,217,255,0.4) !important; }
+        .secondary-btn:hover { background: rgba(0,217,255,0.15) !important; border-color: rgba(0,217,255,0.5) !important; }
         button:disabled { opacity: 0.5; cursor: not-allowed; }
-        .card:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-4px); box-shadow: 0 10px 30px rgba(147,51,234,0.2); }
-        .agent-card:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-6px); box-shadow: 0 15px 40px rgba(147,51,234,0.3); }
-        .nav-link:hover { color: #fff; }
-        input::placeholder { color: #6b7280; }
-        input:focus { border-color: #9333ea; box-shadow: 0 0 0 3px rgba(147,51,234,0.1); outline: none; }
-        .close-btn:hover { background: rgba(255, 255, 255, 0.2) !important; }
+        .card:hover { background: rgba(0,217,255,0.08); transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,217,255,0.3), 0 0 40px rgba(0,217,255,0.1); border-color: rgba(0,217,255,0.3); }
+        .agent-card:hover { background: rgba(0,217,255,0.1); transform: translateY(-6px) scale(1.02); box-shadow: 0 15px 40px rgba(0,217,255,0.4), 0 0 60px rgba(0,217,255,0.2); border-color: rgba(0,217,255,0.4); }
+        .nav-link:hover { color: #00D9FF; text-shadow: 0 0 20px rgba(0,217,255,0.5); }
+        input::placeholder { color: #6B7280; }
+        input:focus { border-color: #00D9FF; box-shadow: 0 0 0 3px rgba(0,217,255,0.2), 0 0 20px rgba(0,217,255,0.3); outline: none; }
+        .close-btn:hover { background: rgba(0,217,255,0.3) !important; color: #FFFFFF !important; box-shadow: 0 0 30px rgba(0,217,255,0.5) !important; }
       `}</style>
 
       {/* WebGL Wave Particle Background */}
@@ -841,10 +937,229 @@ function LoginPage() {
       <div className="background-blob blob-2"></div>
       <div className="background-blob blob-3"></div>
 
+      {/* Scanline Overlay */}
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: 'repeating-linear-gradient(0deg, rgba(0, 217, 255, 0.02) 0px, transparent 1px, transparent 2px, rgba(0, 217, 255, 0.02) 3px)',
+        pointerEvents: 'none',
+        zIndex: 5,
+        animation: 'scanlines 8s linear infinite',
+        opacity: 0.6
+      }} />
+
+      {/* Cyber Grid */}
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundImage: `
+          linear-gradient(rgba(0, 217, 255, 0.02) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0, 217, 255, 0.02) 1px, transparent 1px)
+        `,
+        backgroundSize: '60px 60px',
+        pointerEvents: 'none',
+        zIndex: 2,
+        opacity: 0.2
+      }} />
+
+      {/* 3D Galaxy Particle Field */}
+      <div style={{
+        position: 'fixed',
+        top: '5%',
+        left: '3%',
+        width: '4px',
+        height: '4px',
+        background: 'radial-gradient(circle, #00D9FF 0%, transparent 70%)',
+        borderRadius: '50%',
+        boxShadow: '0 0 20px #00D9FF, 0 0 40px rgba(0,217,255,0.5)',
+        animation: 'float 8s ease-in-out infinite, twinkle 3s ease-in-out infinite',
+        zIndex: 2,
+        pointerEvents: 'none'
+      }} />
+
+      <div style={{
+        position: 'fixed',
+        top: '12%',
+        right: '8%',
+        width: '3px',
+        height: '3px',
+        background: 'radial-gradient(circle, #0EA5E9 0%, transparent 70%)',
+        borderRadius: '50%',
+        boxShadow: '0 0 15px #0EA5E9, 0 0 30px rgba(14,165,233,0.4)',
+        animation: 'float 12s ease-in-out infinite, twinkle 4s ease-in-out infinite',
+        animationDelay: '1s',
+        zIndex: 2,
+        pointerEvents: 'none'
+      }} />
+
+      <div style={{
+        position: 'fixed',
+        top: '25%',
+        left: '15%',
+        width: '5px',
+        height: '5px',
+        background: 'radial-gradient(circle, #00D9FF 0%, transparent 70%)',
+        borderRadius: '50%',
+        boxShadow: '0 0 25px #00D9FF, 0 0 50px rgba(0,217,255,0.6)',
+        animation: 'float 10s ease-in-out infinite, twinkle 2.5s ease-in-out infinite',
+        animationDelay: '2s',
+        zIndex: 2,
+        pointerEvents: 'none'
+      }} />
+
+      <div style={{
+        position: 'fixed',
+        top: '40%',
+        right: '20%',
+        width: '6px',
+        height: '6px',
+        background: 'radial-gradient(circle, #0EA5E9 0%, transparent 70%)',
+        borderRadius: '50%',
+        boxShadow: '0 0 30px #0EA5E9, 0 0 60px rgba(14,165,233,0.7)',
+        animation: 'float 14s ease-in-out infinite, twinkle 3.5s ease-in-out infinite',
+        animationDelay: '0.5s',
+        zIndex: 2,
+        pointerEvents: 'none'
+      }} />
+
+      <div style={{
+        position: 'fixed',
+        bottom: '20%',
+        left: '10%',
+        width: '4px',
+        height: '4px',
+        background: 'radial-gradient(circle, #00D9FF 0%, transparent 70%)',
+        borderRadius: '50%',
+        boxShadow: '0 0 20px #00D9FF, 0 0 40px rgba(0,217,255,0.5)',
+        animation: 'float 11s ease-in-out infinite, twinkle 4.5s ease-in-out infinite',
+        animationDelay: '3s',
+        zIndex: 2,
+        pointerEvents: 'none'
+      }} />
+
+      <div style={{
+        position: 'fixed',
+        bottom: '35%',
+        right: '12%',
+        width: '3px',
+        height: '3px',
+        background: 'radial-gradient(circle, #0EA5E9 0%, transparent 70%)',
+        borderRadius: '50%',
+        boxShadow: '0 0 15px #0EA5E9, 0 0 30px rgba(14,165,233,0.4)',
+        animation: 'float 9s ease-in-out infinite, twinkle 3s ease-in-out infinite',
+        animationDelay: '1.5s',
+        zIndex: 2,
+        pointerEvents: 'none'
+      }} />
+
+      <div style={{
+        position: 'fixed',
+        top: '60%',
+        left: '25%',
+        width: '5px',
+        height: '5px',
+        background: 'radial-gradient(circle, #00D9FF 0%, transparent 70%)',
+        borderRadius: '50%',
+        boxShadow: '0 0 25px #00D9FF, 0 0 50px rgba(0,217,255,0.6)',
+        animation: 'float 13s ease-in-out infinite, twinkle 2s ease-in-out infinite',
+        animationDelay: '2.5s',
+        zIndex: 2,
+        pointerEvents: 'none'
+      }} />
+
+      <div style={{
+        position: 'fixed',
+        top: '75%',
+        right: '30%',
+        width: '4px',
+        height: '4px',
+        background: 'radial-gradient(circle, #0EA5E9 0%, transparent 70%)',
+        borderRadius: '50%',
+        boxShadow: '0 0 20px #0EA5E9, 0 0 40px rgba(14,165,233,0.5)',
+        animation: 'float 15s ease-in-out infinite, twinkle 3.8s ease-in-out infinite',
+        zIndex: 2,
+        pointerEvents: 'none'
+      }} />
+
+      <div style={{
+        position: 'fixed',
+        bottom: '10%',
+        right: '5%',
+        width: '6px',
+        height: '6px',
+        background: 'radial-gradient(circle, #00D9FF 0%, transparent 70%)',
+        borderRadius: '50%',
+        boxShadow: '0 0 30px #00D9FF, 0 0 60px rgba(0,217,255,0.7)',
+        animation: 'float 10s ease-in-out infinite, twinkle 2.8s ease-in-out infinite',
+        animationDelay: '4s',
+        zIndex: 2,
+        pointerEvents: 'none'
+      }} />
+
+      <div style={{
+        position: 'fixed',
+        top: '50%',
+        left: '5%',
+        width: '3px',
+        height: '3px',
+        background: 'radial-gradient(circle, #0EA5E9 0%, transparent 70%)',
+        borderRadius: '50%',
+        boxShadow: '0 0 15px #0EA5E9, 0 0 30px rgba(14,165,233,0.4)',
+        animation: 'float 16s ease-in-out infinite, twinkle 4.2s ease-in-out infinite',
+        animationDelay: '0.8s',
+        zIndex: 2,
+        pointerEvents: 'none'
+      }} />
+
+      <div style={{
+        position: 'fixed',
+        top: '30%',
+        right: '35%',
+        width: '5px',
+        height: '5px',
+        background: 'radial-gradient(circle, #00D9FF 0%, transparent 70%)',
+        borderRadius: '50%',
+        boxShadow: '0 0 25px #00D9FF, 0 0 50px rgba(0,217,255,0.6)',
+        animation: 'float 12s ease-in-out infinite, twinkle 3.3s ease-in-out infinite',
+        animationDelay: '1.2s',
+        zIndex: 2,
+        pointerEvents: 'none'
+      }} />
+
+      <div style={{
+        position: 'fixed',
+        bottom: '45%',
+        left: '40%',
+        width: '4px',
+        height: '4px',
+        background: 'radial-gradient(circle, #0EA5E9 0%, transparent 70%)',
+        borderRadius: '50%',
+        boxShadow: '0 0 20px #0EA5E9, 0 0 40px rgba(14,165,233,0.5)',
+        animation: 'float 11s ease-in-out infinite, twinkle 2.6s ease-in-out infinite',
+        animationDelay: '3.5s',
+        zIndex: 2,
+        pointerEvents: 'none'
+      }} />
+
       {/* Navbar */}
       <nav style={styles.navbar}>
         <div style={styles.logo} onClick={() => scrollToSection('hero')}>
-          <div style={styles.logoIcon}>M</div>
+          <img 
+            src="/Gemini_Generated_Image_v9lm7xv9lm7xv9lm.png" 
+            alt="Market Muse AI Logo" 
+            style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '8px',
+              objectFit: 'cover'
+            }}
+          />
           <span style={styles.logoText}>Market Muse AI</span>
         </div>
         <div style={styles.navLinks}>
@@ -950,7 +1265,7 @@ function LoginPage() {
                   Visualize Magic
                 </button>
                 <button 
-                  style={{...styles.button, color: '#fff', background: 'linear-gradient(135deg, #9333ea 0%, #ec4899 100%)'}}
+                  style={{...styles.button, color: '#000', background: 'linear-gradient(135deg, #00D9FF 0%, #0EA5E9 100%)', fontWeight: '700', border: '1px solid rgba(255,255,255,0.2)', boxShadow: '0 0 30px rgba(0,217,255,0.5), inset 0 0 20px rgba(255,255,255,0.1)'}}
                   onClick={() => handleActivateAgent(agent)}
                   className="primary-btn"
                 >
@@ -1060,22 +1375,22 @@ function LoginPage() {
               <button
                 onClick={handleEmailAuth}
                 disabled={loading}
-                style={{ width: '100%', padding: '0.75rem', background: 'linear-gradient(135deg, #9333ea 0%, #ec4899 100%)', border: 'none', borderRadius: '8px', color: '#fff', fontSize: '1rem', fontWeight: '600', cursor: 'pointer', boxShadow: '0 10px 30px rgba(147,51,234,0.5)' }}
+                style={{ width: '100%', padding: '0.75rem', background: 'linear-gradient(135deg, #00D9FF 0%, #0EA5E9 100%)', border: '1px solid rgba(0,217,255,0.3)', borderRadius: '8px', color: '#000', fontSize: '1rem', fontWeight: '700', cursor: 'pointer', boxShadow: '0 10px 30px rgba(0,217,255,0.5), 0 0 40px rgba(0,217,255,0.2)', letterSpacing: '0.05em', textTransform: 'uppercase' }}
                 className="primary-btn"
               >
                 {loading ? 'Processing...' : isSignUp ? 'Sign Up' : 'Sign In'}
               </button>
             </div>
 
-            <div style={{ position: 'relative', textAlign: 'center', margin: '1.5rem 0', color: '#9ca3af', fontSize: '0.875rem' }}>
-              <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '1px', background: 'rgba(255, 255, 255, 0.2)' }}></div>
-              <span style={{ position: 'relative', background: 'rgba(255, 255, 255, 0.1)', padding: '0 0.5rem', display: 'inline-block' }}>Or continue with</span>
+            <div style={{ position: 'relative', textAlign: 'center', margin: '1.5rem 0', color: '#9CA3AF', fontSize: '0.875rem' }}>
+              <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '1px', background: 'rgba(0,217,255,0.2)' }}></div>
+              <span style={{ position: 'relative', background: 'rgba(0,0,0,0.8)', padding: '0 0.5rem', display: 'inline-block', backdropFilter: 'blur(10px)' }}>Or continue with</span>
             </div>
 
             <button
               onClick={signInWithGoogle}
               disabled={loading}
-              style={{ width: '100%', padding: '0.75rem', background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '8px', color: '#fff', fontSize: '1rem', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+              style={{ width: '100%', padding: '0.75rem', background: 'rgba(0,217,255,0.1)', border: '1px solid rgba(0,217,255,0.3)', borderRadius: '8px', color: '#00D9FF', fontSize: '1rem', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', backdropFilter: 'blur(10px)', boxShadow: '0 0 20px rgba(0,217,255,0.2)' }}
               className="secondary-btn"
             >
               <svg style={{ width: '20px', height: '20px' }} viewBox="0 0 24 24">
@@ -1090,7 +1405,7 @@ function LoginPage() {
             <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
               <button
                 onClick={() => setIsSignUp(!isSignUp)}
-                style={{ background: 'none', border: 'none', color: '#c084fc', cursor: 'pointer', fontSize: '0.875rem', textDecoration: 'underline' }}
+                style={{ background: 'none', border: 'none', color: '#00D9FF', cursor: 'pointer', fontSize: '0.875rem', textDecoration: 'underline' }}
               >
                 {isSignUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
               </button>
@@ -1166,7 +1481,7 @@ function LoginPage() {
                       target="_blank" 
                       rel="noopener noreferrer" 
                       style={{ 
-                        color: '#9333ea', 
+                        color: '#00D9FF', 
                         textDecoration: 'underline' 
                       }}
                     >

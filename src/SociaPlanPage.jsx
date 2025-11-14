@@ -939,99 +939,99 @@ function SociaPlanPage() {
 }
 
 const s = {
-  container: { minHeight: '100vh', background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)', color: '#e2e8f0', fontFamily: 'Inter, system-ui, sans-serif', position: 'relative', overflow: 'hidden' },
-  header: { padding: '1.5rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.1)', position: 'relative', zIndex: 10 },
-  backBtn: { display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'linear-gradient(135deg, rgba(59,130,246,0.2), rgba(147,51,234,0.2))', border: '1px solid rgba(59,130,246,0.3)', color: '#e2e8f0', padding: '0.75rem 1.5rem', borderRadius: '12px', cursor: 'pointer', fontSize: '0.95rem', transition: 'all 0.3s', backdropFilter: 'blur(10px)' },
+  container: { minHeight: '100vh', background: '#000000', color: '#FFFFFF', fontFamily: "'Space Grotesk', sans-serif", position: 'relative', overflow: 'hidden' },
+  header: { padding: '1.5rem 2rem', borderBottom: '1px solid rgba(0, 217, 255, 0.2)', position: 'relative', zIndex: 10, backdropFilter: 'blur(10px)', background: 'rgba(0, 0, 0, 0.8)' },
+  backBtn: { display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(0, 217, 255, 0.05)', border: '1px solid rgba(0, 217, 255, 0.2)', color: '#00D9FF', padding: '0.75rem 1.5rem', borderRadius: '12px', cursor: 'pointer', fontSize: '0.95rem', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', backdropFilter: 'blur(10px)', fontWeight: '600' },
   hero: { textAlign: 'center', padding: '4rem 2rem 2rem', position: 'relative', zIndex: 10 },
-  heroIcon: { display: 'inline-flex', padding: '1.5rem', background: 'linear-gradient(135deg, rgba(59,130,246,0.2), rgba(147,51,234,0.2))', borderRadius: '20px', marginBottom: '1.5rem', border: '1px solid rgba(59,130,246,0.3)', color: '#3b82f6', boxShadow: '0 8px 32px rgba(59,130,246,0.3)', animation: 'float 3s ease-in-out infinite' },
-  title: { fontSize: '3rem', fontWeight: '700', background: 'linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: '1rem', animation: 'gradientFlow 3s ease infinite', backgroundSize: '200% 200%' },
-  subtitle: { fontSize: '1.25rem', color: '#94a3b8', marginBottom: '2rem' },
+  heroIcon: { display: 'inline-flex', padding: '1.5rem', background: 'rgba(0, 217, 255, 0.1)', borderRadius: '20px', marginBottom: '1.5rem', border: '2px solid rgba(0, 217, 255, 0.3)', color: '#00D9FF', boxShadow: '0 0 40px rgba(0, 217, 255, 0.3)', animation: 'float 3s ease-in-out infinite' },
+  title: { fontSize: '3rem', fontWeight: '700', background: 'linear-gradient(135deg, #00D9FF, #0EA5E9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: '1rem', letterSpacing: '-0.02em' },
+  subtitle: { fontSize: '1.25rem', color: '#D1D5DB', marginBottom: '2rem' },
   featureBadges: { display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' },
-  badge: { display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', background: 'linear-gradient(135deg, rgba(59,130,246,0.15), rgba(147,51,234,0.15))', border: '1px solid rgba(59,130,246,0.3)', borderRadius: '20px', fontSize: '0.875rem', backdropFilter: 'blur(10px)' },
+  badge: { display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', background: 'rgba(0, 217, 255, 0.1)', border: '1px solid rgba(0, 217, 255, 0.3)', borderRadius: '20px', fontSize: '0.875rem', backdropFilter: 'blur(10px)', color: '#00D9FF', fontWeight: '600' },
   main: { maxWidth: '1200px', margin: '0 auto', padding: '2rem', position: 'relative', zIndex: 10 },
-  card: { background: 'linear-gradient(135deg, rgba(59,130,246,0.08), rgba(147,51,234,0.08))', backdropFilter: 'blur(20px)', border: '1px solid rgba(59,130,246,0.2)', borderRadius: '24px', padding: '2.5rem', marginBottom: '1.5rem', boxShadow: '0 8px 32px rgba(0,0,0,0.2)' },
+  card: { background: 'rgba(0, 217, 255, 0.03)', backdropFilter: 'blur(20px)', border: '1px solid rgba(0, 217, 255, 0.2)', borderRadius: '24px', padding: '2.5rem', marginBottom: '1.5rem', boxShadow: '0 0 60px rgba(0, 217, 255, 0.2)' },
   formGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', marginBottom: '1.5rem' },
   formGroup: { display: 'flex', flexDirection: 'column', gap: '0.5rem' },
-  label: { fontSize: '0.95rem', fontWeight: '600', color: '#e2e8f0', display: 'flex', alignItems: 'center', gap: '0.5rem' },
-  labelIcon: { fontSize: '1.1rem', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))' },
-  input: { width: '100%', padding: '1rem', background: 'linear-gradient(135deg, rgba(59,130,246,0.1), rgba(147,51,234,0.1))', border: '1px solid rgba(59,130,246,0.3)', borderRadius: '12px', color: '#e2e8f0', fontSize: '1rem', boxSizing: 'border-box', transition: 'all 0.3s', fontFamily: 'inherit', boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.1)' },
+  label: { fontSize: '0.95rem', fontWeight: '600', color: '#FFFFFF', display: 'flex', alignItems: 'center', gap: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' },
+  labelIcon: { fontSize: '1.1rem', color: '#00D9FF' },
+  input: { width: '100%', padding: '1rem', background: 'rgba(0, 217, 255, 0.03)', border: '2px solid rgba(0, 217, 255, 0.2)', borderRadius: '12px', color: '#FFFFFF', fontSize: '1rem', boxSizing: 'border-box', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', fontFamily: 'inherit', outline: 'none' },
   platformGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '0.75rem', marginTop: '0.5rem' },
-  platformBtn: { padding: '0.75rem 1rem', background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.2)', borderRadius: '8px', color: '#94a3b8', cursor: 'pointer', fontSize: '0.875rem', transition: 'all 0.3s', display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'center' },
-  platformBtnActive: { background: 'linear-gradient(135deg, rgba(59,130,246,0.3), rgba(147,51,234,0.3))', border: '1px solid rgba(59,130,246,0.5)', color: '#e2e8f0', fontWeight: '600', transform: 'scale(1.05)' },
-  hint: { fontSize: '0.875rem', color: '#64748b', marginBottom: '1rem', fontStyle: 'italic' },
+  platformBtn: { padding: '0.75rem 1rem', background: 'rgba(0, 217, 255, 0.05)', border: '1px solid rgba(0, 217, 255, 0.2)', borderRadius: '8px', color: '#D1D5DB', cursor: 'pointer', fontSize: '0.875rem', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'center', fontWeight: '600' },
+  platformBtnActive: { background: 'rgba(0, 217, 255, 0.15)', border: '2px solid rgba(0, 217, 255, 0.5)', color: '#00D9FF', fontWeight: '700', transform: 'scale(1.05)', boxShadow: '0 0 20px rgba(0, 217, 255, 0.3)' },
+  hint: { fontSize: '0.875rem', color: '#6B7280', marginBottom: '1rem', fontStyle: 'italic' },
   error: { display: 'flex', alignItems: 'flex-start', gap: '0.75rem', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#fca5a5', padding: '1.25rem', borderRadius: '12px', marginBottom: '1rem', whiteSpace: 'pre-line', lineHeight: '1.6', fontSize: '0.9rem' },
-  btn: { width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', background: 'linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899)', border: 'none', color: 'white', padding: '1.25rem', borderRadius: '12px', fontSize: '1.1rem', fontWeight: '600', cursor: 'pointer', transition: 'all 0.3s', boxShadow: '0 8px 32px rgba(59,130,246,0.4), inset 0 1px 0 rgba(255,255,255,0.2)', backgroundSize: '200% 200%', animation: 'gradientFlow 3s ease infinite' },
+  btn: { width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', background: 'linear-gradient(135deg, #00D9FF, #0EA5E9)', border: 'none', color: '#000000', padding: '1.25rem', borderRadius: '12px', fontSize: '1.1rem', fontWeight: '700', cursor: 'pointer', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', boxShadow: '0 0 40px rgba(0, 217, 255, 0.4)', textTransform: 'uppercase', letterSpacing: '0.05em' },
   
   // Loading Animation Styles
   loading: { textAlign: 'center', padding: '4rem 2rem' },
   calendarAnimation: { position: 'relative', width: '100%', maxWidth: '600px', height: '400px', margin: '0 auto 2rem' },
   animatedCalendar: { display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '0.75rem', marginBottom: '2rem' },
-  calendarDay: { aspectRatio: '1', background: 'linear-gradient(135deg, rgba(59,130,246,0.2), rgba(147,51,234,0.2))', borderRadius: '12px', border: '1px solid rgba(59,130,246,0.3)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', animation: 'pulseGrow 2s ease-in-out infinite', backdropFilter: 'blur(10px)' },
-  dayNumber: { fontSize: '1.5rem', fontWeight: 'bold', color: '#3b82f6', zIndex: 2 },
-  dayPulse: { position: 'absolute', width: '100%', height: '100%', background: 'radial-gradient(circle, rgba(59,130,246,0.4), transparent)', borderRadius: '12px', animation: 'radiusPulse 2s ease-in-out infinite' },
+  calendarDay: { aspectRatio: '1', background: 'rgba(0, 217, 255, 0.1)', borderRadius: '12px', border: '2px solid rgba(0, 217, 255, 0.3)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', animation: 'pulseGrow 2s ease-in-out infinite', backdropFilter: 'blur(10px)' },
+  dayNumber: { fontSize: '1.5rem', fontWeight: '700', color: '#00D9FF', zIndex: 2 },
+  dayPulse: { position: 'absolute', width: '100%', height: '100%', background: 'radial-gradient(circle, rgba(0, 217, 255, 0.4), transparent)', borderRadius: '12px', animation: 'radiusPulse 2s ease-in-out infinite' },
   timelineContainer: { position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '80%', height: '2px' },
-  timelineLine: { width: '100%', height: '2px', background: 'linear-gradient(90deg, transparent, #3b82f6, transparent)', position: 'relative', animation: 'lineGlow 2s ease-in-out infinite' },
-  timelineNode: { position: 'absolute', width: '50px', height: '50px', background: 'linear-gradient(135deg, rgba(59,130,246,0.3), rgba(147,51,234,0.3))', borderRadius: '50%', border: '2px solid rgba(59,130,246,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', top: '-24px', animation: 'nodeFloat 2s ease-in-out infinite', backdropFilter: 'blur(10px)', fontSize: '1.5rem' },
+  timelineLine: { width: '100%', height: '2px', background: 'linear-gradient(90deg, transparent, #00D9FF, transparent)', position: 'relative', animation: 'lineGlow 2s ease-in-out infinite' },
+  timelineNode: { position: 'absolute', width: '50px', height: '50px', background: 'rgba(0, 217, 255, 0.15)', borderRadius: '50%', border: '2px solid rgba(0, 217, 255, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', top: '-24px', animation: 'nodeFloat 2s ease-in-out infinite', backdropFilter: 'blur(10px)', fontSize: '1.5rem' },
   nodeIcon: { fontSize: '1.5rem' },
   floatingIcon: { position: 'absolute', fontSize: '2rem', animation: 'iconFloat 4s ease-in-out infinite', opacity: 0.6 },
-  loadTitle: { fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem', color: '#e2e8f0' },
-  loadText: { fontSize: '1.1rem', color: '#94a3b8', marginBottom: '2rem' },
-  progressBar: { width: '100%', maxWidth: '400px', height: '8px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px', overflow: 'hidden', margin: '0 auto' },
-  progressFill: { height: '100%', background: 'linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #3b82f6)', backgroundSize: '200% 100%', animation: 'shimmer 2s linear infinite', borderRadius: '4px' },
+  loadTitle: { fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem', color: '#FFFFFF', background: 'linear-gradient(135deg, #00D9FF, #0EA5E9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' },
+  loadText: { fontSize: '1.1rem', color: '#D1D5DB', marginBottom: '2rem' },
+  progressBar: { width: '100%', maxWidth: '400px', height: '8px', background: 'rgba(0, 217, 255, 0.2)', borderRadius: '4px', overflow: 'hidden', margin: '0 auto' },
+  progressFill: { height: '100%', background: 'linear-gradient(90deg, #00D9FF, #0EA5E9)', animation: 'shimmer 2s linear infinite', borderRadius: '4px', boxShadow: '0 0 10px rgba(0, 217, 255, 0.5)' },
   
   // Results Styles
   results: { animation: 'fadeIn 0.5s ease' },
   resultHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' },
-  reportTitle: { fontSize: '2.5rem', fontWeight: '700', background: 'linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: '0.5rem' },
-  reportSub: { fontSize: '1rem', color: '#94a3b8', fontStyle: 'italic' },
-  newBtn: { display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899)', border: 'none', color: 'white', padding: '0.875rem 1.75rem', borderRadius: '12px', cursor: 'pointer', fontWeight: '600', transition: 'all 0.3s', boxShadow: '0 4px 16px rgba(59,130,246,0.4), inset 0 1px 0 rgba(255,255,255,0.2)' },
-  h2: { display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.5rem', fontWeight: '700', marginBottom: '1.5rem', color: '#e2e8f0' },
+  reportTitle: { fontSize: '2.5rem', fontWeight: '700', background: 'linear-gradient(135deg, #00D9FF, #0EA5E9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: '0.5rem' },
+  reportSub: { fontSize: '1rem', color: '#D1D5DB', fontStyle: 'italic' },
+  newBtn: { display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'linear-gradient(135deg, #00D9FF, #0EA5E9)', border: 'none', color: '#000000', padding: '0.875rem 1.75rem', borderRadius: '12px', cursor: 'pointer', fontWeight: '700', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', boxShadow: '0 0 30px rgba(0, 217, 255, 0.4)', textTransform: 'uppercase', letterSpacing: '0.05em' },
+  h2: { display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.5rem', fontWeight: '700', marginBottom: '1.5rem', color: '#FFFFFF' },
   
   // Brand Info Card
-  brandCard: { background: 'linear-gradient(135deg, rgba(236,72,153,0.12), rgba(251,191,36,0.12))', backdropFilter: 'blur(20px)', border: '2px solid rgba(236,72,153,0.3)', borderRadius: '24px', padding: '2.5rem', marginBottom: '1.5rem', boxShadow: '0 8px 32px rgba(236,72,153,0.2), 0 0 0 1px rgba(236,72,153,0.1)' },
+  brandCard: { background: 'rgba(0, 217, 255, 0.05)', backdropFilter: 'blur(20px)', border: '2px solid rgba(0, 217, 255, 0.3)', borderRadius: '24px', padding: '2.5rem', marginBottom: '1.5rem', boxShadow: '0 0 60px rgba(0, 217, 255, 0.2)' },
   brandInfoGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.5rem' },
-  infoItem: { padding: '1.25rem', background: 'rgba(255,255,255,0.05)', borderRadius: '16px', border: '2px solid rgba(236,72,153,0.3)', backdropFilter: 'blur(10px)', transition: 'all 0.3s' },
-  infoLabel: { fontSize: '0.75rem', color: '#f9a8d4', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '0.5rem' },
-  infoValue: { fontSize: '1.15rem', color: '#fef3c7', fontWeight: '700', lineHeight: '1.4', wordBreak: 'break-word' },
+  infoItem: { padding: '1.25rem', background: 'rgba(0, 217, 255, 0.05)', borderRadius: '16px', border: '2px solid rgba(0, 217, 255, 0.3)', backdropFilter: 'blur(10px)', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)' },
+  infoLabel: { fontSize: '0.75rem', color: '#00D9FF', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '0.5rem' },
+  infoValue: { fontSize: '1.15rem', color: '#FFFFFF', fontWeight: '700', lineHeight: '1.4', wordBreak: 'break-word' },
   
   // Overview Card Styles
-  overviewCard: { background: 'linear-gradient(135deg, rgba(59,130,246,0.12), rgba(147,51,234,0.12))', backdropFilter: 'blur(20px)', border: '2px solid rgba(59,130,246,0.3)', borderRadius: '24px', padding: '2.5rem', marginBottom: '1.5rem', boxShadow: '0 8px 32px rgba(59,130,246,0.2), 0 0 0 1px rgba(59,130,246,0.1)' },
+  overviewCard: { background: 'rgba(0, 217, 255, 0.05)', backdropFilter: 'blur(20px)', border: '2px solid rgba(0, 217, 255, 0.3)', borderRadius: '24px', padding: '2.5rem', marginBottom: '1.5rem', boxShadow: '0 0 60px rgba(0, 217, 255, 0.2)' },
   statsGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.5rem' },
-  statItem: { display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.5rem', background: 'linear-gradient(135deg, rgba(16,185,129,0.15), rgba(59,130,246,0.15))', borderRadius: '16px', border: '2px solid rgba(16,185,129,0.3)', boxShadow: '0 4px 16px rgba(16,185,129,0.2)', transition: 'all 0.3s', backdropFilter: 'blur(10px)' },
-  statIcon: { fontSize: '2.5rem', filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))', flexShrink: 0 },
-  statValue: { fontSize: '1.8rem', fontWeight: '800', color: '#f1f5f9', lineHeight: 1.2, wordBreak: 'break-word', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' },
-  statLabel: { fontSize: '0.875rem', color: '#cbd5e1', fontWeight: '600', lineHeight: 1.3 },
+  statItem: { display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.5rem', background: 'rgba(0, 217, 255, 0.1)', borderRadius: '16px', border: '2px solid rgba(0, 217, 255, 0.3)', boxShadow: '0 0 30px rgba(0, 217, 255, 0.2)', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', backdropFilter: 'blur(10px)' },
+  statIcon: { fontSize: '2.5rem', color: '#00D9FF', flexShrink: 0 },
+  statValue: { fontSize: '1.8rem', fontWeight: '700', color: '#FFFFFF', lineHeight: 1.2, wordBreak: 'break-word', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' },
+  statLabel: { fontSize: '0.875rem', color: '#D1D5DB', fontWeight: '600', lineHeight: 1.3 },
   
   // Calendar Grid Styles
   calendarGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(380px, 1fr))', gap: '1.5rem', marginBottom: '1.5rem' },
-  dayCard: { backdropFilter: 'blur(20px)', borderRadius: '20px', padding: '1.75rem', transition: 'all 0.3s', border: '2px solid', overflow: 'hidden' },
-  dayHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', paddingBottom: '1rem', borderBottom: '2px solid rgba(255,255,255,0.1)', gap: '0.75rem' },
-  dayBadge: { padding: '0.6rem 1rem', borderRadius: '10px', fontWeight: '800', fontSize: '0.75rem', border: '2px solid', letterSpacing: '0.5px', boxShadow: '0 2px 8px rgba(0,0,0,0.2)', whiteSpace: 'nowrap', flex: '0 0 auto', maxWidth: '45%', overflow: 'hidden', textOverflow: 'ellipsis' },
-  dayDate: { fontSize: '0.85rem', color: '#cbd5e1', fontWeight: '600', flex: '0 0 auto', whiteSpace: 'nowrap' },
-  contentTypeBadge: { display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1.2rem', borderRadius: '20px', fontSize: '0.9rem', marginBottom: '1.25rem', border: '2px solid', fontWeight: '700', boxShadow: '0 2px 8px rgba(0,0,0,0.2)' },
+  dayCard: { backdropFilter: 'blur(20px)', borderRadius: '20px', padding: '1.75rem', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', border: '2px solid', overflow: 'hidden' },
+  dayHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', paddingBottom: '1rem', borderBottom: '2px solid rgba(0, 217, 255, 0.2)', gap: '0.75rem' },
+  dayBadge: { padding: '0.6rem 1rem', borderRadius: '10px', fontWeight: '700', fontSize: '0.75rem', border: '2px solid', letterSpacing: '0.5px', boxShadow: '0 0 20px rgba(0, 217, 255, 0.2)', whiteSpace: 'nowrap', flex: '0 0 auto', maxWidth: '45%', overflow: 'hidden', textOverflow: 'ellipsis', textTransform: 'uppercase' },
+  dayDate: { fontSize: '0.85rem', color: '#D1D5DB', fontWeight: '600', flex: '0 0 auto', whiteSpace: 'nowrap' },
+  contentTypeBadge: { display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1.2rem', borderRadius: '20px', fontSize: '0.9rem', marginBottom: '1.25rem', border: '2px solid', fontWeight: '700', boxShadow: '0 0 20px rgba(0, 217, 255, 0.2)' },
   postsList: { display: 'flex', flexDirection: 'column', gap: '1rem' },
-  postItem: { padding: '1.5rem', background: 'rgba(0,0,0,0.2)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)', transition: 'all 0.3s', backdropFilter: 'blur(10px)' },
+  postItem: { padding: '1.5rem', background: 'rgba(0,0,0,0.3)', borderRadius: '16px', border: '1px solid rgba(0, 217, 255, 0.2)', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', backdropFilter: 'blur(10px)' },
   platformsList: { display: 'flex', flexWrap: 'wrap', gap: '0.6rem', marginBottom: '1rem' },
-  platformTag: { padding: '0.4rem 0.9rem', background: 'rgba(59,130,246,0.2)', borderRadius: '12px', fontSize: '0.8rem', border: '2px solid', fontWeight: '700', boxShadow: '0 2px 6px rgba(0,0,0,0.15)', display: 'flex', alignItems: 'center', gap: '0.4rem' },
-  postHook: { fontSize: '1.1rem', color: '#f1f5f9', marginBottom: '1rem', fontWeight: '800', lineHeight: '1.5', wordBreak: 'break-word' },
-  postCaption: { fontSize: '0.95rem', color: '#cbd5e1', marginBottom: '1rem', lineHeight: '1.7', wordBreak: 'break-word', maxHeight: 'none' },
+  platformTag: { padding: '0.4rem 0.9rem', background: 'rgba(0, 217, 255, 0.1)', borderRadius: '12px', fontSize: '0.8rem', border: '2px solid rgba(0, 217, 255, 0.3)', fontWeight: '700', boxShadow: '0 0 15px rgba(0, 217, 255, 0.15)', display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#00D9FF' },
+  postHook: { fontSize: '1.1rem', color: '#FFFFFF', marginBottom: '1rem', fontWeight: '700', lineHeight: '1.5', wordBreak: 'break-word' },
+  postCaption: { fontSize: '0.95rem', color: '#D1D5DB', marginBottom: '1rem', lineHeight: '1.7', wordBreak: 'break-word', maxHeight: 'none' },
   hashtagsList: { display: 'flex', flexWrap: 'wrap', gap: '0.6rem', marginBottom: '1rem' },
-  hashtagTag: { fontSize: '0.8rem', fontWeight: '700', padding: '0.3rem 0.7rem', background: 'rgba(139,92,246,0.15)', borderRadius: '8px', border: '1px solid rgba(139,92,246,0.3)' },
-  postTime: { fontSize: '0.85rem', color: '#94a3b8', marginBottom: '1rem', padding: '0.6rem 1rem', borderRadius: '10px', border: '1px solid', fontWeight: '600', display: 'inline-block' },
-  visualHint: { fontSize: '0.9rem', color: '#cbd5e1', marginBottom: '1rem', padding: '1rem', background: 'rgba(0,0,0,0.2)', borderRadius: '12px', border: '1px solid', wordBreak: 'break-word' },
-  performanceTag: { fontSize: '0.85rem', fontWeight: '600', padding: '0.8rem 1rem', borderRadius: '12px', border: '2px solid', marginTop: '0.75rem', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' },
-  details: { marginTop: '1.25rem', paddingTop: '1.25rem', borderTop: '2px solid rgba(255,255,255,0.1)' },
-  detailsSummary: { cursor: 'pointer', fontSize: '0.95rem', color: '#93c5fd', fontWeight: '700', padding: '0.75rem 1rem', borderRadius: '10px', transition: 'all 0.3s', userSelect: 'none', border: '2px solid', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(59,130,246,0.1)' },
-  detailsContent: { marginTop: '1.25rem', padding: '1.5rem', borderRadius: '16px', border: '2px solid', backdropFilter: 'blur(10px)' },
-  detailSection: { marginBottom: '1.5rem', paddingBottom: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)' },
-  detailTitle: { fontSize: '1rem', fontWeight: '700', color: '#f1f5f9', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' },
-  detailText: { fontSize: '0.95rem', color: '#cbd5e1', marginTop: '0.5rem', lineHeight: '1.8', wordBreak: 'break-word' },
-  ctaBox: { padding: '1rem', borderRadius: '10px', border: '2px solid', fontWeight: '700', fontSize: '1rem', textAlign: 'center', color: '#f1f5f9' },
+  hashtagTag: { fontSize: '0.8rem', fontWeight: '700', padding: '0.3rem 0.7rem', background: 'rgba(0, 217, 255, 0.1)', borderRadius: '8px', border: '1px solid rgba(0, 217, 255, 0.3)', color: '#00D9FF' },
+  postTime: { fontSize: '0.85rem', color: '#D1D5DB', marginBottom: '1rem', padding: '0.6rem 1rem', borderRadius: '10px', border: '1px solid rgba(0, 217, 255, 0.2)', fontWeight: '600', display: 'inline-block' },
+  visualHint: { fontSize: '0.9rem', color: '#D1D5DB', marginBottom: '1rem', padding: '1rem', background: 'rgba(0, 217, 255, 0.05)', borderRadius: '12px', border: '1px solid rgba(0, 217, 255, 0.2)', wordBreak: 'break-word' },
+  performanceTag: { fontSize: '0.85rem', fontWeight: '600', padding: '0.8rem 1rem', borderRadius: '12px', border: '2px solid', marginTop: '0.75rem', boxShadow: '0 0 15px rgba(0, 217, 255, 0.15)' },
+  details: { marginTop: '1.25rem', paddingTop: '1.25rem', borderTop: '2px solid rgba(0, 217, 255, 0.2)' },
+  detailsSummary: { cursor: 'pointer', fontSize: '0.95rem', color: '#00D9FF', fontWeight: '700', padding: '0.75rem 1rem', borderRadius: '10px', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', userSelect: 'none', border: '2px solid rgba(0, 217, 255, 0.3)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0, 217, 255, 0.05)' },
+  detailsContent: { marginTop: '1.25rem', padding: '1.5rem', borderRadius: '16px', border: '2px solid rgba(0, 217, 255, 0.2)', backdropFilter: 'blur(10px)', background: 'rgba(0, 217, 255, 0.03)' },
+  detailSection: { marginBottom: '1.5rem', paddingBottom: '1.5rem', borderBottom: '1px solid rgba(0, 217, 255, 0.2)' },
+  detailTitle: { fontSize: '1rem', fontWeight: '700', color: '#FFFFFF', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' },
+  detailText: { fontSize: '0.95rem', color: '#D1D5DB', marginTop: '0.5rem', lineHeight: '1.8', wordBreak: 'break-word' },
+  ctaBox: { padding: '1rem', borderRadius: '10px', border: '2px solid rgba(0, 217, 255, 0.3)', fontWeight: '700', fontSize: '1rem', textAlign: 'center', color: '#FFFFFF', background: 'rgba(0, 217, 255, 0.1)' },
   allHashtags: { display: 'flex', flexWrap: 'wrap', gap: '0.6rem', marginTop: '0.75rem' },
   metricsGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem', marginTop: '0.75rem' },
-  metricBox: { padding: '1rem', borderRadius: '12px', border: '2px solid', textAlign: 'center' },
-  metricLabel: { fontSize: '0.75rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem', fontWeight: '600' },
-  metricValue: { fontSize: '1.5rem', fontWeight: '800' },
+  metricBox: { padding: '1rem', borderRadius: '12px', border: '2px solid rgba(0, 217, 255, 0.3)', textAlign: 'center', background: 'rgba(0, 217, 255, 0.05)' },
+  metricLabel: { fontSize: '0.75rem', color: '#D1D5DB', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem', fontWeight: '600' },
+  metricValue: { fontSize: '1.5rem', fontWeight: '700', color: '#00D9FF' },
   
   // Actions Card
   actionsCard: { background: 'linear-gradient(135deg, rgba(59,130,246,0.08), rgba(147,51,234,0.08))', backdropFilter: 'blur(20px)', border: '1px solid rgba(59,130,246,0.2)', borderRadius: '24px', padding: '2.5rem', marginBottom: '1.5rem', boxShadow: '0 8px 32px rgba(0,0,0,0.2)' },
@@ -1039,27 +1039,32 @@ const s = {
   actionBtn: { flex: 1, minWidth: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', background: 'linear-gradient(135deg, rgba(59,130,246,0.2), rgba(147,51,234,0.2))', border: '1px solid rgba(59,130,246,0.3)', color: '#e2e8f0', padding: '0.875rem 1.5rem', borderRadius: '12px', cursor: 'pointer', fontSize: '0.95rem', transition: 'all 0.3s', fontWeight: '500', backdropFilter: 'blur(10px)' },
   
   // Tracking Card
-  trackingCard: { background: 'linear-gradient(135deg, rgba(16,185,129,0.12), rgba(59,130,246,0.12))', backdropFilter: 'blur(20px)', border: '2px solid rgba(16,185,129,0.3)', borderRadius: '24px', padding: '2.5rem', marginBottom: '1.5rem', boxShadow: '0 8px 32px rgba(16,185,129,0.2), 0 0 0 1px rgba(16,185,129,0.1)' },
+  trackingCard: { background: 'rgba(0, 217, 255, 0.05)', backdropFilter: 'blur(20px)', border: '2px solid rgba(0, 217, 255, 0.3)', borderRadius: '24px', padding: '2.5rem', marginBottom: '1.5rem', boxShadow: '0 0 60px rgba(0, 217, 255, 0.2)' },
   trackingGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', marginBottom: '2rem' },
-  trackingSection: { padding: '1.75rem', background: 'rgba(255,255,255,0.05)', borderRadius: '16px', border: '2px solid rgba(16,185,129,0.25)', backdropFilter: 'blur(10px)', transition: 'all 0.3s' },
-  trackingSubtitle: { fontSize: '1.15rem', fontWeight: '700', color: '#f1f5f9', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' },
+  trackingSection: { padding: '1.75rem', background: 'rgba(0, 217, 255, 0.05)', borderRadius: '16px', border: '2px solid rgba(0, 217, 255, 0.25)', backdropFilter: 'blur(10px)', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)' },
+  trackingSubtitle: { fontSize: '1.15rem', fontWeight: '700', color: '#FFFFFF', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' },
   metricsList: { display: 'flex', flexDirection: 'column', gap: '0.9rem' },
-  metricItem: { display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.95rem', color: '#cbd5e1', padding: '0.75rem 1rem', background: 'rgba(16,185,129,0.08)', borderRadius: '10px', border: '2px solid rgba(16,185,129,0.2)', fontWeight: '600', transition: 'all 0.3s' },
+  metricItem: { display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.95rem', color: '#D1D5DB', padding: '0.75rem 1rem', background: 'rgba(0, 217, 255, 0.08)', borderRadius: '10px', border: '2px solid rgba(0, 217, 255, 0.2)', fontWeight: '600', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)' },
   goalsList: { display: 'flex', flexDirection: 'column', gap: '1rem' },
-  goalItem: { padding: '1.25rem', background: 'rgba(59,130,246,0.15)', borderRadius: '12px', border: '2px solid rgba(59,130,246,0.3)', backdropFilter: 'blur(10px)', transition: 'all 0.3s' },
-  goalLabel: { fontSize: '0.75rem', color: '#bae6fd', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem', fontWeight: '700' },
-  goalValue: { fontSize: '1.2rem', color: '#f1f5f9', fontWeight: '800', wordBreak: 'break-word' },
-  trendSection: { padding: '1.75rem', background: 'rgba(236,72,153,0.08)', borderRadius: '16px', border: '2px solid rgba(236,72,153,0.3)', backdropFilter: 'blur(10px)' },
+  goalItem: { padding: '1.25rem', background: 'rgba(0, 217, 255, 0.1)', borderRadius: '12px', border: '2px solid rgba(0, 217, 255, 0.3)', backdropFilter: 'blur(10px)', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)' },
+  goalLabel: { fontSize: '0.75rem', color: '#00D9FF', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem', fontWeight: '700' },
+  goalValue: { fontSize: '1.2rem', color: '#FFFFFF', fontWeight: '700', wordBreak: 'break-word' },
+  trendSection: { padding: '1.75rem', background: 'rgba(0, 217, 255, 0.08)', borderRadius: '16px', border: '2px solid rgba(0, 217, 255, 0.3)', backdropFilter: 'blur(10px)' },
   trendTags: { display: 'flex', flexWrap: 'wrap', gap: '0.75rem' },
-  trendTag: { padding: '0.6rem 1.2rem', background: 'linear-gradient(135deg, rgba(236,72,153,0.25), rgba(251,113,133,0.25))', border: '2px solid rgba(236,72,153,0.4)', borderRadius: '20px', fontSize: '0.9rem', color: '#fda4af', fontWeight: '700', transition: 'all 0.3s', boxShadow: '0 2px 8px rgba(236,72,153,0.2)' },
+  trendTag: { padding: '0.6rem 1.2rem', background: 'rgba(0, 217, 255, 0.15)', border: '2px solid rgba(0, 217, 255, 0.4)', borderRadius: '20px', fontSize: '0.9rem', color: '#00D9FF', fontWeight: '700', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', boxShadow: '0 0 20px rgba(0, 217, 255, 0.2)' },
   
   // Tips Section
   tipsGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' },
-  tipCard: { display: 'flex', gap: '1rem', padding: '1.5rem', background: 'linear-gradient(135deg, rgba(251,191,36,0.05), rgba(236,72,153,0.05))', borderRadius: '16px', border: '1px solid rgba(251,191,36,0.2)', transition: 'all 0.3s', boxShadow: '0 4px 16px rgba(0,0,0,0.1)' },
-  tipIcon: { width: '48px', height: '48px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
+  tipCard: { display: 'flex', gap: '1rem', padding: '1.5rem', background: 'rgba(0, 217, 255, 0.05)', borderRadius: '16px', border: '1px solid rgba(0, 217, 255, 0.2)', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', boxShadow: '0 0 30px rgba(0, 217, 255, 0.1)' },
+  tipIcon: { width: '48px', height: '48px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: 'rgba(0, 217, 255, 0.1)', color: '#00D9FF' },
   tipContent: { flex: 1 },
-  tipTitle: { fontSize: '1rem', fontWeight: '600', color: '#e2e8f0', marginBottom: '0.5rem' },
-  tipText: { fontSize: '0.875rem', color: '#94a3b8', lineHeight: '1.5' },
+  tipTitle: { fontSize: '1rem', fontWeight: '600', color: '#FFFFFF', marginBottom: '0.5rem' },
+  tipText: { fontSize: '0.875rem', color: '#D1D5DB', lineHeight: '1.5' },
+  
+  // Actions Card
+  actionsCard: { background: 'rgba(0, 217, 255, 0.03)', backdropFilter: 'blur(20px)', border: '1px solid rgba(0, 217, 255, 0.2)', borderRadius: '24px', padding: '2.5rem', marginBottom: '1.5rem', boxShadow: '0 0 60px rgba(0, 217, 255, 0.2)' },
+  actionButtons: { display: 'flex', gap: '1rem', flexWrap: 'wrap' },
+  actionBtn: { flex: 1, minWidth: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', background: 'rgba(0, 217, 255, 0.1)', border: '1px solid rgba(0, 217, 255, 0.3)', color: '#00D9FF', padding: '0.875rem 1.5rem', borderRadius: '12px', cursor: 'pointer', fontSize: '0.95rem', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', fontWeight: '600', backdropFilter: 'blur(10px)', textTransform: 'uppercase', letterSpacing: '0.05em' },
 };
 
 const css = document.createElement('style');
@@ -1069,7 +1074,7 @@ css.textContent = `
   @keyframes gradientFlow { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
   @keyframes pulseGrow { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 1; } }
   @keyframes radiusPulse { 0%, 100% { opacity: 0.3; transform: scale(0.9); } 50% { opacity: 0.6; transform: scale(1.1); } }
-  @keyframes lineGlow { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; box-shadow: 0 0 20px rgba(59,130,246,0.8); } }
+  @keyframes lineGlow { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; box-shadow: 0 0 20px rgba(0, 217, 255, 0.8); } }
   @keyframes nodeFloat { 0%, 100% { transform: translateY(0px) scale(1); } 50% { transform: translateY(-10px) scale(1.1); } }
   @keyframes iconFloat { 
     0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.4; } 
@@ -1081,14 +1086,14 @@ css.textContent = `
   
   input:focus, select:focus { 
     outline: none; 
-    border-color: #3b82f6; 
-    box-shadow: 0 0 0 3px rgba(59,130,246,0.3), 0 8px 24px rgba(59,130,246,0.2);
+    border-color: #00D9FF; 
+    box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.3), 0 0 24px rgba(0, 217, 255, 0.2);
     transform: translateY(-2px);
   }
   
   button:hover { 
     transform: translateY(-2px); 
-    box-shadow: 0 12px 48px rgba(59,130,246,0.6) !important; 
+    box-shadow: 0 0 48px rgba(0, 217, 255, 0.6) !important; 
   }
   
   .platform-btn {
@@ -1097,15 +1102,15 @@ css.textContent = `
   
   .platform-btn:hover {
     transform: scale(1.08) translateY(-2px);
-    background: linear-gradient(135deg, rgba(59,130,246,0.3), rgba(147,51,234,0.3));
-    border-color: rgba(59,130,246,0.6);
-    box-shadow: 0 8px 20px rgba(59,130,246,0.3);
+    background: rgba(0, 217, 255, 0.2);
+    border-color: rgba(0, 217, 255, 0.6);
+    box-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
   }
   
   .stat-item:hover {
     transform: translateY(-6px) scale(1.02);
-    box-shadow: 0 12px 40px rgba(16,185,129,0.4);
-    border-color: rgba(16,185,129,0.5);
+    box-shadow: 0 0 40px rgba(0, 217, 255, 0.4);
+    border-color: rgba(0, 217, 255, 0.5);
   }
   
   .day-card {
@@ -1114,35 +1119,35 @@ css.textContent = `
   
   .day-card:hover {
     transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    box-shadow: 0 0 60px rgba(0, 217, 255, 0.4);
   }
   
   .post-item:hover {
-    background: rgba(59,130,246,0.15);
-    border-color: rgba(59,130,246,0.4);
+    background: rgba(0, 217, 255, 0.1);
+    border-color: rgba(0, 217, 255, 0.4);
     transform: translateX(6px);
-    box-shadow: 0 4px 16px rgba(59,130,246,0.2);
+    box-shadow: 0 0 16px rgba(0, 217, 255, 0.2);
   }
   
   .action-btn:hover {
-    background: linear-gradient(135deg, rgba(59,130,246,0.35), rgba(147,51,234,0.35));
-    border-color: rgba(59,130,246,0.6);
+    background: rgba(0, 217, 255, 0.2);
+    border-color: rgba(0, 217, 255, 0.6);
     transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(59,130,246,0.4);
+    box-shadow: 0 0 24px rgba(0, 217, 255, 0.4);
   }
   
   .tip-card:hover {
     transform: translateY(-6px) scale(1.03);
-    background: linear-gradient(135deg, rgba(251,191,36,0.15), rgba(236,72,153,0.15));
-    box-shadow: 0 12px 40px rgba(251,191,36,0.3);
-    border-color: rgba(251,191,36,0.4);
+    background: rgba(0, 217, 255, 0.15);
+    box-shadow: 0 0 40px rgba(0, 217, 255, 0.3);
+    border-color: rgba(0, 217, 255, 0.4);
   }
   
   .info-item:hover {
     transform: translateY(-4px);
-    background: rgba(255,255,255,0.08);
-    border-color: rgba(236,72,153,0.5);
-    box-shadow: 0 8px 24px rgba(236,72,153,0.3);
+    background: rgba(0, 217, 255, 0.08);
+    border-color: rgba(0, 217, 255, 0.5);
+    box-shadow: 0 0 24px rgba(0, 217, 255, 0.3);
   }
   
   .tracking-section:hover {

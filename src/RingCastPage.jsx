@@ -242,14 +242,15 @@ function RingCastPage() {
       minHeight: '100vh',
       position: 'relative',
       overflow: 'hidden',
-      background: 'linear-gradient(135deg, #050b1a 0%, #0e1633 50%, #1b2547 100%)',
-      padding: '2rem'
+      background: '#000000',
+      padding: '2rem',
+      fontFamily: "'Space Grotesk', sans-serif"
     },
     floatingOrb: {
       position: 'absolute',
       borderRadius: '50%',
       filter: 'blur(60px)',
-      opacity: 0.6,
+      opacity: 0.4,
       pointerEvents: 'none'
     },
     orb1: {
@@ -257,7 +258,7 @@ function RingCastPage() {
       left: '10%',
       width: '400px',
       height: '400px',
-      background: 'radial-gradient(circle, rgba(147, 51, 234, 0.3), transparent)',
+      background: 'radial-gradient(circle, rgba(0, 217, 255, 0.2), transparent)',
       animation: 'float 8s ease-in-out infinite'
     },
     orb2: {
@@ -265,7 +266,7 @@ function RingCastPage() {
       right: '10%',
       width: '350px',
       height: '350px',
-      background: 'radial-gradient(circle, rgba(236, 72, 153, 0.3), transparent)',
+      background: 'radial-gradient(circle, rgba(0, 217, 255, 0.15), transparent)',
       animation: 'float 8s ease-in-out infinite 2s'
     },
     orb3: {
@@ -273,15 +274,15 @@ function RingCastPage() {
       left: '50%',
       width: '300px',
       height: '300px',
-      background: 'radial-gradient(circle, rgba(59, 130, 246, 0.2), transparent)',
+      background: 'radial-gradient(circle, rgba(14, 165, 233, 0.15), transparent)',
       animation: 'float 8s ease-in-out infinite 4s'
     },
     gridOverlay: {
       position: 'absolute',
       inset: 0,
-      opacity: 0.2,
-      backgroundImage: `linear-gradient(rgba(147, 51, 234, 0.1) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(147, 51, 234, 0.1) 1px, transparent 1px)`,
+      opacity: 0.1,
+      backgroundImage: `linear-gradient(rgba(0, 217, 255, 0.1) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0, 217, 255, 0.1) 1px, transparent 1px)`,
       backgroundSize: '50px 50px',
       pointerEvents: 'none'
     },
@@ -292,20 +293,22 @@ function RingCastPage() {
       margin: '0 auto'
     },
     backButton: {
-      background: 'rgba(255, 255, 255, 0.05)',
+      background: 'rgba(0, 217, 255, 0.05)',
       backdropFilter: 'blur(16px)',
-      border: '1px solid rgba(255, 255, 255, 0.08)',
+      border: '1px solid rgba(0, 217, 255, 0.2)',
       borderRadius: '24px',
       padding: '0.75rem 1.5rem',
       marginBottom: '2rem',
       display: 'inline-flex',
       alignItems: 'center',
       gap: '0.75rem',
-      color: 'white',
+      color: '#00D9FF',
       cursor: 'pointer',
       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
       fontSize: '1rem',
-      fontWeight: '600'
+      fontWeight: '600',
+      textTransform: 'uppercase',
+      letterSpacing: '0.05em'
     },
     header: {
       textAlign: 'center',
@@ -321,25 +324,29 @@ function RingCastPage() {
       padding: '0.5rem 1rem',
       borderRadius: '9999px',
       marginBottom: '1.5rem',
-      background: 'rgba(147, 51, 234, 0.1)',
-      border: '1px solid rgba(147, 51, 234, 0.3)'
+      background: 'rgba(0, 217, 255, 0.1)',
+      border: '1px solid rgba(0, 217, 255, 0.3)',
+      color: '#00D9FF',
+      textTransform: 'uppercase',
+      letterSpacing: '0.05em',
+      fontWeight: '600'
     },
     title: {
       fontSize: '4rem',
       fontWeight: 'bold',
       marginBottom: '1rem',
-      background: 'linear-gradient(90deg, #9333ea, #ec4899, #3b82f6, #9333ea)',
+      background: 'linear-gradient(90deg, #00D9FF, #0EA5E9, #00D9FF)',
       backgroundSize: '200% auto',
       WebkitBackgroundClip: 'text',
       WebkitTextFillColor: 'transparent',
       backgroundClip: 'text',
       animation: 'gradientShift 4s ease infinite',
-      textShadow: '0 0 30px rgba(147,51,234,0.3)',
-      fontFamily: 'Poppins, sans-serif'
+      textShadow: '0 0 30px rgba(0, 217, 255, 0.3)',
+      fontFamily: "'Space Grotesk', sans-serif"
     },
     subtitle: {
       fontSize: '1.25rem',
-      color: '#d1d5db',
+      color: '#D1D5DB',
       marginBottom: '1.5rem',
       maxWidth: '48rem',
       marginLeft: 'auto',
@@ -351,23 +358,24 @@ function RingCastPage() {
       gap: '0.75rem',
       padding: '0.75rem 1.5rem',
       borderRadius: '9999px',
-      background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05))',
-      border: '1px solid rgba(16, 185, 129, 0.3)',
-      animation: 'glow 2s ease-in-out infinite'
+      background: 'rgba(0, 217, 255, 0.1)',
+      border: '1px solid rgba(0, 217, 255, 0.3)',
+      animation: 'glow 2s ease-in-out infinite',
+      color: '#00D9FF'
     },
     pulsingDot: {
       width: '0.5rem',
       height: '0.5rem',
       borderRadius: '50%',
-      background: '#10b981',
+      background: '#00D9FF',
       animation: 'pulse 2s infinite'
     },
     glassCard: {
-      background: 'rgba(255, 255, 255, 0.05)',
+      background: 'rgba(0, 217, 255, 0.03)',
       backdropFilter: 'blur(16px)',
-      border: '1px solid rgba(255, 255, 255, 0.08)',
+      border: '1px solid rgba(0, 217, 255, 0.1)',
       borderRadius: '24px',
-      boxShadow: '0 0 30px rgba(147, 51, 234, 0.1)',
+      boxShadow: '0 0 40px rgba(0, 217, 255, 0.2)',
       padding: '2rem',
       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
       animation: 'slideIn 0.6s ease-out forwards',
@@ -403,31 +411,33 @@ function RingCastPage() {
       display: 'flex',
       alignItems: 'center',
       gap: '0.5rem',
-      color: 'white',
+      color: '#D1D5DB',
       fontWeight: '600',
       marginBottom: '0.75rem',
-      fontSize: '1rem'
+      fontSize: '1rem',
+      textTransform: 'uppercase',
+      letterSpacing: '0.05em'
     },
     input: {
       width: '100%',
       padding: '1rem 1.25rem',
       borderRadius: '12px',
-      background: 'rgba(255, 255, 255, 0.03)',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      color: '#E4E9F7',
+      background: 'rgba(0, 217, 255, 0.05)',
+      border: '1px solid rgba(0, 217, 255, 0.2)',
+      color: '#FFFFFF',
       fontSize: '1rem',
-      transition: 'all 0.3s ease',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       outline: 'none'
     },
     textarea: {
       width: '100%',
       padding: '1rem 1.25rem',
       borderRadius: '12px',
-      background: 'rgba(255, 255, 255, 0.03)',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      color: '#E4E9F7',
+      background: 'rgba(0, 217, 255, 0.05)',
+      border: '1px solid rgba(0, 217, 255, 0.2)',
+      color: '#FFFFFF',
       fontSize: '1rem',
-      transition: 'all 0.3s ease',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       outline: 'none',
       minHeight: '150px',
       resize: 'vertical',
@@ -437,19 +447,19 @@ function RingCastPage() {
       width: '100%',
       padding: '1rem 1.25rem',
       borderRadius: '12px',
-      background: 'rgba(255, 255, 255, 0.03)',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
+      background: 'rgba(0, 217, 255, 0.05)',
+      border: '1px solid rgba(0, 217, 255, 0.2)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      color: '#E4E9F7'
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      color: '#00D9FF'
     },
     helpText: {
       marginTop: '0.5rem',
       fontSize: '0.875rem',
-      color: '#9ca3af',
+      color: '#D1D5DB',
       display: 'flex',
       alignItems: 'center',
       gap: '0.5rem'
@@ -459,8 +469,8 @@ function RingCastPage() {
       padding: '1.25rem',
       borderRadius: '16px',
       border: 'none',
-      background: 'linear-gradient(135deg, #9333ea, #ec4899)',
-      color: 'white',
+      background: 'linear-gradient(135deg, #00D9FF, #0EA5E9)',
+      color: '#000000',
       fontSize: '1.125rem',
       fontWeight: '700',
       textTransform: 'uppercase',
@@ -470,14 +480,15 @@ function RingCastPage() {
       alignItems: 'center',
       justifyContent: 'center',
       gap: '0.75rem',
-      transition: 'all 0.3s ease',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       position: 'relative',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      boxShadow: '0 0 40px rgba(0, 217, 255, 0.4)'
     },
     bottomText: {
       textAlign: 'center',
       fontSize: '0.875rem',
-      color: '#9ca3af',
+      color: '#D1D5DB',
       marginTop: '1rem'
     },
     loadingContainer: {
@@ -495,14 +506,14 @@ function RingCastPage() {
       position: 'absolute',
       inset: 0,
       borderRadius: '50%',
-      border: '4px solid rgba(147, 51, 234, 0.2)'
+      border: '4px solid rgba(0, 217, 255, 0.2)'
     },
     progressRingInner: {
       position: 'absolute',
       inset: 0,
       borderRadius: '50%',
       border: '4px solid transparent',
-      borderTopColor: '#9333ea',
+      borderTopColor: '#00D9FF',
       animation: 'rotate 2s linear infinite'
     },
     progressRingIcon: {
@@ -510,14 +521,15 @@ function RingCastPage() {
       inset: 0,
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      color: '#00D9FF'
     },
     loadingTitle: {
       fontSize: '2.5rem',
       fontWeight: 'bold',
       color: 'white',
       marginBottom: '1rem',
-      background: 'linear-gradient(90deg, #9333ea, #ec4899, #3b82f6, #9333ea)',
+      background: 'linear-gradient(90deg, #00D9FF, #0EA5E9, #00D9FF)',
       backgroundSize: '200% auto',
       WebkitBackgroundClip: 'text',
       WebkitTextFillColor: 'transparent',
@@ -526,13 +538,13 @@ function RingCastPage() {
     },
     loadingSubtext: {
       fontSize: '1.25rem',
-      color: '#d1d5db',
+      color: '#D1D5DB',
       marginBottom: '2rem'
     },
     counterBox: {
-      background: 'rgba(255, 255, 255, 0.05)',
+      background: 'rgba(0, 217, 255, 0.05)',
       backdropFilter: 'blur(16px)',
-      border: '1px solid rgba(255, 255, 255, 0.08)',
+      border: '1px solid rgba(0, 217, 255, 0.2)',
       borderRadius: '24px',
       padding: '1.5rem',
       display: 'inline-block',
@@ -541,7 +553,7 @@ function RingCastPage() {
     counterNumber: {
       fontSize: '4rem',
       fontWeight: 'bold',
-      background: 'linear-gradient(90deg, #9333ea, #ec4899, #3b82f6)',
+      background: 'linear-gradient(90deg, #00D9FF, #0EA5E9)',
       backgroundSize: '200% auto',
       WebkitBackgroundClip: 'text',
       WebkitTextFillColor: 'transparent',
@@ -553,15 +565,15 @@ function RingCastPage() {
       maxWidth: '32rem',
       margin: '0 auto',
       height: '0.5rem',
-      background: '#1f2937',
+      background: 'rgba(0, 217, 255, 0.2)',
       borderRadius: '9999px',
       overflow: 'hidden'
     },
     progressBarFill: {
       height: '100%',
       borderRadius: '9999px',
-      background: 'linear-gradient(90deg, #9333ea, #ec4899)',
-      boxShadow: '0 0 20px rgba(147, 51, 234, 0.5)',
+      background: 'linear-gradient(90deg, #00D9FF, #0EA5E9)',
+      boxShadow: '0 0 20px rgba(0, 217, 255, 0.5)',
       transition: 'width 0.3s ease'
     },
     successContainer: {
@@ -569,9 +581,9 @@ function RingCastPage() {
       animation: 'slideIn 0.6s ease-out forwards'
     },
     successCard: {
-      background: 'rgba(255, 255, 255, 0.05)',
+      background: 'rgba(0, 217, 255, 0.03)',
       backdropFilter: 'blur(16px)',
-      border: '1px solid rgba(255, 255, 255, 0.08)',
+      border: '1px solid rgba(0, 217, 255, 0.1)',
       borderRadius: '24px',
       padding: '3rem',
       marginBottom: '2rem'
@@ -592,13 +604,13 @@ function RingCastPage() {
     successIcon: {
       position: 'relative',
       zIndex: 10,
-      color: '#10b981'
+      color: '#00D9FF'
     },
     successTitle: {
       fontSize: '3rem',
       fontWeight: 'bold',
       marginBottom: '1rem',
-      background: 'linear-gradient(90deg, #9333ea, #ec4899, #3b82f6, #9333ea)',
+      background: 'linear-gradient(90deg, #00D9FF, #0EA5E9, #00D9FF)',
       backgroundSize: '200% auto',
       WebkitBackgroundClip: 'text',
       WebkitTextFillColor: 'transparent',
@@ -612,16 +624,16 @@ function RingCastPage() {
       marginBottom: '2rem'
     },
     statCard: {
-      background: 'rgba(255, 255, 255, 0.03)',
-      border: '1px solid rgba(255, 255, 255, 0.06)',
+      background: 'rgba(0, 217, 255, 0.03)',
+      border: '1px solid rgba(0, 217, 255, 0.1)',
       borderRadius: '16px',
       padding: '1.5rem',
-      transition: 'all 0.3s ease'
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
     },
     statValue: {
       fontSize: '2rem',
       fontWeight: 'bold',
-      background: 'linear-gradient(90deg, #9333ea, #ec4899, #3b82f6)',
+      background: 'linear-gradient(90deg, #00D9FF, #0EA5E9)',
       backgroundSize: '200% auto',
       WebkitBackgroundClip: 'text',
       WebkitTextFillColor: 'transparent',
@@ -629,9 +641,9 @@ function RingCastPage() {
       marginBottom: '0.5rem'
     },
     detailsCard: {
-      background: 'rgba(255, 255, 255, 0.05)',
+      background: 'rgba(0, 217, 255, 0.03)',
       backdropFilter: 'blur(16px)',
-      border: '1px solid rgba(255, 255, 255, 0.08)',
+      border: '1px solid rgba(0, 217, 255, 0.1)',
       borderRadius: '24px',
       padding: '1.5rem',
       marginBottom: '2rem',
@@ -652,20 +664,21 @@ function RingCastPage() {
       display: 'flex',
       justifyContent: 'space-between',
       marginBottom: '0.75rem',
-      color: '#d1d5db'
+      color: '#D1D5DB'
     },
     newCampaignButton: {
       padding: '1rem 3rem',
       borderRadius: '16px',
       border: 'none',
-      background: 'linear-gradient(135deg, #9333ea, #ec4899)',
-      color: 'white',
+      background: 'linear-gradient(135deg, #00D9FF, #0EA5E9)',
+      color: '#000000',
       fontSize: '1.125rem',
       fontWeight: '700',
       textTransform: 'uppercase',
       letterSpacing: '1px',
       cursor: 'pointer',
-      transition: 'all 0.3s ease'
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      boxShadow: '0 0 40px rgba(0, 217, 255, 0.4)'
     }
   };
 
@@ -673,7 +686,7 @@ function RingCastPage() {
     <div style={styles.container}>
       <style>
         {`
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap');
+          @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap');
           
           * {
             margin: 0;
@@ -682,11 +695,11 @@ function RingCastPage() {
           }
           
           body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Space Grotesk', sans-serif;
           }
           
           h1, h2, h3 {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Space Grotesk', sans-serif;
           }
 
           @keyframes gradientShift {
@@ -705,8 +718,8 @@ function RingCastPage() {
           }
 
           @keyframes glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(147, 51, 234, 0.3), 0 0 40px rgba(236, 72, 153, 0.2); }
-            50% { box-shadow: 0 0 30px rgba(147, 51, 234, 0.5), 0 0 60px rgba(236, 72, 153, 0.3); }
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 217, 255, 0.3), 0 0 40px rgba(0, 217, 255, 0.2); }
+            50% { box-shadow: 0 0 30px rgba(0, 217, 255, 0.5), 0 0 60px rgba(0, 217, 255, 0.3); }
           }
 
           @keyframes slideIn {
@@ -726,18 +739,18 @@ function RingCastPage() {
           }
 
           input::placeholder, textarea::placeholder {
-            color: #A3B0D0;
+            color: #D1D5DB;
           }
 
           input:focus, textarea:focus {
-            background: rgba(255, 255, 255, 0.08);
-            borderColor: #9333ea;
-            boxShadow: 0 0 20px rgba(147, 51, 234, 0.3);
+            background: rgba(0, 217, 255, 0.08);
+            borderColor: #00D9FF;
+            boxShadow: 0 0 20px rgba(0, 217, 255, 0.3);
           }
 
           button:hover {
             transform: translateY(-2px);
-            boxShadow: 0 10px 40px rgba(147, 51, 234, 0.4), 0 0 20px rgba(236, 72, 153, 0.6);
+            boxShadow: 0 0 60px rgba(0, 217, 255, 0.6);
           }
 
           button:active {
@@ -745,20 +758,20 @@ function RingCastPage() {
           }
 
           .stat-card:hover {
-            background: rgba(255, 255, 255, 0.06);
-            borderColor: rgba(147, 51, 234, 0.3);
+            background: rgba(0, 217, 255, 0.06);
+            borderColor: rgba(0, 217, 255, 0.3);
             transform: translateY(-4px);
           }
 
           .glass-card:hover {
             transform: translateY(-4px);
-            boxShadow: 0 20px 60px rgba(147, 51, 234, 0.2), 0 0 40px rgba(236, 72, 153, 0.15);
-            borderColor: rgba(147, 51, 234, 0.2);
+            boxShadow: 0 0 60px rgba(0, 217, 255, 0.3);
+            borderColor: rgba(0, 217, 255, 0.2);
           }
 
           .file-upload-label:hover {
-            borderColor: #9333ea;
-            background: rgba(255, 255, 255, 0.05);
+            borderColor: #00D9FF;
+            background: rgba(0, 217, 255, 0.05);
           }
         `}
       </style>

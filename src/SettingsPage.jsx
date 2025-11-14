@@ -5,6 +5,7 @@ import {
   ArrowLeft, User, Mail, Shield, Trash2, AlertTriangle,
   Moon, Sun, CreditCard, Key
 } from 'lucide-react';
+import SettingsBackground3D from './components/SettingsBackground3D';
 
 function SettingsPage() {
   const navigate = useNavigate();
@@ -71,451 +72,649 @@ function SettingsPage() {
     }
   };
 
-  const styles = {
-    container: {
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #0a0a0f 0%, #1a0a2e 50%, #16001e 100%)',
-      color: '#fff',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif'
-    },
-    header: {
-      position: 'sticky',
-      top: 0,
-      zIndex: 100,
-      backdropFilter: 'blur(12px)',
-      background: 'rgba(255, 255, 255, 0.1)',
-      borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
-      padding: '1.5rem 2rem'
-    },
-    headerContent: {
-      maxWidth: '1000px',
-      margin: '0 auto',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between'
-    },
-    backButton: {
-      background: 'rgba(255, 255, 255, 0.1)',
-      border: 'none',
-      borderRadius: '12px',
-      padding: '0.75rem 1.5rem',
-      color: '#fff',
-      cursor: 'pointer',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.5rem',
-      fontSize: '0.95rem',
-      fontWeight: '500',
-      transition: 'all 0.3s'
-    },
-    title: {
-      fontSize: '1.75rem',
-      fontWeight: 'bold',
-      background: 'linear-gradient(135deg, #c084fc 0%, #f9a8d4 100%)',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.75rem'
-    },
-    mainContent: {
-      maxWidth: '1000px',
-      margin: '0 auto',
-      padding: '2rem'
-    },
-    section: {
-      background: 'rgba(255, 255, 255, 0.05)',
-      borderRadius: '16px',
-      padding: '2rem',
-      marginBottom: '2rem',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      backdropFilter: 'blur(16px)'
-    },
-    sectionTitle: {
-      fontSize: '1.25rem',
-      fontWeight: 'bold',
-      marginBottom: '1.5rem',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.75rem',
-      color: '#e2e8f0'
-    },
-    profileGrid: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-      gap: '1.5rem'
-    },
-    infoItem: {
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '0.5rem'
-    },
-    label: {
-      fontSize: '0.875rem',
-      color: '#9ca3af',
-      fontWeight: '600',
-      textTransform: 'uppercase',
-      letterSpacing: '0.05em'
-    },
-    value: {
-      fontSize: '1rem',
-      color: '#e2e8f0',
-      padding: '0.75rem 1rem',
-      background: 'rgba(255, 255, 255, 0.05)',
-      borderRadius: '12px',
-      border: '1px solid rgba(255, 255, 255, 0.1)'
-    },
-    toggleRow: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      padding: '1rem 0',
-      borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
-    },
-    toggleLabel: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.75rem',
-      fontSize: '0.95rem',
-      color: '#e2e8f0'
-    },
-    toggle: {
-      width: '50px',
-      height: '28px',
-      background: 'rgba(255, 255, 255, 0.1)',
-      borderRadius: '14px',
-      position: 'relative',
-      cursor: 'pointer',
-      transition: 'all 0.3s'
-    },
-    toggleActive: {
-      background: 'linear-gradient(135deg, #9333ea 0%, #ec4899 100%)'
-    },
-    toggleThumb: {
-      width: '22px',
-      height: '22px',
-      background: '#fff',
-      borderRadius: '50%',
-      position: 'absolute',
-      top: '3px',
-      left: '3px',
-      transition: 'all 0.3s'
-    },
-    toggleThumbActive: {
-      left: '25px'
-    },
-    dangerSection: {
-      background: 'rgba(239, 68, 68, 0.1)',
-      border: '1px solid rgba(239, 68, 68, 0.3)'
-    },
-    warningBox: {
-      background: 'rgba(239, 68, 68, 0.1)',
-      border: '1px solid rgba(239, 68, 68, 0.3)',
-      borderRadius: '12px',
-      padding: '1rem',
-      marginBottom: '1.5rem',
-      display: 'flex',
-      gap: '1rem'
-    },
-    warningText: {
-      fontSize: '0.875rem',
-      color: '#fca5a5',
-      lineHeight: '1.6'
-    },
-    deleteButton: {
-      background: 'rgba(239, 68, 68, 0.2)',
-      border: '1px solid rgba(239, 68, 68, 0.5)',
-      borderRadius: '12px',
-      padding: '0.75rem 1.5rem',
-      color: '#fca5a5',
-      fontSize: '0.95rem',
-      fontWeight: '600',
-      cursor: 'pointer',
-      transition: 'all 0.3s',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.5rem'
-    },
-    modal: {
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      background: 'rgba(0, 0, 0, 0.8)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 1000,
-      padding: '2rem'
-    },
-    modalContent: {
-      background: 'linear-gradient(135deg, #1a0a2e 0%, #16001e 100%)',
-      borderRadius: '20px',
-      padding: '2rem',
-      maxWidth: '500px',
-      width: '100%',
-      border: '1px solid rgba(239, 68, 68, 0.3)',
-      boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5)'
-    },
-    modalHeader: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.75rem',
-      marginBottom: '1.5rem'
-    },
-    modalTitle: {
-      fontSize: '1.5rem',
-      fontWeight: 'bold',
-      color: '#fca5a5'
-    },
-    modalText: {
-      fontSize: '0.95rem',
-      color: '#9ca3af',
-      lineHeight: '1.6',
-      marginBottom: '1.5rem'
-    },
-    input: {
-      width: '100%',
-      padding: '0.75rem 1rem',
-      background: 'rgba(255, 255, 255, 0.05)',
-      border: '1px solid rgba(239, 68, 68, 0.3)',
-      borderRadius: '12px',
-      color: '#fff',
-      fontSize: '0.95rem',
-      outline: 'none',
-      marginBottom: '1.5rem'
-    },
-    modalActions: {
-      display: 'flex',
-      gap: '1rem'
-    },
-    confirmButton: {
-      flex: 1,
-      padding: '0.75rem',
-      background: 'rgba(239, 68, 68, 0.2)',
-      border: '1px solid rgba(239, 68, 68, 0.5)',
-      borderRadius: '12px',
-      color: '#fca5a5',
-      fontSize: '0.95rem',
-      fontWeight: '600',
-      cursor: 'pointer',
-      transition: 'all 0.3s'
-    },
-    cancelButton: {
-      flex: 1,
-      padding: '0.75rem',
-      background: 'rgba(255, 255, 255, 0.05)',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      borderRadius: '12px',
-      color: '#fff',
-      fontSize: '0.95rem',
-      fontWeight: '600',
-      cursor: 'pointer',
-      transition: 'all 0.3s'
-    },
-    comingSoon: {
-      background: 'rgba(255, 255, 255, 0.05)',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      borderRadius: '12px',
-      padding: '1rem',
-      textAlign: 'center',
-      color: '#9ca3af',
-      fontSize: '0.875rem',
-      fontStyle: 'italic'
-    }
-  };
-
   return (
-    <div style={styles.container}>
+    <div className="settings-container">
+      {/* 3D Interactive Background */}
+      <SettingsBackground3D />
+
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        .settings-container {
+          min-height: 100vh;
+          background: #000000;
+          color: #FFFFFF;
+          font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+          position: relative;
+          overflow-x: hidden;
+        }
+
+        .settings-container::before {
+          content: '';
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: radial-gradient(
+            circle at 30% 50%,
+            rgba(0, 217, 255, 0.02) 0%,
+            transparent 50%
+          );
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        .content-wrapper {
+          position: relative;
+          z-index: 1;
+        }
+
+        /* Header */
+        .header {
+          position: sticky;
+          top: 0;
+          z-index: 100;
+          backdrop-filter: blur(20px) saturate(180%);
+          background: rgba(0, 0, 0, 0.85);
+          border-bottom: 1px solid rgba(0, 217, 255, 0.15);
+          padding: 1.5rem 2rem;
+          box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        .header-content {
+          max-width: 1000px;
+          margin: 0 auto;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .back-button {
+          background: rgba(0, 217, 255, 0.05);
+          border: 1px solid rgba(0, 217, 255, 0.3);
+          border-radius: 12px;
+          padding: 0.75rem 1.5rem;
+          color: #FFFFFF;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 0.95rem;
+          font-weight: 500;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          font-family: 'Space Grotesk', sans-serif;
+        }
+
         .back-button:hover {
-          background: rgba(255, 255, 255, 0.15);
+          background: rgba(0, 217, 255, 0.1);
+          border-color: rgba(0, 217, 255, 0.5);
           transform: translateX(-4px);
+          box-shadow: 0 4px 16px rgba(0, 217, 255, 0.2);
         }
+
+        .title {
+          font-size: 1.75rem;
+          font-weight: 700;
+          color: #FFFFFF;
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          letter-spacing: -0.02em;
+        }
+
+        .title-icon {
+          color: #00D9FF;
+          filter: drop-shadow(0 0 8px rgba(0, 217, 255, 0.6));
+        }
+
+        /* Main Content */
+        .main-content {
+          max-width: 1000px;
+          margin: 0 auto;
+          padding: 2rem;
+        }
+
+        .section {
+          background: rgba(10, 20, 30, 0.6);
+          border-radius: 20px;
+          padding: 2rem;
+          margin-bottom: 2rem;
+          border: 1px solid rgba(0, 217, 255, 0.2);
+          backdrop-filter: blur(20px);
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .section::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background: linear-gradient(90deg, transparent, #00D9FF, transparent);
+          opacity: 0;
+          transition: opacity 0.4s;
+        }
+
+        .section:hover::before {
+          opacity: 1;
+        }
+
+        .section:hover {
+          background: rgba(10, 20, 30, 0.8);
+          border-color: rgba(0, 217, 255, 0.3);
+        }
+
+        .section-title {
+          font-size: 1.25rem;
+          font-weight: 700;
+          margin-bottom: 1.5rem;
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          color: #FFFFFF;
+          letter-spacing: -0.01em;
+        }
+
+        .section-icon {
+          color: #00D9FF;
+          filter: drop-shadow(0 0 6px rgba(0, 217, 255, 0.6));
+        }
+
+        .profile-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 1.5rem;
+        }
+
+        .info-item {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        .label {
+          font-size: 0.875rem;
+          color: #6B7280;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
+
+        .value {
+          font-size: 1rem;
+          color: #D1D5DB;
+          padding: 0.75rem 1rem;
+          background: rgba(0, 217, 255, 0.05);
+          border-radius: 12px;
+          border: 1px solid rgba(0, 217, 255, 0.2);
+          transition: all 0.3s;
+        }
+
+        .value:hover {
+          background: rgba(0, 217, 255, 0.08);
+          border-color: rgba(0, 217, 255, 0.3);
+        }
+
+        .toggle-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 1rem 0;
+          border-bottom: 1px solid rgba(0, 217, 255, 0.1);
+        }
+
+        .toggle-label {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          font-size: 0.95rem;
+          color: #D1D5DB;
+          font-weight: 500;
+        }
+
+        .toggle {
+          width: 50px;
+          height: 28px;
+          background: rgba(0, 217, 255, 0.1);
+          border: 1px solid rgba(0, 217, 255, 0.3);
+          border-radius: 14px;
+          position: relative;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .toggle-active {
+          background: linear-gradient(135deg, #00D9FF 0%, #0EA5E9 100%);
+          border-color: #00D9FF;
+          box-shadow: 0 0 20px rgba(0, 217, 255, 0.4);
+        }
+
+        .toggle-thumb {
+          width: 22px;
+          height: 22px;
+          background: #FFFFFF;
+          border-radius: 50%;
+          position: absolute;
+          top: 2px;
+          left: 2px;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-thumb-active {
+          left: 24px;
+        }
+
+        .danger-section {
+          background: rgba(255, 107, 107, 0.05);
+          border-color: rgba(255, 107, 107, 0.3);
+        }
+
+        .danger-section::before {
+          background: linear-gradient(90deg, transparent, #FF6B6B, transparent);
+        }
+
+        .warning-box {
+          background: rgba(255, 107, 107, 0.08);
+          border: 1px solid rgba(255, 107, 107, 0.3);
+          border-radius: 12px;
+          padding: 1rem;
+          margin-bottom: 1.5rem;
+          display: flex;
+          gap: 1rem;
+        }
+
+        .warning-text {
+          font-size: 0.875rem;
+          color: #FCA5A5;
+          line-height: 1.6;
+        }
+
+        .delete-button {
+          background: rgba(255, 107, 107, 0.1);
+          border: 1px solid rgba(255, 107, 107, 0.4);
+          border-radius: 12px;
+          padding: 0.75rem 1.5rem;
+          color: #FF6B6B;
+          font-size: 0.95rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-family: 'Space Grotesk', sans-serif;
+        }
+
         .delete-button:hover {
-          background: rgba(239, 68, 68, 0.3);
+          background: rgba(255, 107, 107, 0.2);
+          border-color: #FF6B6B;
           transform: translateY(-2px);
+          box-shadow: 0 4px 20px rgba(255, 107, 107, 0.3);
         }
-        .confirm-button:hover {
-          background: rgba(239, 68, 68, 0.3);
+
+        .modal {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.9);
+          backdrop-filter: blur(8px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+          padding: 2rem;
+          animation: fadeIn 0.2s;
         }
-        .cancel-button:hover {
-          background: rgba(255, 255, 255, 0.1);
+
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
+
+        .modal-content {
+          background: rgba(10, 20, 30, 0.95);
+          border-radius: 24px;
+          padding: 2rem;
+          max-width: 500px;
+          width: 100%;
+          border: 1px solid rgba(255, 107, 107, 0.3);
+          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+          animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .modal-header {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: #FF6B6B;
+        }
+
+        .modal-text {
+          font-size: 0.95rem;
+          color: #9CA3AF;
+          line-height: 1.6;
+          margin-bottom: 1.5rem;
+        }
+
+        .input {
+          width: 100%;
+          padding: 0.75rem 1rem;
+          background: rgba(0, 217, 255, 0.05);
+          border: 1px solid rgba(255, 107, 107, 0.3);
+          border-radius: 12px;
+          color: #FFFFFF;
+          font-size: 0.95rem;
+          outline: none;
+          margin-bottom: 1.5rem;
+          font-family: 'Space Grotesk', sans-serif;
+          transition: all 0.3s;
+        }
+
         .input:focus {
-          border-color: rgba(239, 68, 68, 0.5);
+          border-color: #FF6B6B;
+          background: rgba(255, 107, 107, 0.08);
+          box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
         }
+
+        .modal-actions {
+          display: flex;
+          gap: 1rem;
+        }
+
+        .confirm-button {
+          flex: 1;
+          padding: 0.75rem;
+          background: rgba(255, 107, 107, 0.15);
+          border: 1px solid rgba(255, 107, 107, 0.5);
+          border-radius: 12px;
+          color: #FF6B6B;
+          font-size: 0.95rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s;
+          font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .confirm-button:hover {
+          background: rgba(255, 107, 107, 0.25);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 20px rgba(255, 107, 107, 0.3);
+        }
+
+        .cancel-button {
+          flex: 1;
+          padding: 0.75rem;
+          background: rgba(0, 217, 255, 0.05);
+          border: 1px solid rgba(0, 217, 255, 0.2);
+          border-radius: 12px;
+          color: #FFFFFF;
+          font-size: 0.95rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s;
+          font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .cancel-button:hover {
+          background: rgba(0, 217, 255, 0.1);
+          border-color: #00D9FF;
+        }
+
+        .coming-soon {
+          background: rgba(0, 217, 255, 0.05);
+          border: 1px solid rgba(0, 217, 255, 0.2);
+          border-radius: 12px;
+          padding: 1rem;
+          text-align: center;
+          color: #6B7280;
+          font-size: 0.875rem;
+          font-style: italic;
+        }
+
+        .loading-spinner {
+          width: 60px;
+          height: 60px;
+          border: 4px solid rgba(0, 217, 255, 0.2);
+          border-top-color: #00D9FF;
+          border-radius: 50%;
+          animation: spin 0.8s linear infinite;
+          margin: 3rem auto;
+        }
+
         @keyframes spin {
           to { transform: rotate(360deg); }
         }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+          width: 10px;
+          height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+          background: rgba(0, 0, 0, 0.3);
+        }
+
+        ::-webkit-scrollbar-thumb {
+          background: rgba(0, 217, 255, 0.3);
+          border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+          background: rgba(0, 217, 255, 0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+          .profile-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .header-content {
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-start;
+          }
+
+          .title {
+            font-size: 1.5rem;
+          }
+        }
       `}</style>
 
-      {/* Header */}
-      <div style={styles.header}>
-        <div style={styles.headerContent}>
-          <button 
-            style={styles.backButton}
-            onClick={() => navigate('/')}
-            className="back-button"
-          >
-            <ArrowLeft size={20} />
-            Back to Dashboard
-          </button>
-          <div style={styles.title}>
-            <Shield size={28} />
-            Settings
+      {/* Content Wrapper */}
+      <div className="content-wrapper">
+        {/* Header */}
+        <div className="header">
+          <div className="header-content">
+            <button 
+              className="back-button"
+              onClick={() => navigate('/')}
+            >
+              <ArrowLeft size={20} />
+              Back to Dashboard
+            </button>
+            <div className="title">
+              <Shield size={28} className="title-icon" />
+              Settings
+            </div>
+            <div style={{ width: '160px' }} />
           </div>
-          <div style={{ width: '160px' }} />
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div style={styles.mainContent}>
-        {loading ? (
-          <div style={{ textAlign: 'center', padding: '4rem' }}>
-            <div style={{ width: '50px', height: '50px', border: '4px solid rgba(147,51,234,0.3)', borderTop: '4px solid #9333ea', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto 1rem' }}></div>
-            <div style={{ color: '#9ca3af' }}>Loading settings...</div>
-          </div>
-        ) : (
-          <>
-            {/* Profile Section */}
-            <div style={styles.section}>
-              <div style={styles.sectionTitle}>
-                <User size={24} color="#9333ea" />
-                Profile Information
-              </div>
-              <div style={styles.profileGrid}>
-                <div style={styles.infoItem}>
-                  <div style={styles.label}>Full Name</div>
-                  <div style={styles.value}>
-                    {profile?.full_name || 'Not set'}
-                  </div>
-                </div>
-                <div style={styles.infoItem}>
-                  <div style={styles.label}>Email Address</div>
-                  <div style={styles.value}>
-                    {session?.user?.email || 'Not available'}
-                  </div>
-                </div>
-                <div style={styles.infoItem}>
-                  <div style={styles.label}>User ID</div>
-                  <div style={styles.value} title={session?.user?.id}>
-                    {session?.user?.id?.substring(0, 8)}...
-                  </div>
-                </div>
-                <div style={styles.infoItem}>
-                  <div style={styles.label}>Tokens Remaining</div>
-                  <div style={styles.value}>
-                    {profile?.tokens_remaining?.toLocaleString() || 0}
-                  </div>
-                </div>
-              </div>
+        {/* Main Content */}
+        <div className="main-content">
+          {loading ? (
+            <div style={{ textAlign: 'center', padding: '4rem' }}>
+              <div className="loading-spinner"></div>
+              <div style={{ color: '#6B7280' }}>Loading settings...</div>
             </div>
-
-            {/* Appearance Section */}
-            <div style={styles.section}>
-              <div style={styles.sectionTitle}>
-                <Moon size={24} color="#ec4899" />
-                Appearance
-              </div>
-              <div style={styles.toggleRow}>
-                <div style={styles.toggleLabel}>
-                  <Moon size={20} />
-                  Dark Mode
+          ) : (
+            <>
+              {/* Profile Section */}
+              <div className="section">
+                <div className="section-title">
+                  <User size={24} className="section-icon" />
+                  Profile Information
                 </div>
-                <div 
-                  style={{...styles.toggle, ...(darkMode ? styles.toggleActive : {})}}
-                  onClick={() => setDarkMode(!darkMode)}
+                <div className="profile-grid">
+                  <div className="info-item">
+                    <div className="label">Full Name</div>
+                    <div className="value">
+                      {profile?.full_name || 'Not set'}
+                    </div>
+                  </div>
+                  <div className="info-item">
+                    <div className="label">Email Address</div>
+                    <div className="value">
+                      {session?.user?.email || 'Not available'}
+                    </div>
+                  </div>
+                  <div className="info-item">
+                    <div className="label">User ID</div>
+                    <div className="value" title={session?.user?.id}>
+                      {session?.user?.id?.substring(0, 8)}...
+                    </div>
+                  </div>
+                  <div className="info-item">
+                    <div className="label">Tokens Remaining</div>
+                    <div className="value">
+                      {profile?.tokens_remaining?.toLocaleString() || 0}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Appearance Section */}
+              <div className="section">
+                <div className="section-title">
+                  <Moon size={24} className="section-icon" />
+                  Appearance
+                </div>
+                <div className="toggle-row">
+                  <div className="toggle-label">
+                    <Moon size={20} color="#00D9FF" />
+                    Dark Mode
+                  </div>
+                  <div 
+                    className={`toggle ${darkMode ? 'toggle-active' : ''}`}
+                    onClick={() => setDarkMode(!darkMode)}
+                  >
+                    <div className={`toggle-thumb ${darkMode ? 'toggle-thumb-active' : ''}`}></div>
+                  </div>
+                </div>
+                <div className="coming-soon" style={{ marginTop: '1rem' }}>
+                  Light mode coming soon
+                </div>
+              </div>
+
+              {/* Billing Section */}
+              <div className="section">
+                <div className="section-title">
+                  <CreditCard size={24} className="section-icon" />
+                  Billing & Tokens
+                </div>
+                <div className="coming-soon">
+                  Token purchase and billing features coming soon
+                </div>
+              </div>
+
+              {/* Danger Zone */}
+              <div className="section danger-section">
+                <div className="section-title">
+                  <AlertTriangle size={24} style={{ color: '#FF6B6B', filter: 'drop-shadow(0 0 6px rgba(255, 107, 107, 0.6))' }} />
+                  Danger Zone
+                </div>
+                <div className="warning-box">
+                  <AlertTriangle size={20} color="#FF6B6B" style={{ flexShrink: 0 }} />
+                  <div>
+                    <div style={{ fontWeight: '600', marginBottom: '0.25rem', color: '#FF6B6B' }}>
+                      Delete Account
+                    </div>
+                    <div className="warning-text">
+                      Once you delete your account, there is no going back. All your data, including campaigns, 
+                      usage history, and tokens will be permanently deleted.
+                    </div>
+                  </div>
+                </div>
+                <button 
+                  className="delete-button"
+                  onClick={() => setShowDeleteModal(true)}
                 >
-                  <div style={{...styles.toggleThumb, ...(darkMode ? styles.toggleThumbActive : {})}}></div>
-                </div>
+                  <Trash2 size={18} />
+                  Delete My Account
+                </button>
               </div>
-              <div style={{ ...styles.comingSoon, marginTop: '1rem' }}>
-                Light mode coming soon
-              </div>
-            </div>
-
-            {/* Billing Section (Future) */}
-            <div style={styles.section}>
-              <div style={styles.sectionTitle}>
-                <CreditCard size={24} color="#10b981" />
-                Billing & Tokens
-              </div>
-              <div style={styles.comingSoon}>
-                Token purchase and billing features coming soon
-              </div>
-            </div>
-
-            {/* Danger Zone */}
-            <div style={{...styles.section, ...styles.dangerSection}}>
-              <div style={styles.sectionTitle}>
-                <AlertTriangle size={24} color="#ef4444" />
-                Danger Zone
-              </div>
-              <div style={styles.warningBox}>
-                <AlertTriangle size={20} color="#fca5a5" style={{ flexShrink: 0 }} />
-                <div>
-                  <div style={{ fontWeight: '600', marginBottom: '0.25rem', color: '#fca5a5' }}>
-                    Delete Account
-                  </div>
-                  <div style={styles.warningText}>
-                    Once you delete your account, there is no going back. All your data, including campaigns, 
-                    usage history, and tokens will be permanently deleted.
-                  </div>
-                </div>
-              </div>
-              <button 
-                style={styles.deleteButton}
-                onClick={() => setShowDeleteModal(true)}
-                className="delete-button"
-              >
-                <Trash2 size={18} />
-                Delete My Account
-              </button>
-            </div>
-          </>
-        )}
+            </>
+          )}
+        </div>
       </div>
 
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
-        <div style={styles.modal} onClick={() => setShowDeleteModal(false)}>
-          <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            <div style={styles.modalHeader}>
-              <AlertTriangle size={28} color="#ef4444" />
-              <div style={styles.modalTitle}>Delete Account</div>
+        <div className="modal" onClick={() => setShowDeleteModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <AlertTriangle size={28} color="#FF6B6B" />
+              <div className="modal-title">Delete Account</div>
             </div>
-            <div style={styles.modalText}>
+            <div className="modal-text">
               This action cannot be undone. This will permanently delete your account, 
               all your campaigns, usage history, and any remaining tokens.
             </div>
-            <div style={styles.modalText}>
-              Please type <strong style={{ color: '#fca5a5' }}>DELETE</strong> to confirm:
+            <div className="modal-text">
+              Please type <strong style={{ color: '#FF6B6B' }}>DELETE</strong> to confirm:
             </div>
             <input
               type="text"
-              style={styles.input}
               className="input"
               placeholder="Type DELETE to confirm"
               value={deleteConfirm}
               onChange={(e) => setDeleteConfirm(e.target.value)}
             />
-            <div style={styles.modalActions}>
+            <div className="modal-actions">
               <button 
-                style={styles.cancelButton}
+                className="cancel-button"
                 onClick={() => {
                   setShowDeleteModal(false);
                   setDeleteConfirm('');
                 }}
-                className="cancel-button"
               >
                 Cancel
               </button>
               <button 
-                style={styles.confirmButton}
-                onClick={handleDeleteAccount}
                 className="confirm-button"
+                onClick={handleDeleteAccount}
                 disabled={deleteConfirm !== 'DELETE'}
               >
                 Delete Account
@@ -527,5 +726,6 @@ function SettingsPage() {
     </div>
   );
 }
+
 
 export default SettingsPage;

@@ -181,7 +181,7 @@ function InfluenceScopePage() {
 
   const getGradeColor = (grade) => {
     if (grade?.includes('A')) return '#10b981';
-    if (grade?.includes('B')) return '#3b82f6';
+    if (grade?.includes('B')) return '#00D9FF';
     if (grade?.includes('C')) return '#f59e0b';
     if (grade?.includes('D')) return '#ef4444';
     return '#9ca3af';
@@ -192,14 +192,15 @@ function InfluenceScopePage() {
       minHeight: '100vh',
       position: 'relative',
       overflow: 'hidden',
-      background: 'linear-gradient(135deg, #050b1a 0%, #0e1633 50%, #1b2547 100%)',
-      padding: '2rem'
+      background: '#000000',
+      padding: '2rem',
+      fontFamily: "'Space Grotesk', sans-serif"
     },
     floatingOrb: {
       position: 'absolute',
       borderRadius: '50%',
       filter: 'blur(60px)',
-      opacity: 0.6,
+      opacity: 0.4,
       pointerEvents: 'none'
     },
     orb1: {
@@ -207,7 +208,7 @@ function InfluenceScopePage() {
       left: '10%',
       width: '400px',
       height: '400px',
-      background: 'radial-gradient(circle, rgba(147, 51, 234, 0.3), transparent)',
+      background: 'radial-gradient(circle, rgba(0, 217, 255, 0.2), transparent)',
       animation: 'float 8s ease-in-out infinite'
     },
     orb2: {
@@ -215,7 +216,7 @@ function InfluenceScopePage() {
       right: '10%',
       width: '350px',
       height: '350px',
-      background: 'radial-gradient(circle, rgba(236, 72, 153, 0.3), transparent)',
+      background: 'radial-gradient(circle, rgba(0, 217, 255, 0.15), transparent)',
       animation: 'float 8s ease-in-out infinite 2s'
     },
     orb3: {
@@ -223,15 +224,15 @@ function InfluenceScopePage() {
       left: '50%',
       width: '300px',
       height: '300px',
-      background: 'radial-gradient(circle, rgba(59, 130, 246, 0.2), transparent)',
+      background: 'radial-gradient(circle, rgba(14, 165, 233, 0.15), transparent)',
       animation: 'float 8s ease-in-out infinite 4s'
     },
     gridOverlay: {
       position: 'absolute',
       inset: 0,
-      opacity: 0.2,
-      backgroundImage: `linear-gradient(rgba(147, 51, 234, 0.1) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(147, 51, 234, 0.1) 1px, transparent 1px)`,
+      opacity: 0.1,
+      backgroundImage: `linear-gradient(rgba(0, 217, 255, 0.1) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0, 217, 255, 0.1) 1px, transparent 1px)`,
       backgroundSize: '50px 50px',
       pointerEvents: 'none'
     },
@@ -242,20 +243,22 @@ function InfluenceScopePage() {
       margin: '0 auto'
     },
     backButton: {
-      background: 'rgba(255, 255, 255, 0.05)',
+      background: 'rgba(0, 217, 255, 0.05)',
       backdropFilter: 'blur(16px)',
-      border: '1px solid rgba(255, 255, 255, 0.08)',
+      border: '1px solid rgba(0, 217, 255, 0.2)',
       borderRadius: '24px',
       padding: '0.75rem 1.5rem',
       marginBottom: '2rem',
       display: 'inline-flex',
       alignItems: 'center',
       gap: '0.75rem',
-      color: 'white',
+      color: '#00D9FF',
       cursor: 'pointer',
       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
       fontSize: '1rem',
-      fontWeight: '600'
+      fontWeight: '600',
+      textTransform: 'uppercase',
+      letterSpacing: '0.05em'
     },
     header: {
       textAlign: 'center',
@@ -271,21 +274,25 @@ function InfluenceScopePage() {
       padding: '0.5rem 1rem',
       borderRadius: '9999px',
       marginBottom: '1.5rem',
-      background: 'rgba(147, 51, 234, 0.1)',
-      border: '1px solid rgba(147, 51, 234, 0.3)'
+      background: 'rgba(0, 217, 255, 0.1)',
+      border: '1px solid rgba(0, 217, 255, 0.3)',
+      color: '#00D9FF',
+      textTransform: 'uppercase',
+      letterSpacing: '0.05em',
+      fontWeight: '600'
     },
     title: {
       fontSize: '4rem',
       fontWeight: 'bold',
       marginBottom: '1rem',
-      background: 'linear-gradient(90deg, #9333ea, #ec4899, #3b82f6, #9333ea)',
+      background: 'linear-gradient(90deg, #00D9FF, #0EA5E9, #00D9FF)',
       backgroundSize: '200% auto',
       WebkitBackgroundClip: 'text',
       WebkitTextFillColor: 'transparent',
       backgroundClip: 'text',
       animation: 'gradientShift 4s ease infinite',
-      textShadow: '0 0 30px rgba(147,51,234,0.3)',
-      fontFamily: 'Poppins, sans-serif'
+      textShadow: '0 0 30px rgba(0, 217, 255, 0.3)',
+      fontFamily: "'Space Grotesk', sans-serif"
     },
     subtitle: {
       fontSize: '1.25rem',
@@ -351,8 +358,8 @@ function InfluenceScopePage() {
       padding: '1.25rem',
       borderRadius: '16px',
       border: 'none',
-      background: 'linear-gradient(135deg, #9333ea, #ec4899)',
-      color: 'white',
+      background: 'linear-gradient(135deg, #00D9FF, #0EA5E9)',
+      color: '#000000',
       fontSize: '1.125rem',
       fontWeight: '700',
       textTransform: 'uppercase',
@@ -362,7 +369,8 @@ function InfluenceScopePage() {
       alignItems: 'center',
       justifyContent: 'center',
       gap: '0.75rem',
-      transition: 'all 0.3s ease'
+      transition: 'all 0.3s ease',
+      boxShadow: '0 0 40px rgba(0, 217, 255, 0.4)'
     },
     loadingContainer: {
       textAlign: 'center',
@@ -379,14 +387,14 @@ function InfluenceScopePage() {
       position: 'absolute',
       inset: 0,
       borderRadius: '50%',
-      border: '4px solid rgba(147, 51, 234, 0.2)'
+      border: '4px solid rgba(0, 217, 255, 0.2)'
     },
     progressRingInner: {
       position: 'absolute',
       inset: 0,
       borderRadius: '50%',
       border: '4px solid transparent',
-      borderTopColor: '#9333ea',
+      borderTopColor: '#00D9FF',
       animation: 'rotate 2s linear infinite'
     },
     progressRingIcon: {
@@ -401,7 +409,7 @@ function InfluenceScopePage() {
       fontWeight: 'bold',
       color: 'white',
       marginBottom: '1rem',
-      background: 'linear-gradient(90deg, #9333ea, #ec4899, #3b82f6, #9333ea)',
+      background: 'linear-gradient(90deg, #00D9FF, #0EA5E9, #00D9FF)',
       backgroundSize: '200% auto',
       WebkitBackgroundClip: 'text',
       WebkitTextFillColor: 'transparent',
@@ -431,8 +439,8 @@ function InfluenceScopePage() {
       marginBottom: '2rem'
     },
     statCard: {
-      background: 'rgba(255, 255, 255, 0.03)',
-      border: '1px solid rgba(255, 255, 255, 0.06)',
+      background: 'rgba(0, 217, 255, 0.03)',
+      border: '1px solid rgba(0, 217, 255, 0.1)',
       borderRadius: '16px',
       padding: '1.5rem',
       transition: 'all 0.3s ease'
@@ -440,7 +448,7 @@ function InfluenceScopePage() {
     statValue: {
       fontSize: '2rem',
       fontWeight: 'bold',
-      background: 'linear-gradient(90deg, #9333ea, #ec4899, #3b82f6)',
+      background: 'linear-gradient(90deg, #00D9FF, #0EA5E9, #00D9FF)',
       backgroundSize: '200% auto',
       WebkitBackgroundClip: 'text',
       WebkitTextFillColor: 'transparent',
@@ -478,15 +486,16 @@ function InfluenceScopePage() {
       padding: '1rem 3rem',
       borderRadius: '16px',
       border: 'none',
-      background: 'linear-gradient(135deg, #9333ea, #ec4899)',
-      color: 'white',
+      background: 'linear-gradient(135deg, #00D9FF, #0EA5E9)',
+      color: '#000000',
       fontSize: '1.125rem',
       fontWeight: '700',
       textTransform: 'uppercase',
       letterSpacing: '1px',
       cursor: 'pointer',
       transition: 'all 0.3s ease',
-      marginTop: '2rem'
+      marginTop: '2rem',
+      boxShadow: '0 0 40px rgba(0, 217, 255, 0.4)'
     }
   };
 
@@ -494,7 +503,7 @@ function InfluenceScopePage() {
     <div style={styles.container}>
       <style>
         {`
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap');
+          @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap');
           
           * {
             margin: 0;
@@ -541,14 +550,14 @@ function InfluenceScopePage() {
           }
 
           input:focus {
-            background: rgba(255, 255, 255, 0.08);
-            borderColor: #9333ea;
-            boxShadow: 0 0 20px rgba(147, 51, 234, 0.3);
+            background: rgba(0, 217, 255, 0.05);
+            borderColor: #00D9FF;
+            boxShadow: 0 0 20px rgba(0, 217, 255, 0.3);
           }
 
           button:hover {
             transform: translateY(-2px);
-            boxShadow: 0 10px 40px rgba(147, 51, 234, 0.4), 0 0 20px rgba(236, 72, 153, 0.6);
+            boxShadow: 0 10px 40px rgba(0, 217, 255, 0.5), 0 0 30px rgba(0, 217, 255, 0.4);
           }
 
           button:active {
@@ -584,8 +593,8 @@ function InfluenceScopePage() {
             {/* Header */}
             <div style={styles.header}>
               <div style={styles.aiPoweredBadge}>
-                <Sparkles size={16} style={{color: '#9333ea'}} />
-                <span style={{color: '#9333ea', fontSize: '0.875rem', fontWeight: '600'}}>AI-POWERED INFLUENCER ANALYSIS</span>
+                <Sparkles size={16} style={{color: '#00D9FF'}} />
+                <span style={{color: '#00D9FF', fontSize: '0.875rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em'}}>AI-POWERED INFLUENCER ANALYSIS</span>
               </div>
               
               <h1 style={styles.title}>InfluenceScope</h1>
@@ -606,7 +615,7 @@ function InfluenceScopePage() {
 
               <div style={styles.inputWrapper}>
                 <label style={styles.label}>
-                  <Instagram size={18} style={{color: '#9333ea'}} />
+                  <Instagram size={18} style={{color: '#00D9FF'}} />
                   Instagram Username
                 </label>
                 <input
@@ -639,7 +648,7 @@ function InfluenceScopePage() {
                 <div style={styles.progressRingOuter}></div>
                 <div style={styles.progressRingInner}></div>
                 <div style={styles.progressRingIcon}>
-                  <Instagram size={48} style={{color: '#9333ea', animation: 'pulse 1.5s infinite'}} />
+                  <Instagram size={48} style={{color: '#00D9FF', animation: 'pulse 1.5s infinite'}} />
                 </div>
               </div>
 
@@ -658,7 +667,7 @@ function InfluenceScopePage() {
             {/* Profile Overview */}
             <div style={styles.glassCard}>
               <h2 style={styles.sectionTitle}>
-                <Instagram size={24} style={{color: '#9333ea'}} />
+                <Instagram size={24} style={{color: '#00D9FF'}} />
                 Profile Overview
               </h2>
               
@@ -683,7 +692,7 @@ function InfluenceScopePage() {
 
               {/* Classification */}
               <h2 style={{...styles.sectionTitle, marginTop: '2rem'}}>
-                <Award size={24} style={{color: '#ec4899'}} />
+                <Award size={24} style={{color: '#00D9FF'}} />
                 Influencer Classification
               </h2>
               
@@ -721,7 +730,7 @@ function InfluenceScopePage() {
 
               {/* Engagement Metrics */}
               <h2 style={{...styles.sectionTitle, marginTop: '2rem'}}>
-                <TrendingUp size={24} style={{color: '#3b82f6'}} />
+                <TrendingUp size={24} style={{color: '#00D9FF'}} />
                 Engagement Metrics
               </h2>
               
@@ -866,7 +875,7 @@ function InfluenceScopePage() {
 
               {/* Recommendation */}
               <h2 style={{...styles.sectionTitle, marginTop: '2rem'}}>
-                <Target size={24} style={{color: '#ec4899'}} />
+                <Target size={24} style={{color: '#00D9FF'}} />
                 Final Recommendation
               </h2>
               
@@ -905,7 +914,7 @@ function InfluenceScopePage() {
               {analysisData.recommendation?.action_items && analysisData.recommendation.action_items.length > 0 && (
                 <div style={{...styles.detailSection, marginTop: '1rem'}}>
                   <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem'}}>
-                    <CheckCircle size={20} style={{color: '#3b82f6'}} />
+                    <CheckCircle size={20} style={{color: '#00D9FF'}} />
                     <span style={{fontWeight: '600', color: 'white'}}>Action Items</span>
                   </div>
                   {analysisData.recommendation.action_items.map((item, idx) => (
@@ -913,8 +922,8 @@ function InfluenceScopePage() {
                       padding: '0.75rem',
                       marginBottom: '0.5rem',
                       borderRadius: '8px',
-                      background: 'rgba(59, 130, 246, 0.1)',
-                      border: '1px solid rgba(59, 130, 246, 0.3)',
+                      background: 'rgba(0, 217, 255, 0.1)',
+                      border: '1px solid rgba(0, 217, 255, 0.3)',
                       color: '#93c5fd'
                     }}>
                       {idx + 1}. {item}

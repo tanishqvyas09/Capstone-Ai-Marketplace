@@ -105,14 +105,15 @@ function SocialInsightPage() {
       minHeight: '100vh',
       position: 'relative',
       overflow: 'hidden',
-      background: 'linear-gradient(135deg, #050b1a 0%, #0e1633 50%, #1b2547 100%)',
-      padding: '2rem'
+      background: '#000000',
+      padding: '2rem',
+      fontFamily: "'Space Grotesk', sans-serif"
     },
     floatingOrb: {
       position: 'absolute',
       borderRadius: '50%',
       filter: 'blur(60px)',
-      opacity: 0.6,
+      opacity: 0.4,
       pointerEvents: 'none'
     },
     orb1: {
@@ -120,7 +121,7 @@ function SocialInsightPage() {
       left: '10%',
       width: '400px',
       height: '400px',
-      background: 'radial-gradient(circle, rgba(147, 51, 234, 0.3), transparent)',
+      background: 'radial-gradient(circle, rgba(0, 217, 255, 0.2), transparent)',
       animation: 'float 8s ease-in-out infinite'
     },
     orb2: {
@@ -128,7 +129,7 @@ function SocialInsightPage() {
       right: '10%',
       width: '350px',
       height: '350px',
-      background: 'radial-gradient(circle, rgba(236, 72, 153, 0.3), transparent)',
+      background: 'radial-gradient(circle, rgba(0, 217, 255, 0.15), transparent)',
       animation: 'float 8s ease-in-out infinite 2s'
     },
     orb3: {
@@ -136,15 +137,15 @@ function SocialInsightPage() {
       left: '50%',
       width: '300px',
       height: '300px',
-      background: 'radial-gradient(circle, rgba(59, 130, 246, 0.2), transparent)',
+      background: 'radial-gradient(circle, rgba(14, 165, 233, 0.15), transparent)',
       animation: 'float 8s ease-in-out infinite 4s'
     },
     gridOverlay: {
       position: 'absolute',
       inset: 0,
-      opacity: 0.2,
-      backgroundImage: `linear-gradient(rgba(147, 51, 234, 0.1) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(147, 51, 234, 0.1) 1px, transparent 1px)`,
+      opacity: 0.1,
+      backgroundImage: `linear-gradient(rgba(0, 217, 255, 0.1) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0, 217, 255, 0.1) 1px, transparent 1px)`,
       backgroundSize: '50px 50px',
       pointerEvents: 'none'
     },
@@ -155,20 +156,22 @@ function SocialInsightPage() {
       margin: '0 auto'
     },
     backButton: {
-      background: 'rgba(255, 255, 255, 0.05)',
+      background: 'rgba(0, 217, 255, 0.05)',
       backdropFilter: 'blur(16px)',
-      border: '1px solid rgba(255, 255, 255, 0.08)',
+      border: '1px solid rgba(0, 217, 255, 0.2)',
       borderRadius: '24px',
       padding: '0.75rem 1.5rem',
       marginBottom: '2rem',
       display: 'inline-flex',
       alignItems: 'center',
       gap: '0.75rem',
-      color: 'white',
+      color: '#00D9FF',
       cursor: 'pointer',
       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
       fontSize: '1rem',
-      fontWeight: '600'
+      fontWeight: '600',
+      textTransform: 'uppercase',
+      letterSpacing: '0.05em'
     },
     header: {
       textAlign: 'center',
@@ -184,21 +187,25 @@ function SocialInsightPage() {
       padding: '0.5rem 1rem',
       borderRadius: '9999px',
       marginBottom: '1.5rem',
-      background: 'rgba(147, 51, 234, 0.1)',
-      border: '1px solid rgba(147, 51, 234, 0.3)'
+      background: 'rgba(0, 217, 255, 0.1)',
+      border: '1px solid rgba(0, 217, 255, 0.3)',
+      color: '#00D9FF',
+      textTransform: 'uppercase',
+      letterSpacing: '0.05em',
+      fontWeight: '600'
     },
     title: {
       fontSize: '4rem',
       fontWeight: 'bold',
       marginBottom: '1rem',
-      background: 'linear-gradient(90deg, #9333ea, #ec4899, #3b82f6, #9333ea)',
+      background: 'linear-gradient(90deg, #00D9FF, #0EA5E9, #00D9FF)',
       backgroundSize: '200% auto',
       WebkitBackgroundClip: 'text',
       WebkitTextFillColor: 'transparent',
       backgroundClip: 'text',
       animation: 'gradientShift 4s ease infinite',
-      textShadow: '0 0 30px rgba(147,51,234,0.3)',
-      fontFamily: 'Poppins, sans-serif'
+      textShadow: '0 0 30px rgba(0, 217, 255, 0.3)',
+      fontFamily: "'Space Grotesk', sans-serif"
     },
     subtitle: {
       fontSize: '1.25rem',
@@ -259,8 +266,8 @@ function SocialInsightPage() {
     loaderRing: {
       position: 'absolute',
       inset: 0,
-      border: '4px solid rgba(147, 51, 234, 0.2)',
-      borderTop: '4px solid #9333ea',
+      border: '4px solid rgba(0, 217, 255, 0.2)',
+      borderTop: '4px solid #00D9FF',
       borderRadius: '50%',
       animation: 'spin 1s linear infinite'
     },
@@ -269,20 +276,20 @@ function SocialInsightPage() {
       top: '50%',
       left: '50%',
       transform: 'translate(-50%, -50%)',
-      color: '#c4b5fd',
+      color: '#00D9FF',
       animation: 'pulse 2s infinite'
     },
     loadTitle: {
       fontSize: '2rem',
       fontWeight: '700',
       marginBottom: '0.5rem',
-      background: 'linear-gradient(135deg, #c084fc, #e879f9)',
+      background: 'linear-gradient(135deg, #00D9FF, #0EA5E9)',
       WebkitBackgroundClip: 'text',
       WebkitTextFillColor: 'transparent'
     },
     loadText: {
       fontSize: '1.1rem',
-      color: '#a5b4fc',
+      color: '#D1D5DB',
       marginBottom: '0.5rem'
     },
     errorBox: {
@@ -317,14 +324,17 @@ function SocialInsightPage() {
       alignItems: 'center',
       gap: '0.5rem',
       padding: '1rem 2rem',
-      background: 'linear-gradient(135deg, #9333ea, #ec4899)',
+      background: 'linear-gradient(135deg, #00D9FF, #0EA5E9)',
       border: 'none',
       borderRadius: '16px',
-      color: 'white',
+      color: '#000000',
       fontSize: '1rem',
       fontWeight: '600',
       cursor: 'pointer',
-      transition: 'all 0.3s ease'
+      transition: 'all 0.3s ease',
+      textTransform: 'uppercase',
+      letterSpacing: '0.05em',
+      boxShadow: '0 0 40px rgba(0, 217, 255, 0.4)'
     }
   };
 
@@ -332,7 +342,7 @@ function SocialInsightPage() {
     <div style={styles.container}>
       <style>
         {`
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap');
+          @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap');
           
           * {
             margin: 0;
@@ -438,8 +448,8 @@ function SocialInsightPage() {
             {/* Header */}
             <div style={styles.header}>
               <div style={styles.aiPoweredBadge}>
-                <Sparkles size={16} style={{color: '#9333ea'}} />
-                <span style={{color: '#9333ea', fontSize: '0.875rem', fontWeight: '600'}}>AI-POWERED SOCIAL MEDIA ANALYSIS</span>
+                <Sparkles size={16} style={{color: '#00D9FF'}} />
+                <span style={{color: '#00D9FF', fontSize: '0.875rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em'}}>AI-POWERED SOCIAL MEDIA ANALYSIS</span>
               </div>
               
               <h1 style={styles.title}>SocialInsight</h1>

@@ -795,83 +795,83 @@ function AdVisorPage() {
 }
 
 const s = {
-  container: { minHeight: '100vh', background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', color: '#e2e8f0', fontFamily: 'Inter, system-ui, sans-serif' },
-  header: { padding: '1.5rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.1)' },
-  backBtn: { display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'linear-gradient(135deg, rgba(139,92,246,0.2), rgba(236,72,153,0.2))', border: '1px solid rgba(139,92,246,0.3)', color: '#e2e8f0', padding: '0.75rem 1.5rem', borderRadius: '12px', cursor: 'pointer', fontSize: '0.95rem', transition: 'all 0.3s', backdropFilter: 'blur(10px)' },
+  container: { minHeight: '100vh', background: '#000000', color: '#FFFFFF', fontFamily: "'Space Grotesk', sans-serif" },
+  header: { padding: '1.5rem 2rem', borderBottom: '1px solid rgba(0, 217, 255, 0.1)' },
+  backBtn: { display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(0, 217, 255, 0.05)', border: '1px solid rgba(0, 217, 255, 0.2)', color: '#FFFFFF', padding: '0.75rem 1.5rem', borderRadius: '12px', cursor: 'pointer', fontSize: '0.95rem', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', backdropFilter: 'blur(10px)', fontWeight: '600' },
   hero: { textAlign: 'center', padding: '4rem 2rem' },
-  heroIcon: { display: 'inline-flex', padding: '1.5rem', background: 'linear-gradient(135deg, rgba(139,92,246,0.2), rgba(236,72,153,0.2))', borderRadius: '20px', marginBottom: '1.5rem', border: '1px solid rgba(139,92,246,0.3)', color: '#8b5cf6', boxShadow: '0 8px 32px rgba(139,92,246,0.3)' },
-  title: { fontSize: '3rem', fontWeight: '700', background: 'linear-gradient(135deg, #8b5cf6, #ec4899, #f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: '1rem' },
-  subtitle: { fontSize: '1.25rem', color: '#94a3b8', marginBottom: '2rem' },
-  createBriefBtn: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #f59e0b 0%, #ec4899 100%)', border: 'none', color: 'white', padding: '1rem 2rem', borderRadius: '14px', fontSize: '1.05rem', fontWeight: '600', cursor: 'pointer', transition: 'all 0.3s', boxShadow: '0 8px 24px rgba(245, 158, 11, 0.4)', marginTop: '1rem' },
+  heroIcon: { display: 'inline-flex', padding: '1.5rem', background: 'rgba(0, 217, 255, 0.1)', borderRadius: '20px', marginBottom: '1.5rem', border: '1px solid rgba(0, 217, 255, 0.3)', color: '#00D9FF', boxShadow: '0 0 30px rgba(0, 217, 255, 0.3)' },
+  title: { fontSize: '3rem', fontWeight: '700', background: 'linear-gradient(135deg, #00D9FF, #0EA5E9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: '1rem', letterSpacing: '-0.02em' },
+  subtitle: { fontSize: '1.25rem', color: '#D1D5DB', marginBottom: '2rem' },
+  createBriefBtn: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #00D9FF, #0EA5E9)', border: 'none', color: '#000000', padding: '1rem 2rem', borderRadius: '12px', fontSize: '1.05rem', fontWeight: '700', cursor: 'pointer', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', boxShadow: '0 0 30px rgba(0, 217, 255, 0.4)', marginTop: '1rem', textTransform: 'uppercase', letterSpacing: '0.05em' },
   main: { maxWidth: '1200px', margin: '0 auto', padding: '2rem' },
-  card: { background: 'linear-gradient(135deg, rgba(139,92,246,0.05), rgba(236,72,153,0.05))', backdropFilter: 'blur(20px)', border: '1px solid rgba(139,92,246,0.2)', borderRadius: '24px', padding: '2.5rem', marginBottom: '1.5rem', boxShadow: '0 8px 32px rgba(0,0,0,0.2)' },
+  card: { background: 'rgba(0, 217, 255, 0.03)', backdropFilter: 'blur(20px)', border: '1px solid rgba(0, 217, 255, 0.2)', borderRadius: '24px', padding: '2.5rem', marginBottom: '1.5rem', boxShadow: '0 0 40px rgba(0, 217, 255, 0.1)' },
   
   // Upload Section Styles
   uploadSection: { marginBottom: '2rem' },
-  uploadTitle: { display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.1rem', fontWeight: '600', color: '#e2e8f0', marginBottom: '0.5rem' },
-  uploadSubtitle: { fontSize: '0.9rem', color: '#94a3b8', marginBottom: '1rem' },
-  uploadBox: { display: 'block', width: '100%', padding: '3rem', background: 'linear-gradient(135deg, rgba(59,130,246,0.1), rgba(147,51,234,0.1))', border: '2px dashed rgba(139,92,246,0.4)', borderRadius: '20px', cursor: 'pointer', transition: 'all 0.3s', textAlign: 'center', position: 'relative', overflow: 'hidden' },
+  uploadTitle: { display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.1rem', fontWeight: '600', color: '#FFFFFF', marginBottom: '0.5rem' },
+  uploadSubtitle: { fontSize: '0.9rem', color: '#D1D5DB', marginBottom: '1rem' },
+  uploadBox: { display: 'block', width: '100%', padding: '3rem', background: 'rgba(0, 217, 255, 0.03)', border: '2px dashed rgba(0, 217, 255, 0.3)', borderRadius: '20px', cursor: 'pointer', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', textAlign: 'center', position: 'relative', overflow: 'hidden' },
   fileInput: { display: 'none' },
   uploadContent: { position: 'relative', zIndex: 1 },
-  uploadIcon: { display: 'inline-flex', padding: '1.5rem', background: 'linear-gradient(135deg, rgba(139,92,246,0.2), rgba(236,72,153,0.2))', borderRadius: '50%', marginBottom: '1rem', color: '#8b5cf6' },
-  uploadText: { fontSize: '1.1rem', color: '#e2e8f0', marginBottom: '0.5rem' },
-  uploadHint: { fontSize: '0.875rem', color: '#94a3b8' },
-  previewContainer: { position: 'relative', display: 'inline-block', borderRadius: '16px', overflow: 'hidden', border: '2px solid rgba(139,92,246,0.3)', background: 'linear-gradient(135deg, rgba(139,92,246,0.1), rgba(236,72,153,0.1))' },
+  uploadIcon: { display: 'inline-flex', padding: '1.5rem', background: 'rgba(0, 217, 255, 0.1)', borderRadius: '50%', marginBottom: '1rem', color: '#00D9FF' },
+  uploadText: { fontSize: '1.1rem', color: '#FFFFFF', marginBottom: '0.5rem' },
+  uploadHint: { fontSize: '0.875rem', color: '#D1D5DB' },
+  previewContainer: { position: 'relative', display: 'inline-block', borderRadius: '16px', overflow: 'hidden', border: '2px solid rgba(0, 217, 255, 0.3)', background: 'rgba(0, 217, 255, 0.05)' },
   previewImage: { maxWidth: '300px', maxHeight: '300px', display: 'block', borderRadius: '16px' },
-  removeBtn: { position: 'absolute', top: '0.5rem', right: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.25rem', background: 'rgba(239,68,68,0.9)', border: 'none', color: 'white', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.875rem', fontWeight: '600', transition: 'all 0.3s', backdropFilter: 'blur(10px)' },
-  divider: { height: '1px', background: 'linear-gradient(90deg, transparent, rgba(139,92,246,0.5), transparent)', margin: '2rem 0' },
+  removeBtn: { position: 'absolute', top: '0.5rem', right: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.25rem', background: 'rgba(239,68,68,0.9)', border: 'none', color: 'white', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.875rem', fontWeight: '600', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', backdropFilter: 'blur(10px)' },
+  divider: { height: '1px', background: 'linear-gradient(90deg, transparent, rgba(0, 217, 255, 0.3), transparent)', margin: '2rem 0' },
   personDetailsSection: { marginBottom: '1rem' },
   requirementsSection: { marginBottom: '1rem' },
   
   formGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', marginBottom: '1rem' },
   formGroup: { display: 'flex', flexDirection: 'column', gap: '0.5rem' },
-  label: { fontSize: '0.95rem', fontWeight: '600', color: '#e2e8f0', display: 'flex', alignItems: 'center', gap: '0.5rem' },
-  labelIcon: { fontSize: '1.1rem', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))' },
-  input: { width: '100%', padding: '1rem', background: 'linear-gradient(135deg, rgba(59,130,246,0.1), rgba(147,51,234,0.1))', border: '1px solid rgba(139,92,246,0.3)', borderRadius: '12px', color: '#e2e8f0', fontSize: '1rem', boxSizing: 'border-box', transition: 'all 0.3s', fontFamily: 'inherit', boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.1)' },
-  select: { width: '100%', padding: '1rem', background: 'linear-gradient(135deg, rgba(59,130,246,0.1), rgba(147,51,234,0.1))', border: '1px solid rgba(139,92,246,0.3)', borderRadius: '12px', color: '#e2e8f0', fontSize: '1rem', boxSizing: 'border-box', transition: 'all 0.3s', fontFamily: 'inherit', cursor: 'pointer', boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.1)' },
-  textarea: { width: '100%', padding: '1rem', background: 'linear-gradient(135deg, rgba(59,130,246,0.1), rgba(147,51,234,0.1))', border: '1px solid rgba(139,92,246,0.3)', borderRadius: '12px', color: '#e2e8f0', fontSize: '1rem', marginBottom: '0.5rem', boxSizing: 'border-box', transition: 'all 0.3s', fontFamily: 'inherit', resize: 'vertical', boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.1)' },
-  hint: { fontSize: '0.875rem', color: '#64748b', marginBottom: '1rem', fontStyle: 'italic' },
+  label: { fontSize: '0.95rem', fontWeight: '600', color: '#00D9FF', display: 'flex', alignItems: 'center', gap: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' },
+  labelIcon: { fontSize: '1.1rem', filter: 'drop-shadow(0 0 5px rgba(0, 217, 255, 0.3))' },
+  input: { width: '100%', padding: '1rem', background: 'rgba(0, 217, 255, 0.03)', border: '1px solid rgba(0, 217, 255, 0.2)', borderRadius: '12px', color: '#FFFFFF', fontSize: '1rem', boxSizing: 'border-box', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', fontFamily: 'inherit' },
+  select: { width: '100%', padding: '1rem', background: 'rgba(0, 217, 255, 0.03)', border: '1px solid rgba(0, 217, 255, 0.2)', borderRadius: '12px', color: '#FFFFFF', fontSize: '1rem', boxSizing: 'border-box', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', fontFamily: 'inherit', cursor: 'pointer' },
+  textarea: { width: '100%', padding: '1rem', background: 'rgba(0, 217, 255, 0.03)', border: '1px solid rgba(0, 217, 255, 0.2)', borderRadius: '12px', color: '#FFFFFF', fontSize: '1rem', marginBottom: '0.5rem', boxSizing: 'border-box', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', fontFamily: 'inherit', resize: 'vertical' },
+  hint: { fontSize: '0.875rem', color: '#6B7280', marginBottom: '1rem', fontStyle: 'italic' },
   error: { display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#fca5a5', padding: '1rem', borderRadius: '12px', marginBottom: '1rem' },
-  btn: { width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', background: 'linear-gradient(135deg, #8b5cf6, #ec4899, #f59e0b)', border: 'none', color: 'white', padding: '1.25rem', borderRadius: '12px', fontSize: '1.1rem', fontWeight: '600', cursor: 'pointer', transition: 'all 0.3s', boxShadow: '0 8px 32px rgba(139,92,246,0.4), inset 0 1px 0 rgba(255,255,255,0.2)' },
+  btn: { width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', background: 'linear-gradient(135deg, #00D9FF, #0EA5E9)', border: 'none', color: '#000000', padding: '1.25rem', borderRadius: '12px', fontSize: '1.1rem', fontWeight: '700', cursor: 'pointer', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', boxShadow: '0 0 30px rgba(0, 217, 255, 0.4)', textTransform: 'uppercase', letterSpacing: '0.05em' },
   loading: { textAlign: 'center', padding: '4rem 2rem' },
   generationAnimation: { position: 'relative', width: '250px', height: '250px', margin: '0 auto 2rem' },
-  circle1: { position: 'absolute', width: '100%', height: '100%', border: '4px solid #8b5cf6', borderRadius: '50%', animation: 'rotateCircle 3s linear infinite', opacity: 0.6 },
-  circle2: { position: 'absolute', width: '80%', height: '80%', top: '10%', left: '10%', border: '4px solid #ec4899', borderRadius: '50%', animation: 'rotateCircle 2.5s linear infinite reverse', opacity: 0.6 },
-  circle3: { position: 'absolute', width: '60%', height: '60%', top: '20%', left: '20%', border: '4px solid #3b82f6', borderRadius: '50%', animation: 'rotateCircle 2s linear infinite', opacity: 0.6 },
-  circle4: { position: 'absolute', width: '40%', height: '40%', top: '30%', left: '30%', border: '4px solid #fbbf24', borderRadius: '50%', animation: 'rotateCircle 1.5s linear infinite reverse', opacity: 0.6 },
-  centerIcon: { position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', animation: 'pulse 2s ease-in-out infinite' },
-  particle1: { position: 'absolute', width: '8px', height: '8px', background: '#8b5cf6', borderRadius: '50%', top: '10%', left: '50%', animation: 'float 3s ease-in-out infinite' },
-  particle2: { position: 'absolute', width: '6px', height: '6px', background: '#ec4899', borderRadius: '50%', top: '30%', right: '10%', animation: 'float 2.5s ease-in-out infinite 0.5s' },
-  particle3: { position: 'absolute', width: '10px', height: '10px', background: '#3b82f6', borderRadius: '50%', bottom: '20%', left: '15%', animation: 'float 3.5s ease-in-out infinite 1s' },
-  particle4: { position: 'absolute', width: '7px', height: '7px', background: '#fbbf24', borderRadius: '50%', bottom: '30%', right: '20%', animation: 'float 2.8s ease-in-out infinite 1.5s' },
-  particle5: { position: 'absolute', width: '9px', height: '9px', background: '#10b981', borderRadius: '50%', top: '50%', left: '5%', animation: 'float 3.2s ease-in-out infinite 0.8s' },
-  particle6: { position: 'absolute', width: '6px', height: '6px', background: '#f59e0b', borderRadius: '50%', top: '60%', right: '8%', animation: 'float 2.7s ease-in-out infinite 1.2s' },
-  loadTitle: { fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem' },
-  loadText: { fontSize: '1.1rem', color: '#94a3b8', marginBottom: '2rem' },
-  progressBar: { width: '100%', maxWidth: '400px', height: '8px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px', overflow: 'hidden', margin: '0 auto' },
-  progressFill: { height: '100%', background: 'linear-gradient(90deg, #8b5cf6, #ec4899, #3b82f6, #fbbf24)', backgroundSize: '200% 100%', animation: 'shimmer 2s linear infinite', borderRadius: '4px' },
+  circle1: { position: 'absolute', width: '100%', height: '100%', border: '4px solid #00D9FF', borderRadius: '50%', animation: 'rotateCircle 3s linear infinite', opacity: 0.6 },
+  circle2: { position: 'absolute', width: '80%', height: '80%', top: '10%', left: '10%', border: '4px solid #0EA5E9', borderRadius: '50%', animation: 'rotateCircle 2.5s linear infinite reverse', opacity: 0.6 },
+  circle3: { position: 'absolute', width: '60%', height: '60%', top: '20%', left: '20%', border: '4px solid #00D9FF', borderRadius: '50%', animation: 'rotateCircle 2s linear infinite', opacity: 0.6 },
+  circle4: { position: 'absolute', width: '40%', height: '40%', top: '30%', left: '30%', border: '4px solid #0EA5E9', borderRadius: '50%', animation: 'rotateCircle 1.5s linear infinite reverse', opacity: 0.6 },
+  centerIcon: { position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', animation: 'pulse 2s ease-in-out infinite', color: '#00D9FF' },
+  particle1: { position: 'absolute', width: '8px', height: '8px', background: '#00D9FF', borderRadius: '50%', top: '10%', left: '50%', animation: 'float 3s ease-in-out infinite' },
+  particle2: { position: 'absolute', width: '6px', height: '6px', background: '#0EA5E9', borderRadius: '50%', top: '30%', right: '10%', animation: 'float 2.5s ease-in-out infinite 0.5s' },
+  particle3: { position: 'absolute', width: '10px', height: '10px', background: '#00D9FF', borderRadius: '50%', bottom: '20%', left: '15%', animation: 'float 3.5s ease-in-out infinite 1s' },
+  particle4: { position: 'absolute', width: '7px', height: '7px', background: '#0EA5E9', borderRadius: '50%', bottom: '30%', right: '20%', animation: 'float 2.8s ease-in-out infinite 1.5s' },
+  particle5: { position: 'absolute', width: '9px', height: '9px', background: '#00D9FF', borderRadius: '50%', top: '50%', left: '5%', animation: 'float 3.2s ease-in-out infinite 0.8s' },
+  particle6: { position: 'absolute', width: '6px', height: '6px', background: '#0EA5E9', borderRadius: '50%', top: '60%', right: '8%', animation: 'float 2.7s ease-in-out infinite 1.2s' },
+  loadTitle: { fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem', color: '#FFFFFF' },
+  loadText: { fontSize: '1.1rem', color: '#D1D5DB', marginBottom: '2rem' },
+  progressBar: { width: '100%', maxWidth: '400px', height: '8px', background: 'rgba(0, 217, 255, 0.1)', borderRadius: '4px', overflow: 'hidden', margin: '0 auto' },
+  progressFill: { height: '100%', background: 'linear-gradient(90deg, #00D9FF, #0EA5E9)', backgroundSize: '200% 100%', animation: 'shimmer 2s linear infinite', borderRadius: '4px', boxShadow: '0 0 10px rgba(0, 217, 255, 0.5)' },
   results: { animation: 'fadeIn 0.5s ease' },
   resultHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' },
-  reportTitle: { fontSize: '2.5rem', fontWeight: '700', background: 'linear-gradient(135deg, #8b5cf6, #ec4899, #f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: '0.5rem' },
-  reportSub: { fontSize: '1rem', color: '#94a3b8', fontStyle: 'italic' },
-  newBtn: { display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'linear-gradient(135deg, #8b5cf6, #ec4899, #f59e0b)', border: 'none', color: 'white', padding: '0.875rem 1.75rem', borderRadius: '12px', cursor: 'pointer', fontWeight: '600', transition: 'all 0.3s', boxShadow: '0 4px 16px rgba(139,92,246,0.4), inset 0 1px 0 rgba(255,255,255,0.2)' },
-  h2: { display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.5rem', fontWeight: '700', marginBottom: '1.5rem', color: '#e2e8f0' },
-  imageCard: { background: 'linear-gradient(135deg, rgba(59,130,246,0.1), rgba(147,51,234,0.1))', backdropFilter: 'blur(20px)', border: '1px solid rgba(139,92,246,0.2)', borderRadius: '24px', padding: '2.5rem', marginBottom: '1.5rem', overflow: 'hidden', boxShadow: '0 8px 32px rgba(0,0,0,0.2)' },
-  imageContainer: { width: '100%', background: 'linear-gradient(135deg, rgba(0,0,0,0.3), rgba(139,92,246,0.1))', borderRadius: '16px', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '1px solid rgba(139,92,246,0.2)', boxShadow: 'inset 0 2px 16px rgba(0,0,0,0.3)' },
+  reportTitle: { fontSize: '2.5rem', fontWeight: '700', background: 'linear-gradient(135deg, #00D9FF, #0EA5E9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: '0.5rem', letterSpacing: '-0.02em' },
+  reportSub: { fontSize: '1rem', color: '#D1D5DB', fontStyle: 'italic' },
+  newBtn: { display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'linear-gradient(135deg, #00D9FF, #0EA5E9)', border: 'none', color: '#000000', padding: '0.875rem 1.75rem', borderRadius: '12px', cursor: 'pointer', fontWeight: '700', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', boxShadow: '0 0 30px rgba(0, 217, 255, 0.4)', textTransform: 'uppercase', letterSpacing: '0.05em' },
+  h2: { display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.5rem', fontWeight: '700', marginBottom: '1.5rem', color: '#FFFFFF' },
+  imageCard: { background: 'rgba(0, 217, 255, 0.03)', backdropFilter: 'blur(20px)', border: '1px solid rgba(0, 217, 255, 0.2)', borderRadius: '24px', padding: '2.5rem', marginBottom: '1.5rem', overflow: 'hidden', boxShadow: '0 0 40px rgba(0, 217, 255, 0.1)' },
+  imageContainer: { width: '100%', background: 'rgba(0, 217, 255, 0.02)', borderRadius: '16px', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '1px solid rgba(0, 217, 255, 0.2)' },
   generatedImage: { width: '100%', height: 'auto', display: 'block', borderRadius: '16px' },
   imagePlaceholder: { textAlign: 'center' },
   imageActions: { display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' },
-  actionBtn: { display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'linear-gradient(135deg, rgba(59,130,246,0.2), rgba(147,51,234,0.2))', border: '1px solid rgba(139,92,246,0.3)', color: '#e2e8f0', padding: '0.75rem 1.5rem', borderRadius: '12px', cursor: 'pointer', fontSize: '0.95rem', transition: 'all 0.3s', fontWeight: '500', backdropFilter: 'blur(10px)' },
+  actionBtn: { display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(0, 217, 255, 0.05)', border: '1px solid rgba(0, 217, 255, 0.2)', color: '#FFFFFF', padding: '0.75rem 1.5rem', borderRadius: '12px', cursor: 'pointer', fontSize: '0.95rem', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', fontWeight: '600', backdropFilter: 'blur(10px)' },
   detailsGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' },
-  detailItem: { padding: '1.25rem', background: 'linear-gradient(135deg, rgba(16,185,129,0.1), rgba(59,130,246,0.1))', borderRadius: '16px', border: '1px solid rgba(16,185,129,0.2)', boxShadow: '0 4px 16px rgba(0,0,0,0.1)' },
-  detailLabel: { display: 'block', fontSize: '0.875rem', color: '#94a3b8', marginBottom: '0.5rem' },
-  detailValue: { fontSize: '1.1rem', color: '#e2e8f0', fontWeight: '600' },
+  detailItem: { padding: '1.25rem', background: 'rgba(0, 217, 255, 0.05)', borderRadius: '16px', border: '1px solid rgba(0, 217, 255, 0.2)', boxShadow: '0 0 20px rgba(0, 217, 255, 0.1)' },
+  detailLabel: { display: 'block', fontSize: '0.875rem', color: '#D1D5DB', marginBottom: '0.5rem' },
+  detailValue: { fontSize: '1.1rem', color: '#FFFFFF', fontWeight: '600' },
   tipsGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' },
-  tipCard: { display: 'flex', gap: '1rem', padding: '1.5rem', background: 'linear-gradient(135deg, rgba(251,191,36,0.05), rgba(236,72,153,0.05))', borderRadius: '16px', border: '1px solid rgba(251,191,36,0.2)', transition: 'all 0.3s', boxShadow: '0 4px 16px rgba(0,0,0,0.1)' },
-  tipIcon: { width: '48px', height: '48px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
+  tipCard: { display: 'flex', gap: '1rem', padding: '1.5rem', background: 'rgba(0, 217, 255, 0.03)', borderRadius: '16px', border: '1px solid rgba(0, 217, 255, 0.2)', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', boxShadow: '0 0 20px rgba(0, 217, 255, 0.05)' },
+  tipIcon: { width: '48px', height: '48px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: 'rgba(0, 217, 255, 0.1)' },
   tipContent: { flex: 1 },
-  tipTitle: { fontSize: '1rem', fontWeight: '600', color: '#e2e8f0', marginBottom: '0.5rem' },
-  tipText: { fontSize: '0.875rem', color: '#94a3b8', lineHeight: '1.5' },
+  tipTitle: { fontSize: '1rem', fontWeight: '600', color: '#FFFFFF', marginBottom: '0.5rem' },
+  tipText: { fontSize: '0.875rem', color: '#D1D5DB', lineHeight: '1.5' },
 };
 
 const css = document.createElement('style');
@@ -885,36 +885,36 @@ css.textContent = `
   
   input:focus, textarea:focus, select:focus { 
     outline: none; 
-    border-color: #8b5cf6; 
-    box-shadow: 0 0 0 3px rgba(139,92,246,0.2), 0 8px 24px rgba(139,92,246,0.15);
+    border-color: #00D9FF; 
+    box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.2), 0 0 20px rgba(0, 217, 255, 0.15);
     transform: translateY(-2px);
   }
   
   button:hover { 
     transform: translateY(-2px); 
-    box-shadow: 0 12px 48px rgba(139,92,246,0.6) !important; 
+    box-shadow: 0 0 40px rgba(0, 217, 255, 0.6) !important; 
   }
   
   .actionBtn:hover { 
-    background: linear-gradient(135deg, rgba(59,130,246,0.3), rgba(147,51,234,0.3)); 
-    border-color: rgba(139,92,246,0.5);
+    background: rgba(0, 217, 255, 0.1); 
+    border-color: rgba(0, 217, 255, 0.4);
     transform: translateY(-2px);
   }
   
   .tipCard:hover { 
     transform: translateY(-4px); 
-    background: linear-gradient(135deg, rgba(251,191,36,0.1), rgba(236,72,153,0.1)); 
-    box-shadow: 0 8px 32px rgba(251,191,36,0.2);
+    background: rgba(0, 217, 255, 0.05); 
+    box-shadow: 0 0 30px rgba(0, 217, 255, 0.2);
   }
   
   label[style*="uploadBox"]:hover {
-    border-color: rgba(139,92,246,0.6);
-    background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(147,51,234,0.15));
+    border-color: rgba(0, 217, 255, 0.5);
+    background: rgba(0, 217, 255, 0.05);
     transform: scale(1.01);
   }
   
   .backBtn:hover {
-    background: linear-gradient(135deg, rgba(139,92,246,0.3), rgba(236,72,153,0.3));
+    background: rgba(0, 217, 255, 0.1);
   }
   
   .removeBtn:hover {
@@ -934,7 +934,7 @@ css.textContent = `
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    background: linear-gradient(90deg, transparent, rgba(0, 217, 255, 0.1), transparent);
     transition: left 0.5s;
   }
   
@@ -944,7 +944,7 @@ css.textContent = `
   
   .detailItem:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(16,185,129,0.2);
+    box-shadow: 0 0 30px rgba(0, 217, 255, 0.2);
   }
 `;
 document.head.appendChild(css);

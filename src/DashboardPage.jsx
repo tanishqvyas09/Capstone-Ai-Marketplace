@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { supabase } from "../supabaseClient";
+import ThreeBackground from './components/ThreeBackground';
 import { 
   Search, MessageCircle, Image, Target, Key, Phone, Headphones, 
   TrendingUp, FileText, Users, Bell, Settings, LogOut, 
@@ -168,9 +169,37 @@ function DashboardPage() {
     }
   }, [session]);
 
+  // Map agent names to their routes
+  const agentRoutes = {
+    'SEOrix': '/seorix',
+    'LeadGen': '/leadgen',
+    'WhatsPulse': '/whatspulse',
+    'AdVisor': '/advisor',
+    'SociaPlan': '/sociaplan',
+    'EchoMind': '/echomind',
+    'TrendIQ': '/trendiq',
+    'Scriptly': '/scriptly',
+    'Adbrief': '/adbrief',
+    'ClipGen': '/clipgen',
+    'RingCast': '/ringcast',
+    'InfluenceScope': '/influencescope',
+    'SocialInsight': '/socialinsight'
+  };
+
   const handleUseAgent = (agent) => {
     // Open modal for all agents to show video first
     setSelectedAgent(agent);
+  };
+
+  const handleNavigateToAgent = (agentName) => {
+    const route = agentRoutes[agentName];
+    
+    if (route) {
+      navigate(route);
+    } else {
+      alert(`${agentName} agent page coming soon!`);
+    }
+    setSelectedAgent(null);
   };
 
   const handleTryAgent = async (agentId) => {
@@ -205,10 +234,24 @@ function DashboardPage() {
 
   if (!session || !profile) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: 'linear-gradient(135deg, #0a0a0f 0%, #1a0a2e 50%, #16001e 100%)', color: '#fff' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#000000', color: '#fff' }}>
         <div style={{ textAlign: 'center' }}>
-          <div style={{ width: '50px', height: '50px', border: '4px solid rgba(147,51,234,0.3)', borderTop: '4px solid #9333ea', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto 1rem' }}></div>
-          <div>Loading your workspace...</div>
+          <div style={{ 
+            width: '60px', 
+            height: '60px', 
+            border: '3px solid rgba(0, 217, 255, 0.1)', 
+            borderTop: '3px solid #00D9FF', 
+            borderRadius: '50%', 
+            animation: 'spin 0.8s linear infinite', 
+            margin: '0 auto 1.5rem',
+            boxShadow: '0 0 20px rgba(0, 217, 255, 0.3)'
+          }}></div>
+          <div style={{ 
+            color: '#6B7280', 
+            fontSize: '0.875rem',
+            fontFamily: '"Space Grotesk", -apple-system, sans-serif',
+            letterSpacing: '0.1em'
+          }}>INITIALIZING WORKSPACE...</div>
         </div>
       </div>
     );
@@ -217,43 +260,71 @@ function DashboardPage() {
   const styles = {
     container: {
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #0a0a0f 0%, #1a0a2e 50%, #16001e 100%)',
+      background: 'linear-gradient(180deg, #000000 0%, #0a0a0a 50%, #141414 100%)',
+      position: 'relative',
       color: '#fff',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif'
+      fontFamily: '"Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      overflow: 'hidden'
+    },
+    scanlineOverlay: {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: 'repeating-linear-gradient(0deg, rgba(0, 217, 255, 0.03) 0px, transparent 1px, transparent 2px, rgba(0, 217, 255, 0.03) 3px)',
+      pointerEvents: 'none',
+      zIndex: 100,
+      animation: 'scanlines 8s linear infinite'
+    },
+    cyberGrid: {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundImage: `
+        linear-gradient(rgba(0, 217, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 217, 255, 0.03) 1px, transparent 1px)
+      `,
+      backgroundSize: '50px 50px',
+      pointerEvents: 'none',
+      zIndex: 0,
+      opacity: 0.3
     },
     navbar: {
       position: 'sticky',
       top: 0,
-      zIndex: 100,
-      backdropFilter: 'blur(12px)',
-      background: 'rgba(255, 255, 255, 0.1)',
-      borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
+      zIndex: 1000,
+      backdropFilter: 'blur(20px) saturate(180%)',
+      background: 'rgba(0, 0, 0, 0.85)',
+      borderBottom: '1px solid rgba(0, 217, 255, 0.2)',
       padding: '1rem 2rem',
-      boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+      boxShadow: '0 4px 30px rgba(0, 217, 255, 0.1), inset 0 -1px 0 rgba(0, 217, 255, 0.3)'
     },
     menuButton: {
-      width: '44px',
-      height: '44px',
-      borderRadius: '12px',
-      background: 'rgba(147, 51, 234, 0.15)',
-      border: 'none',
+      width: '40px',
+      height: '40px',
+      borderRadius: '6px',
+      background: 'rgba(0, 217, 255, 0.05)',
+      border: '1px solid rgba(0, 217, 255, 0.3)',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: '5px',
+      gap: '4px',
       cursor: 'pointer',
-      transition: 'all 0.3s',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       padding: '10px',
-      boxShadow: 'none',
-      zIndex: 10
+      position: 'relative'
     },
     menuLine: {
-      width: '24px',
-      height: '2.5px',
-      background: '#ffffff',
-      borderRadius: '10px',
-      transition: 'all 0.3s'
+      width: '20px',
+      height: '2px',
+      background: '#00D9FF',
+      borderRadius: '2px',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      boxShadow: '0 0 8px rgba(0, 217, 255, 0.6)'
     },
     navContent: {
       display: 'flex',
@@ -266,251 +337,318 @@ function DashboardPage() {
       display: 'flex',
       alignItems: 'center',
       gap: '0.75rem',
-      fontSize: '1.5rem',
-      fontWeight: 'bold',
-      background: 'linear-gradient(135deg, #c084fc 0%, #f9a8d4 100%)',
+      fontSize: '1.25rem',
+      fontWeight: '700',
+      background: 'linear-gradient(135deg, #FFFFFF 0%, #00D9FF 100%)',
       WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent'
+      WebkitTextFillColor: 'transparent',
+      letterSpacing: '0.05em',
+      textTransform: 'uppercase',
+      filter: 'drop-shadow(0 0 10px rgba(0, 217, 255, 0.5))'
     },
     logoIcon: {
       width: '40px',
       height: '40px',
-      background: 'linear-gradient(135deg, #9333ea 0%, #ec4899 100%)',
+      background: 'linear-gradient(135deg, #00D9FF 0%, #0EA5E9 100%)',
       borderRadius: '8px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       fontWeight: 'bold',
       fontSize: '1.25rem',
-      boxShadow: '0 0 20px rgba(147,51,234,0.5)'
+      color: '#000',
+      boxShadow: '0 0 30px rgba(0, 217, 255, 0.8), inset 0 0 20px rgba(255, 255, 255, 0.2)',
+      border: '1px solid rgba(255, 255, 255, 0.3)',
+      position: 'relative',
+      overflow: 'hidden'
     },
     navLinks: {
       display: 'flex',
-      gap: '2rem',
+      gap: '2.5rem',
       alignItems: 'center'
     },
     navLink: {
-      color: '#d1d5db',
+      color: '#D1D5DB',
       textDecoration: 'none',
-      transition: 'color 0.3s',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       cursor: 'pointer',
-      fontSize: '0.95rem'
+      fontSize: '0.875rem',
+      fontWeight: '500',
+      letterSpacing: '0.05em',
+      textTransform: 'uppercase',
+      position: 'relative',
+      padding: '0.5rem 0'
     },
     userSection: {
       display: 'flex',
       alignItems: 'center',
-      gap: '1rem'
+      gap: '1.25rem'
     },
     tokenBadge: {
-      padding: '0.5rem 1rem',
-      background: 'linear-gradient(135deg, #9333ea 0%, #ec4899 100%)',
-      borderRadius: '20px',
+      padding: '0.625rem 1.25rem',
+      background: 'linear-gradient(135deg, rgba(0, 217, 255, 0.1) 0%, rgba(14, 165, 233, 0.1) 100%)',
+      border: '1px solid rgba(0, 217, 255, 0.4)',
+      borderRadius: '8px',
       fontSize: '0.875rem',
       fontWeight: '600',
-      boxShadow: '0 4px 12px rgba(147,51,234,0.3)',
       display: 'flex',
       alignItems: 'center',
-      gap: '0.5rem',
+      gap: '0.625rem',
       position: 'relative',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      color: '#FFFFFF',
+      letterSpacing: '0.05em',
+      boxShadow: '0 0 20px rgba(0, 217, 255, 0.2), inset 0 0 20px rgba(0, 217, 255, 0.05)'
     },
     coinIcon: {
       width: '20px',
       height: '20px',
       borderRadius: '50%',
-      background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
+      background: 'linear-gradient(135deg, #00D9FF 0%, #0EA5E9 100%)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       fontWeight: 'bold',
       fontSize: '0.75rem',
-      color: '#78350f',
-      boxShadow: '0 0 10px rgba(251, 191, 36, 0.5)',
-      animation: 'coinSpin 3s linear infinite'
+      color: '#000',
+      boxShadow: '0 0 15px rgba(0, 217, 255, 0.8)',
+      animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
     },
     userAvatar: {
       width: '40px',
       height: '40px',
       borderRadius: '50%',
-      border: '2px solid rgba(147, 51, 234, 0.5)',
+      border: '2px solid rgba(0, 217, 255, 0.5)',
       objectFit: 'cover',
-      boxShadow: '0 0 15px rgba(147, 51, 234, 0.4)',
       cursor: 'pointer',
-      transition: 'all 0.3s',
-      background: '#1a1a2e'
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      background: '#000',
+      boxShadow: '0 0 20px rgba(0, 217, 255, 0.4)'
     },
     userInitial: {
       width: '40px',
       height: '40px',
       borderRadius: '50%',
-      background: 'linear-gradient(135deg, #9333ea 0%, #ec4899 100%)',
-      border: '2px solid rgba(147, 51, 234, 0.5)',
+      background: 'linear-gradient(135deg, #00D9FF 0%, #0EA5E9 100%)',
+      border: '2px solid rgba(0, 217, 255, 0.5)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       cursor: 'pointer',
-      transition: 'all 0.3s',
-      fontWeight: 'bold',
-      fontSize: '1.1rem',
-      color: '#fff',
-      boxShadow: '0 0 15px rgba(147, 51, 234, 0.4)'
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      fontWeight: '700',
+      fontSize: '1rem',
+      color: '#000',
+      boxShadow: '0 0 20px rgba(0, 217, 255, 0.6)'
     },
     iconButton: {
       width: '40px',
       height: '40px',
       borderRadius: '50%',
-      background: 'rgba(255, 255, 255, 0.1)',
-      border: 'none',
+      background: 'rgba(0, 217, 255, 0.05)',
+      border: '1px solid rgba(0, 217, 255, 0.2)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       cursor: 'pointer',
-      transition: 'all 0.3s',
-      color: '#fff',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      color: '#00D9FF',
       position: 'relative'
     },
     mainContent: {
       display: 'flex',
       maxWidth: '1600px',
       margin: '0 auto',
-      padding: '2rem'
+      padding: '2.5rem 2rem',
+      position: 'relative',
+      zIndex: 10
     },
     sidebar: {
-      width: showSidebar ? '260px' : '0',
-      transition: 'width 0.3s',
+      width: showSidebar ? '280px' : '0',
+      transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
       overflow: 'hidden'
     },
     sidebarContent: {
-      width: '260px',
-      padding: '1rem',
-      background: 'rgba(255, 255, 255, 0.05)',
-      borderRadius: '16px',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      backdropFilter: 'blur(16px)'
+      width: '280px',
+      padding: '1.5rem',
+      background: 'rgba(0, 0, 0, 0.6)',
+      borderRadius: '12px',
+      border: '1px solid rgba(0, 217, 255, 0.15)',
+      backdropFilter: 'blur(20px) saturate(180%)',
+      boxShadow: '0 8px 32px rgba(0, 217, 255, 0.1), inset 0 0 40px rgba(0, 217, 255, 0.02)',
+      position: 'relative'
     },
     sidebarItem: {
-      padding: '0.75rem 1rem',
+      padding: '0.875rem 1rem',
       marginBottom: '0.5rem',
       borderRadius: '8px',
       cursor: 'pointer',
-      transition: 'all 0.3s',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       display: 'flex',
       alignItems: 'center',
-      gap: '0.75rem',
-      fontSize: '0.95rem'
+      gap: '1rem',
+      fontSize: '0.875rem',
+      fontWeight: '500',
+      color: '#9CA3AF',
+      letterSpacing: '0.03em',
+      position: 'relative',
+      overflow: 'hidden'
     },
     content: {
       flex: 1,
-      marginLeft: showSidebar ? '2rem' : '0'
+      marginLeft: showSidebar ? '2rem' : '0',
+      transition: 'margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
     },
     welcomeCard: {
-      background: 'linear-gradient(135deg, rgba(147,51,234,0.2) 0%, rgba(236,72,153,0.2) 100%)',
+      background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 217, 255, 0.03) 100%)',
       borderRadius: '16px',
-      padding: '2rem',
-      marginBottom: '2rem',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      backdropFilter: 'blur(16px)'
+      padding: '3rem 2.5rem',
+      marginBottom: '2.5rem',
+      border: '1px solid rgba(0, 217, 255, 0.2)',
+      backdropFilter: 'blur(20px) saturate(180%)',
+      position: 'relative',
+      overflow: 'hidden',
+      boxShadow: '0 20px 60px rgba(0, 217, 255, 0.15), inset 0 0 60px rgba(0, 217, 255, 0.03)'
     },
     statsGrid: {
       display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-      gap: '1rem',
-      marginBottom: '2rem'
-    },
-    statCard: {
-      background: 'rgba(255, 255, 255, 0.05)',
-      borderRadius: '12px',
-      padding: '1.5rem',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      backdropFilter: 'blur(16px)',
-      transition: 'all 0.3s'
-    },
-    statValue: {
-      fontSize: '2rem',
-      fontWeight: 'bold',
-      background: 'linear-gradient(135deg, #c084fc 0%, #f9a8d4 100%)',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-      marginBottom: '0.5rem'
-    },
-    statLabel: {
-      fontSize: '0.875rem',
-      color: '#9ca3af'
-    },
-    sectionTitle: {
-      fontSize: '1.5rem',
-      fontWeight: 'bold',
-      marginBottom: '1.5rem',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.5rem'
-    },
-    agentsGrid: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
       gap: '1.5rem',
       marginBottom: '3rem'
     },
+    statCard: {
+      background: 'rgba(0, 0, 0, 0.6)',
+      borderRadius: '12px',
+      padding: '2rem 1.75rem',
+      border: '1px solid rgba(0, 217, 255, 0.15)',
+      backdropFilter: 'blur(20px) saturate(180%)',
+      transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+      position: 'relative',
+      overflow: 'hidden',
+      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+      cursor: 'pointer'
+    },
+    statValue: {
+      fontSize: '2.5rem',
+      fontWeight: '700',
+      background: 'linear-gradient(135deg, #FFFFFF 0%, #00D9FF 100%)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      marginBottom: '0.5rem',
+      letterSpacing: '-0.03em',
+      filter: 'drop-shadow(0 0 10px rgba(0, 217, 255, 0.5))',
+      fontFamily: '"Space Grotesk", monospace'
+    },
+    statLabel: {
+      fontSize: '0.875rem',
+      color: '#6B7280',
+      fontWeight: '500',
+      letterSpacing: '0.05em',
+      textTransform: 'uppercase'
+    },
+    sectionTitle: {
+      fontSize: '1.5rem',
+      fontWeight: '700',
+      marginBottom: '2rem',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.75rem',
+      letterSpacing: '0.02em',
+      color: '#FFFFFF',
+      textTransform: 'uppercase',
+      filter: 'drop-shadow(0 0 10px rgba(0, 217, 255, 0.3))'
+    },
+    agentsGrid: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+      gap: '1.75rem',
+      marginBottom: '3rem'
+    },
     agentCard: {
-      background: 'rgba(255, 255, 255, 0.05)',
-      borderRadius: '16px',
-      padding: '1.5rem',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      backdropFilter: 'blur(16px)',
-      transition: 'all 0.3s',
+      background: 'rgba(0, 0, 0, 0.8)',
+      borderRadius: '12px',
+      padding: '2rem 1.75rem',
+      border: '1px solid rgba(0, 217, 255, 0.2)',
+      backdropFilter: 'blur(20px) saturate(180%)',
+      transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
       cursor: 'pointer',
-      position: 'relative'
+      position: 'relative',
+      overflow: 'hidden',
+      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+      transformStyle: 'preserve-3d',
+      perspective: '1000px'
     },
     agentHeader: {
       display: 'flex',
       alignItems: 'center',
-      gap: '1rem',
-      marginBottom: '1rem'
+      gap: '1.25rem',
+      marginBottom: '1.25rem',
+      position: 'relative',
+      zIndex: 1
     },
     agentIcon: {
-      width: '50px',
-      height: '50px',
-      background: 'linear-gradient(135deg, #9333ea 0%, #ec4899 100%)',
+      width: '56px',
+      height: '56px',
+      background: 'linear-gradient(135deg, #00D9FF 0%, #0EA5E9 100%)',
       borderRadius: '12px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      boxShadow: '0 0 20px rgba(147,51,234,0.5)'
+      boxShadow: '0 0 30px rgba(0, 217, 255, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.2)',
+      border: '1px solid rgba(255, 255, 255, 0.2)',
+      position: 'relative',
+      overflow: 'hidden'
     },
     agentName: {
       fontSize: '1.25rem',
-      fontWeight: 'bold',
-      marginBottom: '0.25rem'
+      fontWeight: '700',
+      marginBottom: '0.375rem',
+      color: '#FFFFFF',
+      letterSpacing: '0.02em',
+      filter: 'drop-shadow(0 0 5px rgba(0, 217, 255, 0.3))'
     },
     statusBadge: {
-      display: 'inline-block',
-      padding: '0.25rem 0.75rem',
-      borderRadius: '12px',
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '0.375rem',
+      padding: '0.375rem 0.75rem',
+      borderRadius: '6px',
       fontSize: '0.75rem',
       fontWeight: '600',
-      marginTop: '0.5rem'
+      marginTop: '0.5rem',
+      letterSpacing: '0.05em',
+      textTransform: 'uppercase'
     },
     agentDesc: {
       fontSize: '0.875rem',
-      color: '#9ca3af',
-      marginBottom: '1rem',
-      lineHeight: '1.5'
+      color: '#9CA3AF',
+      marginBottom: '1.5rem',
+      lineHeight: '1.6',
+      fontWeight: '400',
+      position: 'relative',
+      zIndex: 1
     },
     useButton: {
       width: '100%',
-      padding: '0.75rem',
-      background: 'linear-gradient(135deg, #9333ea 0%, #ec4899 100%)',
+      padding: '0.875rem',
+      background: 'linear-gradient(135deg, #00D9FF 0%, #0EA5E9 100%)',
       border: 'none',
       borderRadius: '8px',
-      color: '#fff',
-      fontWeight: '600',
+      color: '#000',
+      fontWeight: '700',
       cursor: 'pointer',
-      transition: 'all 0.3s',
-      boxShadow: '0 4px 12px rgba(147,51,234,0.4)',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      boxShadow: '0 0 30px rgba(0, 217, 255, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.1)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: '0.5rem'
+      gap: '0.625rem',
+      fontSize: '0.875rem',
+      letterSpacing: '0.05em',
+      textTransform: 'uppercase',
+      position: 'relative',
+      overflow: 'hidden',
+      border: '1px solid rgba(255, 255, 255, 0.2)'
     },
     modal: {
       position: 'fixed',
@@ -518,121 +656,267 @@ function DashboardPage() {
       left: 0,
       right: 0,
       bottom: 0,
-      background: 'rgba(0, 0, 0, 0.8)',
+      background: 'rgba(0, 0, 0, 0.9)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      zIndex: 1000,
-      backdropFilter: 'blur(5px)',
+      zIndex: 2000,
+      backdropFilter: 'blur(10px)',
       padding: '1rem'
     },
     modalContent: {
-      background: 'rgba(10, 10, 15, 0.95)',
-      borderRadius: '20px',
-      padding: '2rem',
+      background: 'rgba(0, 0, 0, 0.95)',
+      borderRadius: '16px',
+      padding: '2.5rem',
       width: '90%',
       maxWidth: '900px',
-      border: '1px solid rgba(255, 255, 255, 0.2)',
-      backdropFilter: 'blur(20px)',
-      boxShadow: '0 20px 60px rgba(147,51,234,0.3)'
+      border: '1px solid rgba(0, 217, 255, 0.3)',
+      backdropFilter: 'blur(40px) saturate(180%)',
+      boxShadow: '0 30px 80px rgba(0, 217, 255, 0.2), inset 0 0 60px rgba(0, 217, 255, 0.05)',
+      position: 'relative'
     },
     closeButton: {
       position: 'absolute',
-      top: '1rem',
-      right: '1rem',
-      background: 'rgba(255, 255, 255, 0.1)',
-      border: 'none',
-      color: '#fff',
-      fontSize: '1.5rem',
+      top: '1.5rem',
+      right: '1.5rem',
+      background: 'rgba(0, 217, 255, 0.1)',
+      border: '1px solid rgba(0, 217, 255, 0.3)',
+      color: '#00D9FF',
+      fontSize: '1.25rem',
       cursor: 'pointer',
-      padding: '0.5rem',
-      borderRadius: '50%',
+      padding: '0.625rem',
+      borderRadius: '8px',
       width: '40px',
       height: '40px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      transition: 'all 0.3s'
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      boxShadow: '0 0 20px rgba(0, 217, 255, 0.2)'
     },
     videoContainer: {
       width: '100%',
       aspectRatio: '16/9',
-      marginTop: '1rem',
+      marginTop: '1.5rem',
       borderRadius: '12px',
       overflow: 'hidden',
-      background: 'linear-gradient(135deg, rgba(147,51,234,0.2) 0%, rgba(236,72,153,0.2) 100%)'
+      background: 'rgba(0, 0, 0, 0.8)',
+      border: '1px solid rgba(0, 217, 255, 0.2)',
+      boxShadow: '0 0 40px rgba(0, 217, 255, 0.15)'
     },
     tryButton: {
       width: '100%',
       padding: '1rem',
-      background: 'linear-gradient(135deg, #9333ea 0%, #ec4899 100%)',
+      background: 'linear-gradient(135deg, #00D9FF 0%, #0EA5E9 100%)',
       border: 'none',
       borderRadius: '8px',
-      color: '#fff',
-      fontWeight: '600',
+      color: '#000',
+      fontWeight: '700',
       cursor: 'pointer',
-      transition: 'all 0.3s',
-      boxShadow: '0 4px 12px rgba(147,51,234,0.4)',
-      marginTop: '1.5rem',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      boxShadow: '0 0 30px rgba(0, 217, 255, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.1)',
+      marginTop: '2rem',
       fontSize: '1rem',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: '0.5rem'
+      gap: '0.75rem',
+      letterSpacing: '0.05em',
+      textTransform: 'uppercase',
+      border: '1px solid rgba(255, 255, 255, 0.2)',
+      position: 'relative',
+      overflow: 'hidden'
     }
   };
 
   return (
     <div style={styles.container}>
+      <ThreeBackground />
+      <div style={styles.cyberGrid}></div>
+      <div style={styles.scanlineOverlay}></div>
+      
       <style>{`
         @keyframes spin {
           to { transform: rotate(360deg); }
         }
-        @keyframes coinSpin {
-          0% { transform: rotateY(0deg); }
-          50% { transform: rotateY(180deg); }
-          100% { transform: rotateY(360deg); }
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.7; }
         }
-        @keyframes coinFloat {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-3px); }
+        @keyframes scanlines {
+          0% { transform: translateY(0); }
+          100% { transform: translateY(50px); }
         }
+        @keyframes glow {
+          0%, 100% { box-shadow: 0 0 20px rgba(0, 217, 255, 0.3); }
+          50% { box-shadow: 0 0 40px rgba(0, 217, 255, 0.6); }
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotateZ(0deg); }
+          50% { transform: translateY(-10px) rotateZ(2deg); }
+        }
+        @keyframes shimmer {
+          0% { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        @keyframes borderGlow {
+          0%, 100% { border-color: rgba(0, 217, 255, 0.2); }
+          50% { border-color: rgba(0, 217, 255, 0.6); }
+        }
+        
+        /* Cyberpunk Hover Effects */
         .menu-button:hover {
-          background: rgba(147, 51, 234, 0.25);
-          transform: scale(1.05);
+          background: rgba(0, 217, 255, 0.15);
+          border-color: rgba(0, 217, 255, 0.5);
+          transform: translateY(-1px);
+          box-shadow: 0 0 20px rgba(0, 217, 255, 0.4);
         }
         .menu-button:active {
-          transform: scale(0.95);
+          transform: translateY(0);
         }
         .user-avatar:hover, .user-initial:hover {
           transform: scale(1.1);
-          box-shadow: 0 0 20px rgba(147, 51, 234, 0.6);
+          border-color: rgba(0, 217, 255, 0.8);
+          box-shadow: 0 0 30px rgba(0, 217, 255, 0.6);
+        }
+        
+        /* Agent Cards 3D Transform */
+        .agent-card {
+          transform-style: preserve-3d;
         }
         .agent-card:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 12px 30px rgba(147,51,234,0.3);
-          background: rgba(255, 255, 255, 0.1);
+          transform: translateY(-8px) translateZ(20px);
+          border-color: rgba(0, 217, 255, 0.5);
+          box-shadow: 0 20px 60px rgba(0, 217, 255, 0.3), inset 0 0 40px rgba(0, 217, 255, 0.05);
+        }
+        .agent-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background: linear-gradient(90deg, transparent, rgba(0, 217, 255, 0.8), transparent);
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+        .agent-card:hover::before {
+          opacity: 1;
+          animation: shimmer 2s linear infinite;
+        }
+        .agent-card::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(135deg, rgba(0, 217, 255, 0.03), transparent);
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+        .agent-card:hover::after {
+          opacity: 1;
+        }
+        
+        /* Stat Cards Holographic Effect */
+        .stat-card {
+          position: relative;
+          overflow: hidden;
         }
         .stat-card:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 20px rgba(147,51,234,0.2);
+          transform: translateY(-4px);
+          border-color: rgba(0, 217, 255, 0.4);
+          box-shadow: 0 15px 40px rgba(0, 217, 255, 0.2);
         }
+        .stat-card::before {
+          content: '';
+          position: absolute;
+          top: -50%;
+          left: -50%;
+          width: 200%;
+          height: 200%;
+          background: conic-gradient(from 0deg, transparent, rgba(0, 217, 255, 0.1), transparent 30%);
+          animation: float 8s linear infinite;
+        }
+        .stat-card::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(circle at 50% 0%, rgba(0, 217, 255, 0.1), transparent 70%);
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+        .stat-card:hover::after {
+          opacity: 1;
+        }
+        
         .icon-button:hover {
-          background: rgba(255, 255, 255, 0.2);
-          transform: scale(1.05);
+          background: rgba(0, 217, 255, 0.2);
+          transform: scale(1.1);
+          box-shadow: 0 0 20px rgba(0, 217, 255, 0.4);
+        }
+        .nav-link {
+          position: relative;
+        }
+        .nav-link::after {
+          content: '';
+          position: absolute;
+          bottom: -4px;
+          left: 0;
+          width: 0%;
+          height: 2px;
+          background: linear-gradient(90deg, #00D9FF, #0EA5E9);
+          transition: width 0.3s ease;
         }
         .nav-link:hover {
-          color: #fff;
+          color: #00D9FF;
+          text-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+        }
+        .nav-link:hover::after {
+          width: 100%;
         }
         .sidebar-item:hover {
-          background: rgba(255, 255, 255, 0.1);
+          background: rgba(0, 217, 255, 0.1);
+          color: #FFFFFF;
+          box-shadow: inset 4px 0 0 #00D9FF;
+          transform: translateX(4px);
         }
-        .use-button:hover {
+        .use-button:hover, .try-button:hover {
           transform: translateY(-2px);
-          box-shadow: 0 8px 20px rgba(147,51,234,0.6);
+          box-shadow: 0 0 40px rgba(0, 217, 255, 0.8), inset 0 0 30px rgba(255, 255, 255, 0.2);
+        }
+        .use-button:active, .try-button:active {
+          transform: translateY(0);
+        }
+        .use-button::before, .try-button::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+          background-size: 200% 200%;
+          animation: shimmer 3s linear infinite;
         }
         .close-btn:hover {
-          background: rgba(255, 255, 255, 0.2);
+          background: rgba(0, 217, 255, 0.2);
+          border-color: rgba(0, 217, 255, 0.5);
+          box-shadow: 0 0 20px rgba(0, 217, 255, 0.4);
+        }
+        
+        /* Loading Scanner Effect */
+        .loading-scanner {
+          position: relative;
+        }
+        .loading-scanner::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background: linear-gradient(90deg, transparent, #00D9FF, transparent);
+          animation: scan 2s linear infinite;
+        }
+        @keyframes scan {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
         }
       `}</style>
 
@@ -650,7 +934,15 @@ function DashboardPage() {
               <div style={styles.menuLine}></div>
             </button>
             <div style={styles.logo}>
-              <div style={styles.logoIcon}>M</div>
+              <img 
+                src="/Gemini_Generated_Image_v9lm7xv9lm7xv9lm-removebg-preview.png" 
+                alt="Market Muse AI Logo" 
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  objectFit: 'contain'
+                }}
+              />
               <span>Market Muse AI</span>
             </div>
           </div>
@@ -694,33 +986,36 @@ function DashboardPage() {
               {showUserMenu && (
                 <div style={{
                   position: 'absolute',
-                  top: '50px',
+                  top: '48px',
                   right: 0,
-                  background: 'rgba(10, 10, 15, 0.95)',
-                  borderRadius: '12px',
+                  background: 'rgba(15, 10, 30, 0.95)',
+                  borderRadius: '10px',
                   padding: '0.5rem',
                   minWidth: '200px',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  backdropFilter: 'blur(20px)',
-                  boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
+                  border: '1px solid rgba(254, 119, 16, 0.2)',
+                  backdropFilter: 'blur(40px) saturate(180%)',
+                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)'
                 }}>
-                  <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                    <div style={{ fontWeight: '600', marginBottom: '0.25rem' }}>{displayName}</div>
-                    <div style={{ fontSize: '0.75rem', color: '#9ca3af' }}>{session.user.email}</div>
+                  <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid rgba(254, 119, 16, 0.1)' }}>
+                    <div style={{ fontWeight: '600', marginBottom: '0.25rem', color: '#F3F4F6', fontSize: '0.875rem' }}>{displayName}</div>
+                    <div style={{ fontSize: '0.75rem', color: '#9CA3AF' }}>{session.user.email}</div>
                   </div>
                   <button onClick={signOut} style={{
                     width: '100%',
-                    padding: '0.75rem 1rem',
+                    padding: '0.625rem 0.875rem',
                     background: 'transparent',
                     border: 'none',
-                    color: '#fff',
+                    color: '#9CA3AF',
                     cursor: 'pointer',
                     textAlign: 'left',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.5rem',
-                    borderRadius: '8px',
-                    marginTop: '0.5rem'
+                    borderRadius: '6px',
+                    marginTop: '0.5rem',
+                    fontSize: '0.875rem',
+                    fontWeight: '500',
+                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
                   }} className="sidebar-item">
                     <LogOut size={16} />
                     Sign Out
@@ -764,10 +1059,10 @@ function DashboardPage() {
         <main style={styles.content}>
           {/* Welcome Section */}
           <div style={styles.welcomeCard}>
-            <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+            <h1 style={{ fontSize: '1.875rem', fontWeight: '700', marginBottom: '0.5rem', letterSpacing: '-0.02em', color: '#F3F4F6' }}>
               {getGreeting()}, {displayName}! 👋
             </h1>
-            <p style={{ color: '#9ca3af', fontSize: '1rem' }}>
+            <p style={{ color: '#9CA3AF', fontSize: '0.938rem', fontWeight: '400' }}>
               Your AI copilots are ready to automate, analyze, and amplify your marketing.
             </p>
           </div>
@@ -794,8 +1089,8 @@ function DashboardPage() {
 
           {/* AI Agents Section */}
           <div style={styles.sectionTitle}>
-            <Zap size={24} />
-            AI Agent Marketplace
+            <Zap size={28} style={{ filter: 'drop-shadow(0 0 10px rgba(0, 217, 255, 0.8))' }} />
+            <span style={{ letterSpacing: '0.1em' }}>AGENT MARKETPLACE</span>
           </div>
           <div style={styles.agentsGrid}>
             {agentDetails.map((agent) => {
@@ -804,7 +1099,7 @@ function DashboardPage() {
                 <div key={agent.id} style={styles.agentCard} className="agent-card">
                   <div style={styles.agentHeader}>
                     <div style={styles.agentIcon}>
-                      <IconComponent size={28} color="#fff" />
+                      <IconComponent size={28} color="#000" />
                     </div>
                     <div>
                       <div style={styles.agentName}>{agent.name}</div>
@@ -812,24 +1107,24 @@ function DashboardPage() {
                         style={{
                           ...styles.statusBadge,
                           background: agent.status === 'active' 
-                            ? 'rgba(34,197,94,0.2)' 
-                            : 'rgba(156,163,175,0.2)',
-                          color: agent.status === 'active' ? '#86efac' : '#9ca3af'
+                            ? 'rgba(0, 217, 255, 0.15)' 
+                            : 'rgba(156, 163, 175, 0.1)',
+                          color: agent.status === 'active' ? '#00D9FF' : '#9CA3AF',
+                          border: `1px solid ${agent.status === 'active' ? 'rgba(0, 217, 255, 0.4)' : 'rgba(156, 163, 175, 0.2)'}`,
+                          boxShadow: agent.status === 'active' ? '0 0 15px rgba(0, 217, 255, 0.3)' : 'none'
                         }}
                       >
-                        {agent.status === 'active' ? '● Active' : '● Idle'}
+                        {agent.status === 'active' ? '● ACTIVE' : '● IDLE'}
                       </div>
                     </div>
                   </div>
                   <p style={styles.agentDesc}>{agent.desc}</p>
                   <button 
-                    style={styles.useButton}
-                    onClick={() => {
-                      if (agent.name === 'TrendIQ') {
-                        navigate('/trendiq');
-                      } else {
-                        handleUseAgent(agent);
-                      }
+                    style={{...styles.useButton, zIndex: 999, position: 'relative', pointerEvents: 'auto'}}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleNavigateToAgent(agent.name);
                     }}
                     className="use-button"
                   >
@@ -855,10 +1150,20 @@ function DashboardPage() {
               <X size={20} />
             </button>
             
-            <h2 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+            <h2 style={{ 
+              fontSize: '2rem', 
+              fontWeight: '700', 
+              marginBottom: '0.75rem', 
+              background: 'linear-gradient(135deg, #FFFFFF 0%, #00D9FF 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              letterSpacing: '0.05em',
+              textTransform: 'uppercase',
+              filter: 'drop-shadow(0 0 10px rgba(0, 217, 255, 0.3))'
+            }}>
               {selectedAgent.name}
             </h2>
-            <p style={{ color: '#9ca3af', marginBottom: '1.5rem' }}>
+            <p style={{ color: '#9CA3AF', marginBottom: '2rem', fontSize: '0.875rem', fontWeight: '400', letterSpacing: '0.02em' }}>
               {selectedAgent.desc}
             </p>
 
@@ -885,7 +1190,7 @@ function DashboardPage() {
                       width: '100%',
                       height: '100%',
                       objectFit: 'contain',
-                      background: '#1a1a2e'
+                      background: '#0F0A1E'
                     }}
                   >
                     <source src={selectedAgent.videoUrl} type="video/mp4" />
@@ -900,49 +1205,17 @@ function DashboardPage() {
                   height: '100%',
                   flexDirection: 'column',
                   gap: '1rem',
-                  color: '#9ca3af'
+                  color: '#6B7280'
                 }}>
-                  <Play size={48} />
-                  <div>Demo video coming soon</div>
+                  <Play size={64} style={{ filter: 'drop-shadow(0 0 20px rgba(0, 217, 255, 0.5))' }} color="#00D9FF" />
+                  <div style={{ fontSize: '0.875rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Demo Video Coming Soon</div>
                 </div>
               )}
             </div>
 
             <button
               style={styles.tryButton}
-              onClick={() => {
-                if (selectedAgent.name === 'SEOrix') {
-                  navigate('/seorix');
-                } else if (selectedAgent.name === 'WhatsPulse') {
-                  navigate('/whatspulse');
-                } else if (selectedAgent.name === 'EchoMind') {
-                  navigate('/echomind');
-                } else if (selectedAgent.name === 'SociaPlan') {
-                  navigate('/sociaplan');
-                } else if (selectedAgent.name === 'LeadGen') {
-                  navigate('/leadgen');
-                } else if (selectedAgent.name === 'AdVisor') {
-                  navigate('/advisor');
-                } else if (selectedAgent.name === 'TrendIQ') {
-                  navigate('/trendiq');
-                } else if (selectedAgent.name === 'Scriptly') {
-                  navigate('/scriptly');
-                } else if (selectedAgent.name === 'Adbrief') {
-                  navigate('/adbrief');
-                } else if (selectedAgent.name === 'ClipGen') {
-                  navigate('/clipgen');
-                } else if (selectedAgent.name === 'RingCast') {
-                  navigate('/ringcast');
-                } else if (selectedAgent.name === 'InfluenceScope') {
-                  navigate('/influencescope');
-                } else if (selectedAgent.name === 'SocialInsight') {
-                  navigate('/socialinsight');
-                } else {
-                  // For other agents, you can add their specific routes here
-                  alert(`${selectedAgent.name} agent page coming soon!`);
-                }
-                setSelectedAgent(null);
-              }}
+              onClick={() => handleNavigateToAgent(selectedAgent.name)}
             >
               <Play size={16} />
               Use This Agent
@@ -950,18 +1223,28 @@ function DashboardPage() {
 
             {outputs[selectedAgent.id] && (
               <div style={{
-                marginTop: '1.5rem',
-                background: 'rgba(0,0,0,0.3)',
-                padding: '1rem',
+                marginTop: '2rem',
+                background: 'rgba(0, 0, 0, 0.8)',
+                padding: '1.5rem',
                 borderRadius: '8px',
-                border: '1px solid rgba(255,255,255,0.1)'
+                border: '1px solid rgba(0, 217, 255, 0.2)',
+                boxShadow: '0 0 20px rgba(0, 217, 255, 0.1)'
               }}>
-                <strong style={{ color: '#c084fc' }}>Output:</strong>
+                <strong style={{ 
+                  color: '#00D9FF', 
+                  fontSize: '0.875rem',
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  textShadow: '0 0 10px rgba(0, 217, 255, 0.5)'
+                }}>System Output</strong>
                 <pre style={{
                   whiteSpace: 'pre-wrap',
-                  marginTop: '0.5rem',
-                  fontSize: '0.875rem',
-                  color: '#d1d5db'
+                  marginTop: '1rem',
+                  fontSize: '0.813rem',
+                  color: '#D1D5DB',
+                  fontFamily: '"JetBrains Mono", "Fira Code", monospace',
+                  lineHeight: '1.6',
+                  letterSpacing: '0.01em'
                 }}>
                   {outputs[selectedAgent.id]}
                 </pre>
