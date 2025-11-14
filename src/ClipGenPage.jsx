@@ -90,14 +90,18 @@ function ClipGenPage() {
         'ClipGen',
         async () => {
           console.log('🚀 Sending request to ClipGen webhook...');
-          console.log('Sending only URL:', sourceUrl);
+          console.log('Sending data:', { url: sourceUrl, clip_style: clipStyle, max_clips: maxClips });
           
           const response = await fetch('https://glowing-g79w8.crab.containers.automata.host/webhook/Clipgen', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ url: sourceUrl }) // Send only URL
+            body: JSON.stringify({ 
+              url: sourceUrl,
+              clip_style: clipStyle,
+              max_clips: maxClips
+            })
           });
 
           console.log('📡 Response status:', response.status);
@@ -131,7 +135,7 @@ function ClipGenPage() {
           console.log('✅ ClipGen Response:', JSON.stringify(data, null, 2));
           return data;
         },
-        { url: sourceUrl }, // Request data for logging
+        { url: sourceUrl, clip_style: clipStyle, max_clips: maxClips }, // Request data for logging
         1,
         outputSummary
       );
